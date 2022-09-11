@@ -2,14 +2,18 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeveloperDao implements DataAccess<Integer, Developer> {
     private Connection connection;
 
+
+    public DeveloperDao(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public Developer getById(Integer integer) {
@@ -25,20 +29,47 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
             statement.setString(2,developer.getLastName());
             statement.setString(3,developer.getSex());
             statement.setObject(4,developer.getCompanyId());
-            statement.setDouble(5,developer.getSalary());
+            statement.setBigDecimal(5,developer.getSalary());
 
             var x = statement.executeUpdate();
 
+            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    developer.setId(generatedKey.getInt(1));
+                } else {
+                    throw new RuntimeException("No id returned back.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Couldn't create new developer in database");
+                throw new RuntimeException(e.getMessage());
+            }
 
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
+        return developer;
     }
 
     @Override
-    public List<Developer> get() {
-        return null;
+    public List<Developer> findAll() {
+        List<Developer> allDevs = new ArrayList<>();
+        try (var statement = connection.prepareStatement(SQL.SELECT_ALL.command)) {
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            while (rs.next()) {
+                allDevs.add(new Developer(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("sex"),
+                        rs.getObject("company_id",Integer.class),
+                        rs.getObject("salary", BigDecimal.class)));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return allDevs;
     }
 
     @Override
@@ -57,9 +88,9 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     enum SQL {
-        INSERT
-                ("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
-                "VALUES (?,?,?,?,?);");
+        INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
+                "VALUES (?,?,?,?,?);"),
+        SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary FROM developers;");
 
         SQL(String command) {
             this.command = command;

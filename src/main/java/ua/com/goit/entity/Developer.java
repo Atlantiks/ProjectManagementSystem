@@ -1,14 +1,18 @@
 package ua.com.goit.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.math.BigDecimal;
+
 @Data
+@AllArgsConstructor
 public class Developer {
     private Integer id;
     @NonNull private String firstName;
     @NonNull private String lastName;
-    private String sex;
+    @NonNull private String sex;
     private Integer companyId;
-    private Double salary;
+    private BigDecimal salary;
 }
