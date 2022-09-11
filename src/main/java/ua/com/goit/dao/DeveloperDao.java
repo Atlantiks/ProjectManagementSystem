@@ -16,7 +16,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public Developer getById(Integer id) {
+    public Developer findById(Integer id) {
         Developer dev = null;
         String query = SQL.SELECT_BY_ID.command;
 
@@ -97,7 +97,21 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
     @Override
     public boolean remove(Developer developer) {
-        return false;
+        String query = SQL.DELETE.command;
+
+        int updatedRows = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,developer.getFirstName());
+            statement.setString(2,developer.getLastName());
+
+            updatedRows = statement.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return updatedRows > 0;
     }
 
     @Override
@@ -139,6 +153,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     enum SQL {
         INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
                 "VALUES (?,?,?,?,?);"),
+
         SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary " +
                 "FROM developers " +
                 "ORDER BY id"),
@@ -150,7 +165,10 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
                 "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +
                 "WHERE id = ?;"),
 
-        DELETE_BY_ID("DELETE FROM developers WHERE id = ?;");
+        DELETE_BY_ID("DELETE FROM developers WHERE id = ?;"),
+
+        DELETE("DELETE FROM developers " +
+                "WHERE first_name = ? AND last_name = ?;");
 
         SQL(String command) {
             this.command = command;

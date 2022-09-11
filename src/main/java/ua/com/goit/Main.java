@@ -15,14 +15,16 @@ public class Main {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         DataAccess<Integer, Developer> devDao = new DeveloperDao(connectionManager.getConnection());
 
+        devDao.remove(new Developer(30,"Sergii","Shynkarenko","M",null,null));
+
         var x = devDao.findAll();
         x.stream().forEach(System.out::println);
 
-        Developer dev = new Developer("Sergii","Shynkarenko","M");
-        devDao.save(dev);
-
+/*        Developer dev = new Developer("Sergii","Shynkarenko","M");
+        devDao.save(dev);*/
+/*
         var y = devDao.findAll();
-        y.stream().forEach(System.out::println);
+        y.stream().forEach(System.out::println);*/
 
 
     }
