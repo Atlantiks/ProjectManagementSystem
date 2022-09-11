@@ -18,15 +18,12 @@ public class Main {
         var x = devDao.findAll();
         x.stream().forEach(System.out::println);
 
-        Developer dev = devDao.getById(26);
-        dev.setLastName("Shynkarenko");
-        dev.setCompanyId(null);
-        devDao.update(dev);
+        Developer dev = new Developer("Sergii","Shynkarenko","M");
+        devDao.save(dev);
 
-        var y = dev.getCompanyId();
+        var y = devDao.findAll();
+        y.stream().forEach(System.out::println);
 
-        dev = devDao.getById(26);
-        System.out.println(dev);
 
     }
 

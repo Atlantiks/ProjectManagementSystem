@@ -101,8 +101,17 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public boolean removeById(Integer integer) {
-        return false;
+    public boolean removeById(Integer id) {
+        String query = SQL.DELETE_BY_ID.command;
+        int result;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            result = statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return result > 0;
     }
 
     @Override
@@ -139,7 +148,9 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
         UPDATE("UPDATE developers " +
                 "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +
-                "WHERE id = ?;");
+                "WHERE id = ?;"),
+
+        DELETE_BY_ID("DELETE FROM developers WHERE id = ?;");
 
         SQL(String command) {
             this.command = command;
