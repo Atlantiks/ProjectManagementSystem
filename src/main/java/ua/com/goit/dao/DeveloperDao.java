@@ -16,8 +16,29 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public Developer getById(Integer integer) {
-        return null;
+    public Developer getById(Integer id) {
+        Developer dev = null;
+        String query = SQL.SELECT_BY_ID.command;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            if (rs.next()) {
+                dev = new Developer(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("sex"),
+                        rs.getObject("company_id",Integer.class),
+                        rs.getObject("salary", BigDecimal.class));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return dev;
     }
 
     @Override
@@ -53,7 +74,9 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     @Override
     public List<Developer> findAll() {
         List<Developer> allDevs = new ArrayList<>();
-        try (var statement = connection.prepareStatement(SQL.SELECT_ALL.command)) {
+        String query = SQL.SELECT_ALL.command;
+
+        try (var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -84,13 +107,39 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
     @Override
     public boolean update(Developer developer) {
-        return false;
+        var query = SQL.UPDATE.command;
+        int updatedRows = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,developer.getFirstName());
+            statement.setString(2,developer.getLastName());
+            statement.setString(3,developer.getSex());
+            statement.setObject(4,developer.getCompanyId(),Types.INTEGER);
+            statement.setBigDecimal(5,developer.getSalary());
+
+            statement.setInt(6,developer.getId());
+
+            updatedRows = statement.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return updatedRows > 0;
     }
 
     enum SQL {
         INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
                 "VALUES (?,?,?,?,?);"),
-        SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary FROM developers;");
+        SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary " +
+                "FROM developers " +
+                "ORDER BY id"),
+
+        SELECT_BY_ID("SELECT id, first_name, last_name, sex, company_id, salary FROM developers " +
+                "WHERE id = ?;"),
+
+        UPDATE("UPDATE developers " +
+                "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +
+                "WHERE id = ?;");
 
         SQL(String command) {
             this.command = command;
