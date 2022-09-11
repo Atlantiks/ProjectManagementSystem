@@ -9,6 +9,6 @@ public class Developer {
     @NonNull private String firstName;
     @NonNull private String lastName;
     private String sex;
-    private String companyId;
+    private Integer companyId;
     private Double salary;
 }
