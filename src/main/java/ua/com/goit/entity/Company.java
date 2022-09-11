@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Company {
-    Integer id;
-    String name;
-    String country;
+    private Integer id;
+    private String name;
+    private String country;
 }

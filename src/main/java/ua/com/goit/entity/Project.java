@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class Project {
-    Integer id;
-    String name;
-    String description;
-    String status;
-    Double cost;
+    private Integer id;
+    private String name;
+    private String description;
+    private String status;
+    private Double cost;
 }
