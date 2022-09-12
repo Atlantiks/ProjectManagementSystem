@@ -3,14 +3,12 @@ package ua.com.goit.dao;
 import ua.com.goit.entity.Company;
 import ua.com.goit.entity.Project;
 
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CompanyDao implements DataAccess<Integer, Company>{
+public class CompanyDao implements DataAccess<Integer, Company> {
     private final Connection connection;
 
     public CompanyDao(Connection connection) {
@@ -18,13 +16,54 @@ public class CompanyDao implements DataAccess<Integer, Company>{
     }
 
     @Override
-    public Optional<Company> findById(Integer integer) {
-        return Optional.empty();
+    public Optional<Company> findById(Integer id) {
+        Company company = null;
+        String query = SQL.SELECT_BY_ID.command;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            if (rs.next()) {
+                company = new Company(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getObject("country",String.class)
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return Optional.ofNullable(company);
     }
 
     @Override
     public Company save(Company company) {
-        return null;
+        var query = SQL.INSERT.command;
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setObject(1,company.getName());
+            statement.setObject(2,company.getCountry());
+
+            int resultRows = statement.executeUpdate();
+
+            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    company.setId(generatedKey.getInt(1));
+                } else {
+                    throw new RuntimeException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Couldn't create new project in database");
+                throw new RuntimeException(e.getMessage());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return company;
     }
 
     @Override
@@ -51,17 +90,51 @@ public class CompanyDao implements DataAccess<Integer, Company>{
 
     @Override
     public boolean remove(Company company) {
-        return false;
+        String query = SQL.DELETE_BY_NAME.command;
+
+        int updatedRows;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,company.getName());
+            updatedRows = statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return updatedRows > 0;
     }
 
     @Override
-    public boolean removeById(Integer integer) {
-        return false;
+    public boolean removeById(Integer id) {
+        String query = SQL.DELETE_BY_ID.command;
+        int result;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            result = statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return result > 0;
     }
 
     @Override
     public boolean update(Company company) {
-        return false;
+        var query = SQL.UPDATE.command;
+        int updatedRows;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,company.getName());
+            statement.setObject(2,company.getCountry(),Types.VARCHAR);
+
+            statement.setInt(3,company.getId());
+
+            updatedRows = statement.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return updatedRows > 0;
     }
 
     @Override

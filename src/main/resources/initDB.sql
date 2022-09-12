@@ -1,7 +1,7 @@
 CREATE TABLE companies
 (
     id      SERIAL PRIMARY KEY,
-    name    VARCHAR(128) NOT NULL,
+    name    VARCHAR(128) NOT NULL UNIQUE,
     country VARCHAR(128)
 );
 
@@ -18,8 +18,8 @@ CREATE TABLE developers
 CREATE TABLE skills
 (
     id    SERIAL,
-    name  VARCHAR,
-    level VARCHAR,
+    name  VARCHAR NOT NULL,
+    level VARCHAR NOT NULL,
     PRIMARY KEY (name, level),
     UNIQUE (id)
 );

@@ -4,7 +4,8 @@ VALUES ('Apple', 'United States'),
        ('Oracle', 'United States'),
        ('Schneider Electric', 'France'),
        ('Kongsberg Software DevDep', 'Norway'),
-       ('ABB', 'Swiss');
+       ('ABB', 'Swiss'),
+       ('Symantec', 'United States');
 
 INSERT INTO projects (name, description, status)
 VALUES ('iOS Development', 'develops operating system for iPhones, iPads', 'Active'),

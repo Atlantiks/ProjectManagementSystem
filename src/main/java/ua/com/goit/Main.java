@@ -16,7 +16,15 @@ public class Main {
         DataAccess<Integer, Project> projectDao = new ProjectDao(connectionManager.getConnection());
         DataAccess<Integer, Company> companyDao = new CompanyDao(connectionManager.getConnection());
 
-        companyDao.findAll().stream().forEach(System.out::println);
+        companyDao.findAll().forEach(System.out::println);
+
+        Company comp = new Company("Shynkarenko");
+        comp.setCountry("Ukraine");
+        comp.setId(9);
+        companyDao.update(comp);
+
+
+        companyDao.findAll().forEach(System.out::println);
 
     }
 
