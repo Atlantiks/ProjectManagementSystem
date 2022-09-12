@@ -41,7 +41,7 @@ public class CompanyDao implements DataAccess<Integer, Company> {
 
     @Override
     public Company save(Company company) {
-        var query = SQL.INSERT.command;
+        String query = SQL.INSERT.command;
 
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1,company.getName());

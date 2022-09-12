@@ -47,7 +47,7 @@ CREATE TABLE developers_skills
     developers_id INT REFERENCES developers (id),
     skill_name TEXT,
     skill_level TEXT,
-    FOREIGN KEY (skill_name, skill_level) REFERENCES skills(name, level),
+    FOREIGN KEY (skill_name, skill_level) REFERENCES skills(name, level) ON DELETE CASCADE ON UPDATE CASCADE,
     UNIQUE (developers_id,skill_name)
 );
 

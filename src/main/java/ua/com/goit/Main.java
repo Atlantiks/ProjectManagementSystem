@@ -13,10 +13,11 @@ public class Main {
         DataAccess<Integer, Project> projectDao = new ProjectDao(connectionManager.getConnection());
         DataAccess<Integer, Company> companyDao = new CompanyDao(connectionManager.getConnection());
         DataAccess<Integer, Customer> customerDao = new CustomerDao(connectionManager.getConnection());
-customerDao.removeById(8);
-        //customerDao.save(new Customer("Igal","Levin"));
-        customerDao.findAll().forEach(System.out::println);
+        DataAccess<Integer, Skill> skillDao = new SkillDao(connectionManager.getConnection());
 
+        skillDao.update(new Skill(7,"C#","Founder"));
+
+        skillDao.findAll().forEach(System.out::println);
 
     }
 
