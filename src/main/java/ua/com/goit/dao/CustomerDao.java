@@ -2,7 +2,8 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Customer;
 
-import java.sql.Connection;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,36 +16,142 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
 
     @Override
     public Optional<Customer> findById(Integer id) {
-        return Optional.empty();
+        Customer customer = null;
+        String query = SQL.SELECT_BY_ID.command;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            if (rs.next()) {
+                customer = new Customer(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("company"),
+                        rs.getString("address")
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return Optional.ofNullable(customer);
     }
 
     @Override
     public Customer save(Customer customer) {
-        return null;
+        String query = SQL.INSERT.command;
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1,customer.getFirstName());
+            statement.setString(2,customer.getLastName());
+            statement.setObject(3,customer.getCompany());
+            statement.setObject(4,customer.getAddress());
+
+            statement.executeUpdate();
+
+            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    customer.setId(generatedKey.getInt(1));
+                } else {
+                    throw new RuntimeException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Couldn't create new project in database");
+                throw new RuntimeException(e.getMessage());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return customer;
     }
 
     @Override
     public List<Customer> findAll() {
-        return null;
+        List<Customer> allCustomers = new ArrayList<>();
+        String query = SQL.SELECT_ALL.command;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            while (rs.next()) {
+                allCustomers.add(new Customer(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getObject("company",String.class),
+                        rs.getObject("address", String.class)));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return allCustomers;
     }
 
     @Override
     public boolean remove(Customer customer) {
-        return false;
+        String query = SQL.DELETE_BY_FULLNAME.command;
+
+        int updatedRows;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,customer.getFirstName());
+            statement.setString(2,customer.getLastName());
+            updatedRows = statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return updatedRows > 0;
     }
 
     @Override
     public boolean removeById(Integer id) {
-        return false;
+        String query = SQL.DELETE_BY_ID.command;
+        int result;
+
+        try (var statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            result = statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return result > 0;
     }
 
     @Override
     public boolean update(Customer customer) {
-        return false;
+        var query = SQL.UPDATE.command;
+        int updatedRows = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1,customer.getFirstName());
+            statement.setString(2,customer.getLastName());
+            statement.setObject(3,customer.getCompany(),Types.VARCHAR);
+            statement.setObject(4,customer.getAddress(),Types.LONGVARCHAR);
+
+            statement.setInt(5,customer.getId());
+
+            updatedRows = statement.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return updatedRows > 0;
     }
 
     @Override
     public int count() {
+        String query = SQL.COUNT.command;
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            if (st.executeQuery().next()) return st.getResultSet().getInt(1);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
         return 0;
     }
 
@@ -52,7 +159,7 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
         INSERT("INSERT INTO customers (first_name, last_name, company, address) " +
                 "VALUES (?,?,?,?)"),
 
-        SELECT_ALL ("SELECT id, first_name, last_name, company, address" +
+        SELECT_ALL ("SELECT id, first_name, last_name, company, address " +
                 "FROM customers " +
                 "ORDER BY id"),
 

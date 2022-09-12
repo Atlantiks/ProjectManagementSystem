@@ -43,7 +43,7 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
     @Override
     public Project save(Project project) {
-        var query = SQL.INSERT.command;
+        String query = SQL.INSERT.command;
 
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1,project.getName());
