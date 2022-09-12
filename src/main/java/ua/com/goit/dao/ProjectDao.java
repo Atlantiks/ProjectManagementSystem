@@ -146,7 +146,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
     @Override
     public int count() {
-        try (PreparedStatement st = connection.prepareStatement(SQL.COUNT.command)) {
+        String query = SQL.COUNT.command;
+        try (PreparedStatement st = connection.prepareStatement(query)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

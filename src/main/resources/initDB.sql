@@ -1,16 +1,16 @@
 CREATE TABLE companies
 (
     id      SERIAL PRIMARY KEY,
-    name    VARCHAR(128),
+    name    VARCHAR(128) NOT NULL,
     country VARCHAR(128)
 );
 
 CREATE TABLE developers
 (
     id         SERIAL PRIMARY KEY,
-    first_name VARCHAR,
-    last_name  VARCHAR,
-    sex        CHAR(1),
+    first_name VARCHAR NOT NULL,
+    last_name  VARCHAR NOT NULL,
+    sex        CHAR(1) NOT NULL,
     company_id INT REFERENCES companies(id),
     UNIQUE (first_name, last_name)
 );
