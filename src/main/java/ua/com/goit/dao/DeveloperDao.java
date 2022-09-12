@@ -163,25 +163,25 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
     enum SQL {
         INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
-                "VALUES (?,?,?,?,?);"),
+                "VALUES (?,?,?,?,?)"),
 
         SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary " +
                 "FROM developers " +
                 "ORDER BY id"),
 
         SELECT_BY_ID("SELECT id, first_name, last_name, sex, company_id, salary FROM developers " +
-                "WHERE id = ?;"),
+                "WHERE id = ?"),
 
         UPDATE("UPDATE developers " +
                 "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +
-                "WHERE id = ?;"),
+                "WHERE id = ?"),
 
-        DELETE_BY_ID("DELETE FROM developers WHERE id = ?;"),
+        DELETE_BY_ID("DELETE FROM developers WHERE id = ?"),
 
         DELETE("DELETE FROM developers " +
-                "WHERE first_name = ? AND last_name = ?;"),
+                "WHERE first_name = ? AND last_name = ?"),
 
-        COUNT("SELECT count(id) FROM developers;");
+        COUNT("SELECT count(id) FROM developers");
 
         SQL(String command) {
             this.command = command;

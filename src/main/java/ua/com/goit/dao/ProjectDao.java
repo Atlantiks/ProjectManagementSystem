@@ -157,24 +157,24 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
     enum SQL {
         INSERT("INSERT INTO projects (name, description, status, cost) " +
-                "VALUES (?,?,?,?);"),
+                "VALUES (?,?,?,?)"),
 
         SELECT_ALL ("SELECT id, name, description, status, cost " +
                 "FROM projects " +
                 "ORDER BY id"),
 
         SELECT_BY_ID("SELECT id, name, description, status, cost FROM projects " +
-                "WHERE id = ?;"),
+                "WHERE id = ?"),
 
         UPDATE("UPDATE projects " +
                 "SET name = ?, description = ?, status = ?, cost = ? " +
-                "WHERE id = ?;"),
+                "WHERE id = ?"),
 
-        DELETE_BY_ID("DELETE FROM projects WHERE id = ?;"),
+        DELETE_BY_ID("DELETE FROM projects WHERE id = ?"),
 
-        DELETE_BY_NAME("DELETE FROM projects WHERE name = ?;"),
+        DELETE_BY_NAME("DELETE FROM projects WHERE name = ?"),
 
-        COUNT("SELECT count(id) FROM projects;");
+        COUNT("SELECT count(id) FROM projects");
 
         SQL(String command) {
             this.command = command;
