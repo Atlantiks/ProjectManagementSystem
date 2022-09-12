@@ -5,20 +5,20 @@ import ua.com.goit.dao.DataAccess;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.entity.Developer;
 
-import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         DataAccess<Integer, Developer> devDao = new DeveloperDao(connectionManager.getConnection());
 
-        devDao.remove(new Developer(30,"Sergii","Shynkarenko","M",null,null));
+/*        devDao.remove(new Developer(30,"Sergii","Shynkarenko","M",null,null));
 
         var x = devDao.findAll();
-        x.stream().forEach(System.out::println);
+        x.stream().forEach(System.out::println);*/
+
+        var count = devDao.count();
+        System.out.println(count);
+
 
 /*        Developer dev = new Developer("Sergii","Shynkarenko","M");
         devDao.save(dev);*/

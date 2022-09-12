@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class DeveloperDao implements DataAccess<Integer, Developer> {
     private Connection connection;
@@ -16,7 +17,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public Developer findById(Integer id) {
+    public Optional<Developer> findById(Integer id) {
         Developer dev = null;
         String query = SQL.SELECT_BY_ID.command;
 
@@ -38,7 +39,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
             throw new RuntimeException(e.getMessage());
         }
 
-        return dev;
+        return Optional.ofNullable(dev);
     }
 
     @Override
@@ -150,6 +151,16 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         return updatedRows > 0;
     }
 
+    public int count() {
+
+        try (PreparedStatement st = connection.prepareStatement(SQL.COUNT.command)) {
+            if (st.executeQuery().next()) return st.getResultSet().getInt(1);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return 0;
+    }
+
     enum SQL {
         INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
                 "VALUES (?,?,?,?,?);"),
@@ -168,7 +179,9 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         DELETE_BY_ID("DELETE FROM developers WHERE id = ?;"),
 
         DELETE("DELETE FROM developers " +
-                "WHERE first_name = ? AND last_name = ?;");
+                "WHERE first_name = ? AND last_name = ?;"),
+
+        COUNT("SELECT count(id) FROM developers;");
 
         SQL(String command) {
             this.command = command;
