@@ -35,8 +35,8 @@ CREATE TABLE projects
 CREATE TABLE customers
 (
     id         SERIAL PRIMARY KEY,
-    first_name VARCHAR(128),
-    last_name  VARCHAR(128),
+    first_name VARCHAR(128) NOT NULL,
+    last_name  VARCHAR(128) NOT NULL,
     company VARCHAR,
     address TEXT,
     UNIQUE (first_name, last_name, company)
