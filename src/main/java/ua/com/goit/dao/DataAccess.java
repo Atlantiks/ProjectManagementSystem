@@ -10,7 +10,6 @@ public interface DataAccess<Key, Entity> {
     boolean remove(Entity entity);
     boolean removeById(Key key);
     boolean update(Entity entity);
-
     int count();
 
 }

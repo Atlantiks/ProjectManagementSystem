@@ -16,9 +16,8 @@ public class Main {
         var x = devDao.findAll();
         x.stream().forEach(System.out::println);*/
 
-        var count = devDao.count();
-        System.out.println(count);
-
+        var y =devDao.findById(13);
+        y.ifPresent(System.out::println);
 
 /*        Developer dev = new Developer("Sergii","Shynkarenko","M");
         devDao.save(dev);*/
