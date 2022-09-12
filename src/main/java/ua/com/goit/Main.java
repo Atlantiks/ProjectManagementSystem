@@ -1,29 +1,38 @@
 package ua.com.goit;
 
-import ua.com.goit.dao.ConnectionManager;
-import ua.com.goit.dao.DataAccess;
-import ua.com.goit.dao.DeveloperDao;
+import ua.com.goit.dao.*;
 import ua.com.goit.entity.Developer;
+import ua.com.goit.entity.Project;
+
+import java.util.List;
+import java.util.Optional;
 
 
 public class Main {
     public static void main(String[] args) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
         DataAccess<Integer, Developer> devDao = new DeveloperDao(connectionManager.getConnection());
+        DataAccess<Integer, Project> projectDao = new ProjectDao(connectionManager.getConnection());
 
-/*        devDao.remove(new Developer(30,"Sergii","Shynkarenko","M",null,null));
+        projectDao.removeById(13);
 
-        var x = devDao.findAll();
-        x.stream().forEach(System.out::println);*/
+        var all = projectDao.findAll();
+        all.forEach(System.out::println);
 
-        var y =devDao.findById(13);
-        y.ifPresent(System.out::println);
+/*        var all = projectDao.findAll();
+        all.forEach(System.out::println);
 
-/*        Developer dev = new Developer("Sergii","Shynkarenko","M");
-        devDao.save(dev);*/
-/*
-        var y = devDao.findAll();
-        y.stream().forEach(System.out::println);*/
+        var byId = projectDao.findById(12);
+        var tba = byId.orElseGet(() -> new Project("TBA"));
+        tba.setDescription("TBA");
+        tba.setStatus("Inactive");
+
+        projectDao.save(tba);
+
+        System.out.println(projectDao.count());
+
+        all = projectDao.findAll();
+        all.forEach(System.out::println);*/
 
 
     }

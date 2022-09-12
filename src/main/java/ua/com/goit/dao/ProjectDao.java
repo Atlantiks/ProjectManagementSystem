@@ -1,6 +1,6 @@
 package ua.com.goit.dao;
 
-import ua.com.goit.entity.Developer;
+import ua.com.goit.entity.Project;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -8,17 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DeveloperDao implements DataAccess<Integer, Developer> {
+public class ProjectDao implements DataAccess<Integer, Project> {
     private final Connection connection;
 
-
-    public DeveloperDao(Connection connection) {
+    public ProjectDao(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public Optional<Developer> findById(Integer id) {
-        Developer dev = null;
+    public Optional<Project> findById(Integer id) {
+        Project project = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -27,54 +26,53 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                dev = new Developer(
+                project = new Project(
                         rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("sex"),
-                        rs.getObject("company_id",Integer.class),
-                        rs.getObject("salary", BigDecimal.class));
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getString("status"),
+                        rs.getBigDecimal("cost")
+                );
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(dev);
+        return Optional.ofNullable(project);
     }
 
     @Override
-    public Developer save(Developer developer) {
-        String query = SQL.INSERT.command;
+    public Project save(Project project) {
+        var query = SQL.INSERT.command;
 
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
-            statement.setString(3,developer.getSex());
-            statement.setObject(4,developer.getCompanyId());
-            statement.setBigDecimal(5,developer.getSalary());
+            statement.setObject(1,project.getName());
+            statement.setObject(2,project.getDescription());
+            statement.setObject(3,project.getStatus());
+            statement.setObject(4,project.getCost());
 
-            var x = statement.executeUpdate();
+            int resultRows = statement.executeUpdate();
 
             try(ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
-                    developer.setId(generatedKey.getInt(1));
+                    project.setId(generatedKey.getInt(1));
                 } else {
                     throw new RuntimeException("No id was returned back.");
                 }
             } catch (SQLException e) {
-                System.out.println("Couldn't create new developer in database");
+                System.out.println("Couldn't create new project in database");
                 throw new RuntimeException(e.getMessage());
             }
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        return developer;
+        return project;
     }
 
     @Override
-    public List<Developer> findAll() {
-        List<Developer> allDevs = new ArrayList<>();
+    public List<Project> findAll() {
+        List<Project> allProjects = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -82,32 +80,28 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
             var rs = statement.getResultSet();
             while (rs.next()) {
-                allDevs.add(new Developer(
+                allProjects.add(new Project(
                         rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("sex"),
-                        rs.getObject("company_id",Integer.class),
-                        rs.getObject("salary", BigDecimal.class)));
+                        rs.getString("name"),
+                        rs.getObject("description",String.class),
+                        rs.getObject("status",String.class),
+                        rs.getObject("cost",BigDecimal.class)));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-        return allDevs;
+        return allProjects;
     }
 
     @Override
-    public boolean remove(Developer developer) {
-        String query = SQL.DELETE.command;
+    public boolean remove(Project project) {
+        String query = SQL.DELETE_BY_NAME.command;
 
         int updatedRows = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
-
+            statement.setString(1,project.getName());
             updatedRows = statement.executeUpdate();
-
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
@@ -130,18 +124,17 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public boolean update(Developer developer) {
-        String query = SQL.UPDATE.command;
+    public boolean update(Project project) {
+        var query = SQL.UPDATE.command;
         int updatedRows = 0;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
-            statement.setString(3,developer.getSex());
-            statement.setObject(4,developer.getCompanyId(),Types.INTEGER);
-            statement.setBigDecimal(5,developer.getSalary());
+            statement.setString(1,project.getName());
+            statement.setObject(2,project.getDescription(),Types.VARCHAR);
+            statement.setObject(3,project.getStatus(),Types.VARCHAR);
+            statement.setObject(4,project.getCost(),Types.NUMERIC);
 
-            statement.setInt(6,developer.getId());
+            statement.setInt(5,project.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -151,8 +144,8 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         return updatedRows > 0;
     }
 
+    @Override
     public int count() {
-
         try (PreparedStatement st = connection.prepareStatement(SQL.COUNT.command)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
@@ -162,26 +155,25 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     enum SQL {
-        INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
-                "VALUES (?,?,?,?,?);"),
+        INSERT("INSERT INTO projects (name, description, status, cost) " +
+                "VALUES (?,?,?,?);"),
 
-        SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary " +
-                "FROM developers " +
+        SELECT_ALL ("SELECT id, name, description, status, cost " +
+                "FROM projects " +
                 "ORDER BY id"),
 
-        SELECT_BY_ID("SELECT id, first_name, last_name, sex, company_id, salary FROM developers " +
+        SELECT_BY_ID("SELECT id, name, description, status, cost FROM projects " +
                 "WHERE id = ?;"),
 
-        UPDATE("UPDATE developers " +
-                "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +
+        UPDATE("UPDATE projects " +
+                "SET name = ?, description = ?, status = ?, cost = ? " +
                 "WHERE id = ?;"),
 
-        DELETE_BY_ID("DELETE FROM developers WHERE id = ?;"),
+        DELETE_BY_ID("DELETE FROM projects WHERE id = ?;"),
 
-        DELETE("DELETE FROM developers " +
-                "WHERE first_name = ? AND last_name = ?;"),
+        DELETE_BY_NAME("DELETE FROM projects WHERE name = ?;"),
 
-        COUNT("SELECT count(id) FROM developers;");
+        COUNT("SELECT count(id) FROM projects;");
 
         SQL(String command) {
             this.command = command;
