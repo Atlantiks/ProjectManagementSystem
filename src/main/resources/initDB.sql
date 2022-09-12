@@ -27,9 +27,9 @@ CREATE TABLE skills
 CREATE TABLE projects
 (
     id          SERIAL PRIMARY KEY,
-    name        VARCHAR UNIQUE,
+    name        VARCHAR UNIQUE NOT NULL,
     description TEXT,
-    status      TEXT CHECK (status IN ('Active', 'Inactive', 'Discontinued'))
+    status      TEXT CHECK (status IN ('Active', 'Inactive', 'Discontinued', 'Not commissioned'))
 );
 
 CREATE TABLE customers
