@@ -12,6 +12,7 @@ CREATE TABLE developers
     last_name  VARCHAR NOT NULL,
     sex        CHAR(1) NOT NULL,
     company_id INT REFERENCES companies(id),
+    salary     NUMERIC,
     UNIQUE (first_name, last_name)
 );
 
@@ -29,7 +30,8 @@ CREATE TABLE projects
     id          SERIAL PRIMARY KEY,
     name        VARCHAR UNIQUE NOT NULL,
     description TEXT,
-    status      TEXT CHECK (status IN ('Active', 'Inactive', 'Discontinued', 'Not commissioned'))
+    status      TEXT CHECK (status IN ('Active', 'Inactive', 'Discontinued', 'Not commissioned')),
+    cost        NUMERIC
 );
 
 CREATE TABLE customers

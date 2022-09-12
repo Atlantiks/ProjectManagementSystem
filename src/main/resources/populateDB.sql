@@ -120,3 +120,15 @@ VALUES (3, 5),
        (2, 4),
        (4, 8),
        (4, 10);
+
+UPDATE developers
+SET salary = 650 + round((random() * 3350)::numeric, 2);
+
+UPDATE projects p
+SET cost = total
+FROM  (SELECT p.id, sum(d.salary) total
+            FROM developers d
+            JOIN projects_developers pd on d.id = pd.developers_id
+            JOIN projects p on pd.projects_id = p.id
+            GROUP BY p.id) AS result
+WHERE p.id = result.id;
