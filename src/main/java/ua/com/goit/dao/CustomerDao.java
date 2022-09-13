@@ -16,7 +16,6 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
 
     @Override
     public Optional<Customer> findById(Integer id) {
-        Customer customer = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -25,19 +24,19 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                customer = new Customer(
+                return Optional.of(new Customer(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("company"),
                         rs.getString("address")
-                );
+                ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(customer);
+        return Optional.empty();
     }
 
     @Override

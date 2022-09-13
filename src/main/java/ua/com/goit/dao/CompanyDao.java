@@ -16,7 +16,6 @@ public class CompanyDao implements DataAccess<Integer, Company> {
 
     @Override
     public Optional<Company> findById(Integer id) {
-        Company company = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -25,17 +24,17 @@ public class CompanyDao implements DataAccess<Integer, Company> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                company = new Company(
+                return Optional.of(new Company(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getObject("country",String.class)
-                );
+                ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(company);
+        return Optional.empty();
     }
 
     @Override

@@ -17,7 +17,6 @@ public class SkillDao implements DataAccess<Integer, Skill> {
 
     @Override
     public Optional<Skill> findById(Integer id) {
-        Skill skill = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -26,17 +25,17 @@ public class SkillDao implements DataAccess<Integer, Skill> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                skill = new Skill(
+                return Optional.of(new Skill(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("level")
-                );
+                ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(skill);
+        return Optional.empty();
     }
 
     @Override

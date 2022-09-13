@@ -18,7 +18,6 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
     @Override
     public Optional<Developer> findById(Integer id) {
-        Developer dev = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -27,19 +26,19 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                dev = new Developer(
+                return Optional.of(new Developer(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("sex"),
                         rs.getObject("company_id",Integer.class),
-                        rs.getObject("salary", BigDecimal.class));
+                        rs.getObject("salary", BigDecimal.class)));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(dev);
+        return Optional.empty();
     }
 
     @Override

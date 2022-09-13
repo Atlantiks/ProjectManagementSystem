@@ -18,7 +18,6 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
     @Override
     public Optional<Project> findById(Integer id) {
-        Project project = null;
         String query = SQL.SELECT_BY_ID.command;
 
         try (var statement = connection.prepareStatement(query)) {
@@ -27,20 +26,20 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
             var rs = statement.getResultSet();
             if (rs.next()) {
-                project = new Project(
+                return Optional.of(new Project(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
                         rs.getBigDecimal("cost")
-                );
+                        ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
 
-        return Optional.ofNullable(project);
+        return Optional.empty();
     }
 
     @Override
