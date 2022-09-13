@@ -1,6 +1,7 @@
 package ua.com.goit.dao;
 
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -61,7 +62,15 @@ public final class ConnectionManager {
         pool = new ArrayBlockingQueue<>(poolSize);
 
         for (int i = 0; i < poolSize; i++) {
-            pool.add(INSTANCE.openConnection());
+            var connection = INSTANCE.openConnection();
+            var proxyConnection = (Connection)
+                    Proxy.newProxyInstance(
+                            ConnectionManager.class.getClassLoader(),
+                            new Class[]{Connection.class},
+                    (proxy, method, args) ->
+                            method.getName().equals("close") ?
+                            pool.add((Connection) proxy) : method.invoke(connection, args));
+            pool.add(proxyConnection);
         }
     }
 }
