@@ -22,6 +22,7 @@ public class Main {
         }
 
         projectDao.findAll().forEach(System.out::println);
+        connectionManager.closeConnectionPool();
     }
 
 }

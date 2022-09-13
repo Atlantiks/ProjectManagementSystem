@@ -86,10 +86,10 @@ public class ProjectDao implements DataAccess<Integer, Project> {
                 allProjects.add(new Project(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getObject("date_created",LocalDate.class),
+                        rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
-                        rs.getObject("cost",BigDecimal.class)));
+                        rs.getObject("cost", BigDecimal.class)));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

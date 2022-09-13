@@ -1,7 +1,6 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Company;
-import ua.com.goit.entity.Project;
 
 import java.sql.*;
 import java.util.ArrayList;
