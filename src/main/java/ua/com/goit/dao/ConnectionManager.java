@@ -5,6 +5,8 @@ import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -13,6 +15,7 @@ public final class ConnectionManager {
     private static final Properties PROPERTIES = new Properties();
     private static final ConnectionManager INSTANCE = new ConnectionManager();
     private static BlockingQueue<Connection> pool;
+    private static List<Connection> allConnections;
 
     static {
         initVariables();
@@ -60,6 +63,7 @@ public final class ConnectionManager {
         var poolSize = Integer.parseInt(PROPERTIES.getProperty("db.pool.size"));
 
         pool = new ArrayBlockingQueue<>(poolSize);
+        allConnections = new ArrayList<>(poolSize);
 
         for (int i = 0; i < poolSize; i++) {
             var connection = INSTANCE.openConnection();
@@ -71,6 +75,17 @@ public final class ConnectionManager {
                             method.getName().equals("close") ?
                             pool.add((Connection) proxy) : method.invoke(connection, args));
             pool.add(proxyConnection);
+            allConnections.add(connection);
         }
+    }
+
+    public void closeConnectionPool() {
+        allConnections.forEach(connection -> {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 }

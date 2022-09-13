@@ -4,6 +4,7 @@ import ua.com.goit.entity.Project;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class ProjectDao implements DataAccess<Integer, Project> {
                 project = new Project(
                         rs.getInt("id"),
                         rs.getString("name"),
+                        rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
                         rs.getBigDecimal("cost")
@@ -46,10 +48,11 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         String query = SQL.INSERT.command;
 
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1,project.getName());
-            statement.setObject(2,project.getDescription());
-            statement.setObject(3,project.getStatus());
-            statement.setObject(4,project.getCost());
+            statement.setString(1,project.getName());
+            statement.setObject(2,project.getDate_created());
+            statement.setObject(3,project.getDescription());
+            statement.setObject(4,project.getStatus());
+            statement.setObject(5,project.getCost());
 
             int resultRows = statement.executeUpdate();
 
@@ -83,8 +86,9 @@ public class ProjectDao implements DataAccess<Integer, Project> {
                 allProjects.add(new Project(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getObject("description",String.class),
-                        rs.getObject("status",String.class),
+                        rs.getObject("date_created",LocalDate.class),
+                        rs.getString("description"),
+                        rs.getString("status"),
                         rs.getObject("cost",BigDecimal.class)));
             }
         } catch (Exception e) {
@@ -130,11 +134,12 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1,project.getName());
-            statement.setObject(2,project.getDescription(),Types.VARCHAR);
-            statement.setObject(3,project.getStatus(),Types.VARCHAR);
-            statement.setObject(4,project.getCost(),Types.NUMERIC);
+            statement.setObject(2,project.getDate_created(),Types.DATE);
+            statement.setObject(3,project.getDescription(),Types.VARCHAR);
+            statement.setObject(4,project.getStatus(),Types.VARCHAR);
+            statement.setObject(5,project.getCost(),Types.NUMERIC);
 
-            statement.setInt(5,project.getId());
+            statement.setInt(6,project.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -156,18 +161,18 @@ public class ProjectDao implements DataAccess<Integer, Project> {
     }
 
     enum SQL {
-        INSERT("INSERT INTO projects (name, description, status, cost) " +
-                "VALUES (?,?,?,?)"),
+        INSERT("INSERT INTO projects (name, date_created, description, status, cost) " +
+                "VALUES (?,?,?,?,?)"),
 
-        SELECT_ALL ("SELECT id, name, description, status, cost " +
+        SELECT_ALL ("SELECT id, name, date_created, description, status, cost " +
                 "FROM projects " +
                 "ORDER BY id"),
 
-        SELECT_BY_ID("SELECT id, name, description, status, cost FROM projects " +
+        SELECT_BY_ID("SELECT id, name, date_created, description, status, cost FROM projects " +
                 "WHERE id = ?"),
 
         UPDATE("UPDATE projects " +
-                "SET name = ?, description = ?, status = ?, cost = ? " +
+                "SET name = ?, date_created = ?, description = ?, status = ?, cost = ? " +
                 "WHERE id = ?"),
 
         DELETE_BY_ID("DELETE FROM projects WHERE id = ?"),

@@ -3,9 +3,8 @@ package ua.com.goit;
 import ua.com.goit.dao.*;
 import ua.com.goit.entity.*;
 
-import java.sql.Connection;
-import java.util.List;
-import java.util.Optional;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,10 +17,11 @@ public class Main {
         DataAccess<Integer, Customer> customerDao = new CustomerDao(connection);
         DataAccess<Integer, Skill> skillDao = new SkillDao(connection);
 
-        skillDao.update(new Skill(7,"C#","Founder"));
+        for (int i = 0; i < 22; i++) {
+            projectDao.removeById(i);
+        }
 
-        skillDao.findAll().forEach(System.out::println);
-
+        projectDao.findAll().forEach(System.out::println);
     }
 
 }

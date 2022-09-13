@@ -7,19 +7,22 @@ VALUES ('Apple', 'United States'),
        ('ABB', 'Swiss'),
        ('Symantec', 'United States');
 
-INSERT INTO projects (name, description, status)
-VALUES ('iOS Development', 'develops operating system for iPhones, iPads', 'Active'),
-       ('OS X Development', 'develops operating system for iMacs, MacBooks', 'Discontinued'),
-       ('Mac OS Development', 'develops operating system for iPhones, iPads', 'Active'),
-       ('Android OS Development', 'develops operating system for all android-run phones', 'Active'),
-       ('Google Search Website', 'develops google.com search engine', 'Active'),
-       ('Google Talk Development', 'develops voice and text messenger', 'Discontinued'),
-       ('Google Techs Development', 'develops some technical software', 'Discontinued'),
-       ('NORCONTROL Development', 'develops integrated monitoring alarming and controlling system for ships',
+INSERT INTO projects (name, date_created, description, status)
+VALUES ('iOS Development', '2002-01-01','develops operating system for iPhones, iPads', 'Active'),
+       ('OS X Development','2002-01-01', 'develops operating system for iMacs, MacBooks', 'Discontinued'),
+       ('Mac OS Development','2002-01-01', 'develops operating system for iPhones, iPads', 'Active'),
+       ('Android OS Development','2002-01-01', 'develops operating system for all android-run phones', 'Active'),
+       ('Google Search Website','2002-01-01', 'develops google.com search engine', 'Active'),
+       ('Google Talk Development','2002-01-01', 'develops voice and text messenger', 'Discontinued'),
+       ('Google Techs Development','2002-01-01', 'develops some technical software', 'Discontinued'),
+       ('NORCONTROL Development','2002-01-01', 'develops integrated monitoring alarming and controlling system for ships',
         'Inactive'),
-       ('Simos IMAC', 'develops integrated monitoring alarming and controlling system for ships', 'Active'),
-       ('Kongsberg DP3 Development', 'develops dynamical positioning system (DP) for ships', 'Active'),
-       ('NS5 Planned Management System', 'develops multipurpose maintenance plan, control of its execution etc for power plants', 'Active');
+       ('Simos IMAC','2002-01-01', 'develops integrated monitoring alarming and controlling system for ships', 'Active'),
+       ('Kongsberg DP3 Development', '2002-01-01','develops dynamical positioning system (DP) for ships', 'Active'),
+       ('NS5 Planned Management System', '2002-01-01','develops multipurpose maintenance plan, control of its execution etc for power plants', 'Active');
+
+INSERT INTO projects (name, description, status)
+VALUES ('GOIT.ua Java DEveloper 6','develops web pet project', 'Not commissioned');
 
 INSERT INTO companies_projects
 VALUES (1, 1),
