@@ -3,9 +3,6 @@ package ua.com.goit;
 import ua.com.goit.dao.*;
 import ua.com.goit.entity.*;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 public class Main {
     public static void main(String[] args) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();

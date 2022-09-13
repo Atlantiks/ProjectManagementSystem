@@ -1,15 +1,13 @@
 package ua.com.goit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Data
 public class Project {
     private Integer id;

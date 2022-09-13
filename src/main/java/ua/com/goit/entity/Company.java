@@ -1,12 +1,10 @@
 package ua.com.goit.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
+@NoArgsConstructor
 @Data
 public class Company {
     private Integer id;
