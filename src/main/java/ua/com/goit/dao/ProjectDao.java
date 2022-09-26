@@ -203,16 +203,16 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
             if (resultSet.next()) {
                 System.out.println("\nДата создания - название проекта - количество разработчиков на этом проекте.");
-                System.out.print(resultSet.getDate(1).toLocalDate() + " ");
-                System.out.print(resultSet.getString(2) + " ");
+                System.out.print(resultSet.getDate(1).toLocalDate() + " - ");
+                System.out.print(resultSet.getString(2) + " - ");
                 System.out.print(resultSet.getInt(3) + "\n");
             } else {
                 System.out.println("Информация не найдена");
             }
 
             while (resultSet.next()) {
-                System.out.print(resultSet.getDate(1).toLocalDate() + " ");
-                System.out.print(resultSet.getString(2) + " ");
+                System.out.print(resultSet.getDate(1).toLocalDate() + " - ");
+                System.out.print(resultSet.getString(2) + " - ");
                 System.out.print(resultSet.getInt(3) + "\n");
             }
         } catch (SQLException e) {

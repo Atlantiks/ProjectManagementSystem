@@ -78,7 +78,7 @@ public final class ConnectionManager {
             allConnections.add(connection);
         }
 
-        System.out.println("Пулл соединений создан");
+        System.out.println("Пулл соединений создан\n");
     }
 
     public void closeConnectionPool() {
@@ -89,6 +89,6 @@ public final class ConnectionManager {
                 System.out.println(e.getMessage());
             }
         });
-        System.out.println("Пулл соединений закрыт");
+        System.out.println("\nПулл соединений закрыт");
     }
 }

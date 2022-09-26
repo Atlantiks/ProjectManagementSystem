@@ -17,19 +17,28 @@ public class Main {
         SkillDao skillDao = new SkillDao(connectionManager, devDao);
 
         //task #1
-        var devsInProject = projectDao.getListOfInvolvedDevelopers(6);
-
-        //task #1
-        System.out.println(devsInProject.stream().map(Developer::getSalary)
+        Integer projectId = 1;
+        var devsInProject = projectDao.getListOfInvolvedDevelopers(projectId);
+        System.out.printf("Список всех разработчиков проекта с id = %s\n", "\033[0;93m" + projectId + "\033[0m");
+        devsInProject.forEach(System.out::println);
+        //task #2
+        System.out.printf("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
+                devsInProject.stream().map(Developer::getSalary)
                 .reduce(BigDecimal.valueOf(0.0), BigDecimal::add));
 
-
-        var x = skillDao.getDevelopersWithSkillName("Java");
+        //task #3
+        String skillName = "Java";
+        System.out.printf("\nСписок всех разработчиков проекта cо знанием %s\n", "\033[0;93m" + skillName + "\033[0m");
+        var x = skillDao.getDevelopersWithSkillName(skillName);
         x.forEach(System.out::println);
 
-        var y = skillDao.getDevelopersWithSkillLevel("Star");
+        //task #4
+        String level = "middle";
+        System.out.printf("\nСписок всех разработчиков уровня %s\n", "\033[0;93m" + level + "\033[0m");
+        var y = skillDao.getDevelopersWithSkillLevel(level);
         y.forEach(System.out::println);
 
+        //task #5
         projectDao.printProjectInfo();
 
         connectionManager.closeConnectionPool();
