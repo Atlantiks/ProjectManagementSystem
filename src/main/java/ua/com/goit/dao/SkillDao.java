@@ -1,6 +1,6 @@
 package ua.com.goit.dao;
 
-import ua.com.goit.entity.Company;
+import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 
 import java.sql.*;
@@ -10,9 +10,11 @@ import java.util.Optional;
 
 public class SkillDao implements DataAccess<Integer, Skill> {
     private Connection connection;
+    private final DataAccess<Integer, Developer> developerDao;
 
-    public SkillDao(Connection connection) {
+    public SkillDao(Connection connection, DataAccess<Integer, Developer> developerDao) {
         this.connection = connection;
+        this.developerDao = developerDao;
     }
 
     @Override
@@ -43,12 +45,12 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         String query = SQL.INSERT.command;
 
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1,skill.getName());
-            statement.setObject(2,skill.getLevel());
+            statement.setObject(1, skill.getName());
+            statement.setObject(2, skill.getLevel());
 
             statement.executeUpdate();
 
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
                     skill.setId(generatedKey.getInt(1));
                 } else {
@@ -94,7 +96,7 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         int updatedRows;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,skill.getName());
+            statement.setString(1, skill.getName());
             updatedRows = statement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -123,9 +125,9 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         int updatedRows;
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,skill.getName());
-            statement.setString(2,skill.getLevel());
-            statement.setInt(3,skill.getId());
+            statement.setString(1, skill.getName());
+            statement.setString(2, skill.getLevel());
+            statement.setInt(3, skill.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -145,11 +147,59 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         return 0;
     }
 
+    public List<Developer> getDevelopersWithSkillName(String skillName) {
+        String query = SQL.GET_ALL_DEVS_BY_SKILL_NAME.command;
+        List<Integer> developersIds = new ArrayList<>();
+        List<Developer> devs = new ArrayList<>();
+
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setString(1, skillName);
+            var resultSet = st.executeQuery();
+
+            while (resultSet.next()) {
+                developersIds.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        developersIds.stream().map(developerDao::findById)
+                .forEach(developer -> developer.ifPresent(devs::add));
+
+        if (devs.size() == 0) System.out.printf("Разработчиков со знанием %s не найдено\n", skillName);
+
+        return devs;
+    }
+
+    public List<Developer> getDevelopersWithSkillLevel(String skillLevel) {
+        String query = SQL.GET_ALL_DEVS_BY_SKILL_LEVEL.command;
+        List<Integer> developersIds = new ArrayList<>();
+        List<Developer> devs = new ArrayList<>();
+
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setString(1, skillLevel);
+            var resultSet = st.executeQuery();
+
+            while (resultSet.next()) {
+                developersIds.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        developersIds.stream().map(developerDao::findById)
+                .forEach(developer -> developer.ifPresent(devs::add));
+
+        if (devs.size() == 0) System.out.printf("Разработчиков уровня %s не найдено\n", skillLevel);
+
+        return devs;
+    }
+
     enum SQL {
         INSERT("INSERT INTO skills (name, level) " +
                 "VALUES (?,?)"),
 
-        SELECT_ALL ("SELECT id, name, level " +
+        SELECT_ALL("SELECT id, name, level " +
                 "FROM skills " +
                 "ORDER BY id"),
 
@@ -164,7 +214,19 @@ public class SkillDao implements DataAccess<Integer, Skill> {
 
         DELETE_BY_NAME("DELETE FROM skills WHERE name = ?"),
 
-        COUNT("SELECT count(id) FROM skills");
+        COUNT("SELECT count(id) FROM skills"),
+
+        GET_ALL_DEVS_BY_SKILL_NAME("SELECT developers_id " +
+                "FROM skills " +
+                "LEFT JOIN developers_skills ds on skills.name = ds.skill_name and skills.level = ds.skill_level " +
+                "LEFT JOIN developers d on ds.developers_id = d.id " +
+                "WHERE skill_name ILIKE ? "),
+
+        GET_ALL_DEVS_BY_SKILL_LEVEL("SELECT DISTINCT developers_id " +
+                "FROM skills " +
+                "LEFT JOIN developers_skills ds on skills.name = ds.skill_name and skills.level = ds.skill_level " +
+                "LEFT JOIN developers d on ds.developers_id = d.id " +
+                "WHERE skill_level ILIKE ? ");
 
         SQL(String command) {
             this.command = command;

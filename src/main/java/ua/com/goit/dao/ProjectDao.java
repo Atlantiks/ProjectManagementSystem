@@ -1,5 +1,6 @@
 package ua.com.goit.dao;
 
+import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 
 import java.math.BigDecimal;
@@ -11,9 +12,12 @@ import java.util.Optional;
 
 public class ProjectDao implements DataAccess<Integer, Project> {
     private final Connection connection;
+    private final DataAccess<Integer, Developer> developerDao;
 
-    public ProjectDao(Connection connection) {
+    public ProjectDao(Connection connection, DataAccess<Integer, Developer> developerDao) {
+
         this.connection = connection;
+        this.developerDao = developerDao;
     }
 
     @Override
@@ -88,7 +92,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
                         rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
-                        rs.getObject("cost", BigDecimal.class)));
+                        rs.getObject("cost", BigDecimal.class)
+                ));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -159,6 +164,54 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         return 0;
     }
 
+    public List<Developer> getListOfInvolvedDevelopers(Integer id) {
+        String query = SQL.GET_ALL_DEVS.command;
+        List<Integer> developersIds = new ArrayList<>();
+        List<Developer> devs = new ArrayList<>();
+
+        try (PreparedStatement st  = connection.prepareStatement(query)) {
+            st.setInt(1,id);
+            var resultSet = st.executeQuery();
+
+            while (resultSet.next()) {
+                developersIds.add(resultSet.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        developersIds.stream().map(developerDao::findById)
+                .forEach(developer -> developer.ifPresent(devs::add));
+
+        if (devs.size() == 0) System.out.printf("Разработчиков проекта с id = %d не найдено\n", id);
+        return devs;
+    }
+
+    public void printProjectInfo() {
+        String query = SQL.GET_INFO.command;
+
+        try (PreparedStatement st  = connection.prepareStatement(query)) {
+            var resultSet = st.executeQuery();
+
+            if (resultSet.next()) {
+                System.out.println("\nДата создания - название проекта - количество разработчиков на этом проекте.");
+                System.out.print(resultSet.getDate(1).toLocalDate() + " ");
+                System.out.print(resultSet.getString(2) + " ");
+                System.out.print(resultSet.getInt(3) + "\n");
+            } else {
+                System.out.println("Информация не найдена");
+            }
+
+            while (resultSet.next()) {
+                System.out.print(resultSet.getDate(1).toLocalDate() + " ");
+                System.out.print(resultSet.getString(2) + " ");
+                System.out.print(resultSet.getInt(3) + "\n");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     enum SQL {
         INSERT("INSERT INTO projects (name, date_created, description, status, cost) " +
                 "VALUES (?,?,?,?,?)"),
@@ -178,7 +231,19 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
         DELETE_BY_NAME("DELETE FROM projects WHERE name = ?"),
 
-        COUNT("SELECT count(id) FROM projects");
+        COUNT("SELECT count(id) FROM projects"),
+
+        GET_ALL_DEVS("SELECT developers_id\n" +
+                "FROM projects\n" +
+                "LEFT JOIN projects_developers pd on projects.id = pd.projects_id\n" +
+                "LEFT JOIN developers d on pd.developers_id = d.id\n" +
+                "WHERE projects_id = ?"),
+
+        GET_INFO("SELECT p.date_created, p.name, count(d.id) as number_of_developers\n" +
+                "FROM projects p\n" +
+                "LEFT JOIN projects_developers pd on p.id = pd.projects_id\n" +
+                "LEFT JOIN developers d on pd.developers_id = d.id\n" +
+                "GROUP BY p.date_created, p.name");
 
         SQL(String command) {
             this.command = command;
