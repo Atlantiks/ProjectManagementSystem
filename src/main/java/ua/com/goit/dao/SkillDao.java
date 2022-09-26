@@ -8,13 +8,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SkillDao implements DataAccess<Integer, Skill> {
-    private ConnectionManager connectionManager;
-    private final DataAccess<Integer, Developer> developerDao;
+public final class SkillDao implements DataAccess<Integer, Skill> {
+    private static final SkillDao SKILL_DAO = new SkillDao();
+    private static final ConnectionManager connectionManager = ConnectionManager.getInstance();
+    private static final DeveloperDao developerDao = DeveloperDao.getInstance();
 
-    public SkillDao(ConnectionManager connectionManager, DataAccess<Integer, Developer> developerDao) {
-        this.connectionManager = connectionManager;
-        this.developerDao = developerDao;
+    private SkillDao() {
+    }
+
+    public static SkillDao getInstance() {
+        return SKILL_DAO;
     }
 
     @Override

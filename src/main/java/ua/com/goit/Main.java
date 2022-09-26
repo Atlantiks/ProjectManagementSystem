@@ -9,18 +9,18 @@ public class Main {
     public static void main(String[] args) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
 
-        DeveloperDao devDao = new DeveloperDao(connectionManager);
-
-        ProjectDao projectDao = new ProjectDao(connectionManager, devDao);
-        CompanyDao companyDao = new CompanyDao(connectionManager);
-        CustomerDao customerDao = new CustomerDao(connectionManager);
-        SkillDao skillDao = new SkillDao(connectionManager, devDao);
+        DeveloperDao devDao = DeveloperDao.getInstance();
+        ProjectDao projectDao = ProjectDao.getInstance();
+        CompanyDao companyDao = CompanyDao.getInstance();
+        CustomerDao customerDao = CustomerDao.getInstance();
+        SkillDao skillDao = SkillDao.getInstance();
 
         //task #1
         Integer projectId = 1;
         var devsInProject = projectDao.getListOfInvolvedDevelopers(projectId);
         System.out.printf("Список всех разработчиков проекта с id = %s\n", "\033[0;93m" + projectId + "\033[0m");
         devsInProject.forEach(System.out::println);
+
         //task #2
         System.out.printf("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
                 devsInProject.stream().map(Developer::getSalary)

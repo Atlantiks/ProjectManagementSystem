@@ -10,13 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ProjectDao implements DataAccess<Integer, Project> {
-    private final ConnectionManager connectionManager;
-    private final DataAccess<Integer, Developer> developerDao;
+public final class ProjectDao implements DataAccess<Integer, Project> {
+    private static final ProjectDao PROJECT_DAO = new ProjectDao();
+    private static final ConnectionManager connectionManager = ConnectionManager.getInstance();
+    private static final DeveloperDao developerDao = DeveloperDao.getInstance();
 
-    public ProjectDao(ConnectionManager connectionManager, DataAccess<Integer, Developer> developerDao) {
-        this.connectionManager = connectionManager;
-        this.developerDao = developerDao;
+    private ProjectDao() {
+    }
+
+    public static ProjectDao getInstance() {
+        return PROJECT_DAO;
     }
 
     @Override

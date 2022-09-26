@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DeveloperDao implements DataAccess<Integer, Developer> {
-    private final ConnectionManager connectionManager;
+public final class DeveloperDao implements DataAccess<Integer, Developer> {
+    private static final DeveloperDao DEV_DAO = new DeveloperDao();
+    private static final ConnectionManager connectionManager = ConnectionManager.getInstance();
 
+    private DeveloperDao() {
+    }
 
-    public DeveloperDao(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
+    public static DeveloperDao getInstance() {
+        return DEV_DAO;
     }
 
     @Override

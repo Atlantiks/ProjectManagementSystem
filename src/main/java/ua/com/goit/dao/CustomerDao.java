@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerDao implements DataAccess<Integer, Customer> {
-    private final ConnectionManager connectionManager;
+public final class CustomerDao implements DataAccess<Integer, Customer> {
+    private static final CustomerDao CUSTOMER_DAO = new CustomerDao();
+    private final ConnectionManager connectionManager = ConnectionManager.getInstance();
 
-    public CustomerDao(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
+    private CustomerDao() {
+    }
+
+    public static CustomerDao getInstance() {
+        return CUSTOMER_DAO;
     }
 
     @Override
