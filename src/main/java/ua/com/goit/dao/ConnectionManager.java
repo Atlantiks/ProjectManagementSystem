@@ -77,6 +77,8 @@ public final class ConnectionManager {
             pool.add(proxyConnection);
             allConnections.add(connection);
         }
+
+        System.out.println("Пулл соединений создан");
     }
 
     public void closeConnectionPool() {
@@ -87,5 +89,6 @@ public final class ConnectionManager {
                 System.out.println(e.getMessage());
             }
         });
+        System.out.println("Пулл соединений закрыт");
     }
 }

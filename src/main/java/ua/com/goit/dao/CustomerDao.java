@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerDao implements DataAccess<Integer, Customer> {
-    private final Connection connection;
+    private final ConnectionManager connectionManager;
 
-    public CustomerDao(Connection connection) {
-        this.connection = connection;
+    public CustomerDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public Optional<Customer> findById(Integer id) {
         String query = SQL.SELECT_BY_ID.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeQuery();
 
@@ -43,7 +44,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
     public Customer save(Customer customer) {
         String query = SQL.INSERT.command;
 
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1,customer.getFirstName());
             statement.setString(2,customer.getLastName());
             statement.setObject(3,customer.getCompany());
@@ -73,7 +75,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
         List<Customer> allCustomers = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -97,7 +100,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
 
         int updatedRows;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1,customer.getFirstName());
             statement.setString(2,customer.getLastName());
             updatedRows = statement.executeUpdate();
@@ -113,7 +117,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
         String query = SQL.DELETE_BY_ID.command;
         int result;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
         } catch (Exception e) {
@@ -127,7 +132,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
         var query = SQL.UPDATE.command;
         int updatedRows = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1,customer.getFirstName());
             statement.setString(2,customer.getLastName());
             statement.setObject(3,customer.getCompany(),Types.VARCHAR);
@@ -146,7 +152,8 @@ public class CustomerDao implements DataAccess<Integer, Customer> {
     @Override
     public int count() {
         String query = SQL.COUNT.command;
-        try (PreparedStatement st = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

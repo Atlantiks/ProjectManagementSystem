@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class CompanyDao implements DataAccess<Integer, Company> {
-    private final Connection connection;
+    private final ConnectionManager connectionManager;
 
-    public CompanyDao(Connection connection) {
-        this.connection = connection;
+    public CompanyDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public Optional<Company> findById(Integer id) {
         String query = SQL.SELECT_BY_ID.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query);) {
             statement.setInt(1, id);
             statement.executeQuery();
 
@@ -27,7 +28,7 @@ public class CompanyDao implements DataAccess<Integer, Company> {
                 return Optional.of(new Company(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getObject("country",String.class)
+                        rs.getObject("country", String.class)
                 ));
             }
         } catch (Exception e) {
@@ -41,13 +42,14 @@ public class CompanyDao implements DataAccess<Integer, Company> {
     public Company save(Company company) {
         String query = SQL.INSERT.command;
 
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1,company.getName());
-            statement.setObject(2,company.getCountry());
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setObject(1, company.getName());
+            statement.setObject(2, company.getCountry());
 
             int resultRows = statement.executeUpdate();
 
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
                     company.setId(generatedKey.getInt(1));
                 } else {
@@ -69,7 +71,8 @@ public class CompanyDao implements DataAccess<Integer, Company> {
         List<Company> allCompanies = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -77,7 +80,7 @@ public class CompanyDao implements DataAccess<Integer, Company> {
                 allCompanies.add(new Company(
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getObject("country",String.class))
+                        rs.getObject("country", String.class))
                 );
             }
         } catch (Exception e) {
@@ -92,8 +95,9 @@ public class CompanyDao implements DataAccess<Integer, Company> {
 
         int updatedRows;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,company.getName());
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, company.getName());
             updatedRows = statement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -107,7 +111,8 @@ public class CompanyDao implements DataAccess<Integer, Company> {
         String query = SQL.DELETE_BY_ID.command;
         int result;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
         } catch (Exception e) {
@@ -121,11 +126,12 @@ public class CompanyDao implements DataAccess<Integer, Company> {
         var query = SQL.UPDATE.command;
         int updatedRows;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,company.getName());
-            statement.setObject(2,company.getCountry(),Types.VARCHAR);
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, company.getName());
+            statement.setObject(2, company.getCountry(), Types.VARCHAR);
 
-            statement.setInt(3,company.getId());
+            statement.setInt(3, company.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -137,7 +143,8 @@ public class CompanyDao implements DataAccess<Integer, Company> {
 
     @Override
     public int count() {
-        try (PreparedStatement st = connection.prepareStatement(SQL.COUNT.command)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(SQL.COUNT.command)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -149,7 +156,7 @@ public class CompanyDao implements DataAccess<Integer, Company> {
         INSERT("INSERT INTO companies (name, country) " +
                 "VALUES (?,?)"),
 
-        SELECT_ALL ("SELECT id, name, country " +
+        SELECT_ALL("SELECT id, name, country " +
                 "FROM companies " +
                 "ORDER BY id"),
 

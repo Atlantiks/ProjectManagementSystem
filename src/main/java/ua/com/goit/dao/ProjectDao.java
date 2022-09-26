@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ProjectDao implements DataAccess<Integer, Project> {
-    private final Connection connection;
+    private final ConnectionManager connectionManager;
     private final DataAccess<Integer, Developer> developerDao;
 
-    public ProjectDao(Connection connection, DataAccess<Integer, Developer> developerDao) {
-
-        this.connection = connection;
+    public ProjectDao(ConnectionManager connectionManager, DataAccess<Integer, Developer> developerDao) {
+        this.connectionManager = connectionManager;
         this.developerDao = developerDao;
     }
 
@@ -24,7 +23,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
     public Optional<Project> findById(Integer id) {
         String query = SQL.SELECT_BY_ID.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeQuery();
 
@@ -50,7 +50,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
     public Project save(Project project) {
         String query = SQL.INSERT.command;
 
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1,project.getName());
             statement.setObject(2,project.getDate_created());
             statement.setObject(3,project.getDescription());
@@ -81,7 +82,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         List<Project> allProjects = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -107,7 +109,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
 
         int updatedRows = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1,project.getName());
             updatedRows = statement.executeUpdate();
         } catch (Exception e) {
@@ -122,7 +125,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         String query = SQL.DELETE_BY_ID.command;
         int result;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
         } catch (Exception e) {
@@ -136,7 +140,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         var query = SQL.UPDATE.command;
         int updatedRows = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1,project.getName());
             statement.setObject(2,project.getDate_created(),Types.DATE);
             statement.setObject(3,project.getDescription(),Types.VARCHAR);
@@ -156,7 +161,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
     @Override
     public int count() {
         String query = SQL.COUNT.command;
-        try (PreparedStatement st = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -169,7 +175,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
         List<Integer> developersIds = new ArrayList<>();
         List<Developer> devs = new ArrayList<>();
 
-        try (PreparedStatement st  = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st  = connection.prepareStatement(query)) {
             st.setInt(1,id);
             var resultSet = st.executeQuery();
 
@@ -190,7 +197,8 @@ public class ProjectDao implements DataAccess<Integer, Project> {
     public void printProjectInfo() {
         String query = SQL.GET_INFO.command;
 
-        try (PreparedStatement st  = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st  = connection.prepareStatement(query)) {
             var resultSet = st.executeQuery();
 
             if (resultSet.next()) {

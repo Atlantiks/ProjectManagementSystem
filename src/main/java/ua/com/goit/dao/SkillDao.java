@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class SkillDao implements DataAccess<Integer, Skill> {
-    private Connection connection;
+    private ConnectionManager connectionManager;
     private final DataAccess<Integer, Developer> developerDao;
 
-    public SkillDao(Connection connection, DataAccess<Integer, Developer> developerDao) {
-        this.connection = connection;
+    public SkillDao(ConnectionManager connectionManager, DataAccess<Integer, Developer> developerDao) {
+        this.connectionManager = connectionManager;
         this.developerDao = developerDao;
     }
 
@@ -21,7 +21,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
     public Optional<Skill> findById(Integer id) {
         String query = SQL.SELECT_BY_ID.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeQuery();
 
@@ -44,7 +45,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
     public Skill save(Skill skill) {
         String query = SQL.INSERT.command;
 
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, skill.getName());
             statement.setObject(2, skill.getLevel());
 
@@ -72,7 +74,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         List<Skill> allSkills = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -95,7 +98,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
 
         int updatedRows;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1, skill.getName());
             updatedRows = statement.executeUpdate();
         } catch (Exception e) {
@@ -110,7 +114,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         String query = SQL.DELETE_BY_ID.command;
         int result;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
         } catch (Exception e) {
@@ -124,7 +129,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         String query = SQL.UPDATE.command;
         int updatedRows;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setString(1, skill.getName());
             statement.setString(2, skill.getLevel());
             statement.setInt(3, skill.getId());
@@ -139,7 +145,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
 
     @Override
     public int count() {
-        try (PreparedStatement st = connection.prepareStatement(SQL.COUNT.command)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(SQL.COUNT.command)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -152,7 +159,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         List<Integer> developersIds = new ArrayList<>();
         List<Developer> devs = new ArrayList<>();
 
-        try (PreparedStatement st = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
             st.setString(1, skillName);
             var resultSet = st.executeQuery();
 
@@ -176,7 +184,8 @@ public class SkillDao implements DataAccess<Integer, Skill> {
         List<Integer> developersIds = new ArrayList<>();
         List<Developer> devs = new ArrayList<>();
 
-        try (PreparedStatement st = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
             st.setString(1, skillLevel);
             var resultSet = st.executeQuery();
 

@@ -9,18 +9,19 @@ import java.util.List;
 import java.util.Optional;
 
 public class DeveloperDao implements DataAccess<Integer, Developer> {
-    private final Connection connection;
+    private final ConnectionManager connectionManager;
 
 
-    public DeveloperDao(Connection connection) {
-        this.connection = connection;
+    public DeveloperDao(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
     }
 
     @Override
     public Optional<Developer> findById(Integer id) {
         String query = SQL.SELECT_BY_ID.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeQuery();
 
@@ -31,7 +32,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("sex"),
-                        rs.getObject("company_id",Integer.class),
+                        rs.getObject("company_id", Integer.class),
                         rs.getObject("salary", BigDecimal.class)));
             }
         } catch (Exception e) {
@@ -45,16 +46,17 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
     public Developer save(Developer developer) {
         String query = SQL.INSERT.command;
 
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
-            statement.setString(3,developer.getSex());
-            statement.setObject(4,developer.getCompanyId());
-            statement.setBigDecimal(5,developer.getSalary());
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
+            statement.setString(3, developer.getSex());
+            statement.setObject(4, developer.getCompanyId());
+            statement.setBigDecimal(5, developer.getSalary());
 
             var x = statement.executeUpdate();
 
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
                     developer.setId(generatedKey.getInt(1));
                 } else {
@@ -76,7 +78,8 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         List<Developer> allDevs = new ArrayList<>();
         String query = SQL.SELECT_ALL.command;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.executeQuery();
 
             var rs = statement.getResultSet();
@@ -86,7 +89,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("sex"),
-                        rs.getObject("company_id",Integer.class),
+                        rs.getObject("company_id", Integer.class),
                         rs.getObject("salary", BigDecimal.class)));
             }
         } catch (Exception e) {
@@ -101,9 +104,10 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
         int updatedRows = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
 
             updatedRows = statement.executeUpdate();
 
@@ -119,7 +123,8 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         String query = SQL.DELETE_BY_ID.command;
         int result;
 
-        try (var statement = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
         } catch (Exception e) {
@@ -133,14 +138,15 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         String query = SQL.UPDATE.command;
         int updatedRows = 0;
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1,developer.getFirstName());
-            statement.setString(2,developer.getLastName());
-            statement.setString(3,developer.getSex());
-            statement.setObject(4,developer.getCompanyId(),Types.INTEGER);
-            statement.setBigDecimal(5,developer.getSalary());
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
+            statement.setString(3, developer.getSex());
+            statement.setObject(4, developer.getCompanyId(), Types.INTEGER);
+            statement.setBigDecimal(5, developer.getSalary());
 
-            statement.setInt(6,developer.getId());
+            statement.setInt(6, developer.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -152,7 +158,8 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
 
     public int count() {
         String query = SQL.COUNT.command;
-        try (PreparedStatement st = connection.prepareStatement(query)) {
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -164,7 +171,7 @@ public class DeveloperDao implements DataAccess<Integer, Developer> {
         INSERT("INSERT INTO developers (first_name, last_name, sex, company_id, salary) " +
                 "VALUES (?,?,?,?,?)"),
 
-        SELECT_ALL ("SELECT id, first_name, last_name, sex, company_id, salary " +
+        SELECT_ALL("SELECT id, first_name, last_name, sex, company_id, salary " +
                 "FROM developers " +
                 "ORDER BY id"),
 

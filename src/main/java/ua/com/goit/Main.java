@@ -8,14 +8,13 @@ import java.math.BigDecimal;
 public class Main {
     public static void main(String[] args) {
         ConnectionManager connectionManager = ConnectionManager.getInstance();
-        var connection = connectionManager.getConnection();
 
-        DeveloperDao devDao = new DeveloperDao(connection);
+        DeveloperDao devDao = new DeveloperDao(connectionManager);
 
-        ProjectDao projectDao = new ProjectDao(connection, devDao);
-        CompanyDao companyDao = new CompanyDao(connection);
-        CustomerDao customerDao = new CustomerDao(connection);
-        SkillDao skillDao = new SkillDao(connection, devDao);
+        ProjectDao projectDao = new ProjectDao(connectionManager, devDao);
+        CompanyDao companyDao = new CompanyDao(connectionManager);
+        CustomerDao customerDao = new CustomerDao(connectionManager);
+        SkillDao skillDao = new SkillDao(connectionManager, devDao);
 
         //task #1
         var devsInProject = projectDao.getListOfInvolvedDevelopers(6);
