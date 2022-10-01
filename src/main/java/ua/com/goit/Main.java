@@ -3,6 +3,7 @@ package ua.com.goit;
 import ua.com.goit.command.Command;
 import ua.com.goit.command.DeveloperMenu;
 import ua.com.goit.command.Help;
+import ua.com.goit.command.developer.GetDevelopersWithSkillLevel;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.entity.*;
@@ -22,15 +23,15 @@ public class Main {
 
         commands.add(new Help(view));
         commands.add(new DeveloperMenu(view));
-
+        commands.add(new GetDevelopersWithSkillLevel(view));
         //commands.add(new CreateDeveloper(view));
-        //commands.add(new GetDevelopersWithSkillLevel(view));
 
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
 
         pms.run();
 
         ConnectionManager connectionManager = ConnectionManager.getInstance();
+
         DeveloperDao devDao = DeveloperDao.getInstance();
         ProjectDao projectDao = ProjectDao.getInstance();
         CompanyDao companyDao = CompanyDao.getInstance();
