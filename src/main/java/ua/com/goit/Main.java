@@ -1,14 +1,36 @@
 package ua.com.goit;
 
+import ua.com.goit.command.Command;
+import ua.com.goit.command.DeveloperMenu;
+import ua.com.goit.command.Help;
+import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.entity.*;
+import ua.com.goit.view.Console;
+import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ConnectionManager connectionManager = ConnectionManager.getInstance();
+        Scanner scanner = new Scanner(System.in);
+        View view = new Console(scanner);
+        List<Command> commands = new ArrayList<>();
 
+        commands.add(new Help(view));
+        commands.add(new DeveloperMenu(view));
+
+        //commands.add(new CreateDeveloper(view));
+        //commands.add(new GetDevelopersWithSkillLevel(view));
+
+        ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
+
+        pms.run();
+
+        ConnectionManager connectionManager = ConnectionManager.getInstance();
         DeveloperDao devDao = DeveloperDao.getInstance();
         ProjectDao projectDao = ProjectDao.getInstance();
         CompanyDao companyDao = CompanyDao.getInstance();
