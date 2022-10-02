@@ -17,6 +17,7 @@ public class Help implements Command {
     public void execute() {
         view.write("===========HELP MENU===========");
         view.write(String.format("Type %s to see tasks for developers", "\033[0;93m" + DeveloperMenu.DEV_COMMANDS + "\033[0m"));
-        view.write(String.format("Type %s to see all commands", Help.HELP));
+        view.write(String.format("Type %s to see tasks for projects", "\033[0;93m" + ProjectMenu.PROJECT_COMMANDS + "\033[0m"));
+        view.write("===============================");
     }
 }
