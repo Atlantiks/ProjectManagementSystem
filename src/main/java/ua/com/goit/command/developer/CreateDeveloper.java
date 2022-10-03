@@ -1,6 +1,5 @@
 package ua.com.goit.command.developer;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
@@ -42,7 +41,7 @@ public class CreateDeveloper implements Command {
 
         Developer newDev = new Developer(firstName, lastName, sex);
 
-        view.write("Would you like to add non-required fields? Y/N");
+        view.write("Would you like to add non-required fields? Y/N  Press ENTER for default option(N)");
 
         String userAnswer = view.read();
         userAnswer = userAnswer.isBlank() ? "N" : userAnswer.substring(0, 1).toUpperCase();
