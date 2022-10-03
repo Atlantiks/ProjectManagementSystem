@@ -206,12 +206,12 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             var resultSet = st.executeQuery();
 
             if (resultSet.next()) {
-                sb.append("\nДата создания - название проекта - количество разработчиков на этом проекте.");
+                sb.append("\nДата создания - название проекта - количество разработчиков на этом проекте.\n");
                 sb.append(resultSet.getDate(1).toLocalDate()).append(" - ");
                 sb.append(resultSet.getString(2)).append(" - ");
                 sb.append(resultSet.getInt(3)).append("\n");
             } else {
-                sb.append("Информация не найдена");
+                sb.append("Информация не найдена\n");
             }
 
             while (resultSet.next()) {
@@ -223,6 +223,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             throw new RuntimeException(e.getMessage());
         }
 
+        sb.append("\nPlease, enter next command...");
         return sb.toString();
     }
 

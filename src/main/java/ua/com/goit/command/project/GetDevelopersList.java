@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
 import ua.com.goit.dao.ProjectDao;
+import ua.com.goit.entity.Developer;
 import ua.com.goit.view.View;
 
 @RequiredArgsConstructor
@@ -29,6 +30,10 @@ public class GetDevelopersList implements Command {
         }
 
         view.write(String.format("Список всех разработчиков проекта с id = %s\n", "\033[0;93m" + projectId + "\033[0m"));
-        PROJECT_DAO.getListOfInvolvedDevelopers(projectId).forEach(System.out::println);
+        PROJECT_DAO.getListOfInvolvedDevelopers(projectId).stream()
+                .map(Developer::toString)
+                .forEach(view::write);
+
+        view.write("\nPlease, enter next command...");
     }
 }
