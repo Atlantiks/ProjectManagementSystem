@@ -37,7 +37,8 @@ public class CreateDeveloper implements Command {
         if (lastName.isBlank()) throw new BlancFieldException();
         view.write("3. Please enter new Developer's sex (M/F):");
         String sex = view.read();
-        sex = sex.isBlank() ? "M" : sex.toUpperCase().substring(0, 1);
+        if (sex.isBlank()) throw new BlancFieldException();
+        sex = sex.toUpperCase().substring(0, 1);
 
         Developer newDev = new Developer(firstName, lastName, sex);
 
@@ -66,8 +67,8 @@ public class CreateDeveloper implements Command {
         Developer savedDev = DEV_DAO.save(newDev, view);
 
         if (Objects.nonNull(savedDev.getId())) {
-            view.write("The following developer was successfully added to database:\n");
-            view.write(savedDev.toString());
+            view.write("\033[0;92mThe following developer was successfully added to database:\033[0m");
+            view.write(savedDev + "\n");
         }
     }
 }

@@ -6,7 +6,6 @@ import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.ExitException;
 import ua.com.goit.view.View;
 
-import java.sql.SQLException;
 import java.util.List;
 
 @AllArgsConstructor
