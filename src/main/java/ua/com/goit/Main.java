@@ -4,6 +4,7 @@ import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.customer.CreateCustomer;
 import ua.com.goit.command.developer.CreateDeveloper;
+import ua.com.goit.command.developer.FindDeveloperById;
 import ua.com.goit.command.developer.GetDevelopersWithSkillLevel;
 import ua.com.goit.command.developer.GetDevelopersWithSkillName;
 import ua.com.goit.command.project.CreateProject;
@@ -41,6 +42,7 @@ public class Main {
         commands.add(new Exit());
 
         commands.add(new DeveloperMenu(view));
+        commands.add(new FindDeveloperById(view));
         commands.add(new GetDevelopersWithSkillName(view));
         commands.add(new GetDevelopersWithSkillLevel(view));
         commands.add(new CreateDeveloper(view));
