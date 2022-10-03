@@ -2,6 +2,7 @@ package ua.com.goit.command.developer;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import ua.com.goit.Formatter;
 import ua.com.goit.command.Command;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.entity.Developer;
@@ -30,14 +31,25 @@ public class CreateDeveloper implements Command {
 
         view.write("1. Please enter new Developer's name:");
         String firstName = view.read();
-        if (firstName.isBlank()) throw new BlancFieldException();
+        if (firstName.isBlank()) {
+            throw new BlancFieldException();
+        } else {
+            firstName = Formatter.capitalize(firstName);
+        }
         view.write("2. Please enter new Developer's surname:");
         String lastName = view.read();
-        if (lastName.isBlank()) throw new BlancFieldException();
+        if (lastName.isBlank()) {
+            throw new BlancFieldException();
+        } else {
+            lastName = Formatter.capitalize(lastName);
+        }
         view.write("3. Please enter new Developer's sex (M/F):");
         String sex = view.read();
-        if (sex.isBlank()) throw new BlancFieldException();
-        sex = sex.toUpperCase().substring(0, 1);
+        if (sex.isBlank()) {
+            throw new BlancFieldException();
+        } else {
+            sex = Formatter.capitalize(sex).substring(0,1);
+        }
 
         Developer newDev = new Developer(firstName, lastName, sex);
 

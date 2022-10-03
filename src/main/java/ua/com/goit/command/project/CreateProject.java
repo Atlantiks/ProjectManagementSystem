@@ -2,6 +2,7 @@ package ua.com.goit.command.project;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import ua.com.goit.Formatter;
 import ua.com.goit.command.Command;
 import ua.com.goit.dao.ProjectDao;
 import ua.com.goit.entity.Project;
@@ -24,11 +25,15 @@ public class CreateProject implements Command {
 
     @Override
     public void execute() {
-        view.write("To create new Project you have to enter mandatory project name " +
-                "and optionally description and status.");
+        view.write("To create new Project you have to enter :\n--mandatory project name " +
+                "\n--optionally description and status.");
         view.write("1. Please enter new Project's name:");
         String projectName = view.read();
-        if (projectName.isBlank()) throw new BlancFieldException();
+        if (projectName.isBlank()) {
+            throw new BlancFieldException();
+        } else {
+            projectName = Formatter.capitalize(projectName);
+        }
 
         Project newProject = new Project(projectName);
         newProject.setDate_created(LocalDate.now());
@@ -44,7 +49,7 @@ public class CreateProject implements Command {
                 String desc = view.read();
                 view.write("3. Please enter new Project's status:");
                 view.write("(Choose from: Active, Inactive , Discontinued , Not commissioned)");
-                String status = view.read();
+                String status = Formatter.capitalize(view.read());
 
                 newProject.setDescription(desc);
                 newProject.setStatus(status);

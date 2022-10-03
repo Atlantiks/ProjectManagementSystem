@@ -207,7 +207,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
 
             if (resultSet.next()) {
                 sb.append("\nДата создания - название проекта - количество разработчиков на этом проекте.\n");
-                sb.append(resultSet.getDate(1).toLocalDate()).append(" - ");
+                sb.append(resultSet.getObject(1,LocalDate.class)).append(" - ");
                 sb.append(resultSet.getString(2)).append(" - ");
                 sb.append(resultSet.getInt(3)).append("\n");
             } else {
@@ -215,7 +215,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             }
 
             while (resultSet.next()) {
-                sb.append(resultSet.getDate(1).toLocalDate()).append(" - ");
+                sb.append(resultSet.getObject(1,LocalDate.class)).append(" - ");
                 sb.append(resultSet.getString(2)).append(" - ");
                 sb.append(resultSet.getInt(3)).append("\n");
             }
