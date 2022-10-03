@@ -193,7 +193,6 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
         developersIds.stream().map(developerDao::findById)
                 .forEach(developer -> developer.ifPresent(devs::add));
 
-        if (devs.size() == 0) System.out.printf("Разработчиков проекта с id = %d не найдено\n", id);
         return devs;
     }
 
@@ -223,7 +222,6 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             throw new RuntimeException(e.getMessage());
         }
 
-        sb.append("\nPlease, enter next command...");
         return sb.toString();
     }
 

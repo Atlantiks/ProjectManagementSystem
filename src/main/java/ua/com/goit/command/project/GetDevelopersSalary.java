@@ -36,5 +36,7 @@ public class GetDevelopersSalary implements Command {
                 PROJECT_DAO.getListOfInvolvedDevelopers(projectId)
                         .stream().map(Developer::getSalary)
                         .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));
+
+        view.write("\nPlease, enter next command...");
     }
 }
