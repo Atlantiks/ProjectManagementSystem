@@ -64,11 +64,12 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
                 }
             } catch (SQLException e) {
                 System.out.println("Couldn't create new skill in database");
-                throw new RuntimeException(e.getMessage());
+                view.write(e.getMessage());
             }
 
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (SQLException e) {
+            view.write("Couldn't create new skill in database");
+            view.write(e.getMessage());
         }
         return skill;
     }

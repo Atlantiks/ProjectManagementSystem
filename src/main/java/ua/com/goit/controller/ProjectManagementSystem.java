@@ -14,7 +14,7 @@ public class ProjectManagementSystem {
     private final List<Command> commands;
 
     public void run() {
-        view.write("Hello, please enter help to see all command");
+        view.write("Hello, please enter help to see all commands");
         try {
             execute();
         } catch (ExitException e) {
