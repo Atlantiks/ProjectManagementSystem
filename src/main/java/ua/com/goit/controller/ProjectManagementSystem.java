@@ -42,7 +42,7 @@ public class ProjectManagementSystem {
                 view.write("Command not found/not recognised.");
             }
 
-            view.write(String.format("Please enter next command or type %s to see available list", "\033[0;93m" + "help" + "\033[0m"));
+            view.write("Please enter next command:");
         }
     }
 }

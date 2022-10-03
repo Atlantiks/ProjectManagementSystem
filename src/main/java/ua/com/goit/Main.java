@@ -8,6 +8,7 @@ import ua.com.goit.command.project.CreateProject;
 import ua.com.goit.command.project.GetDevelopersList;
 import ua.com.goit.command.project.GetDevelopersSalary;
 import ua.com.goit.command.project.GetProjectInfo;
+import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.view.Console;
@@ -49,6 +50,7 @@ public class Main {
         commands.add(new GetProjectInfo(view));
 
         commands.add(new SkillMenu(view));
+        commands.add(new CreateSkill(view));
 
         commands.add(new CompanyMenu(view));
 
