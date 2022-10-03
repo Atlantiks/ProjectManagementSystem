@@ -18,11 +18,10 @@ CREATE TABLE developers
 
 CREATE TABLE skills
 (
-    id    SERIAL,
+    id    SERIAL PRIMARY KEY,
     name  VARCHAR NOT NULL,
     level VARCHAR NOT NULL,
-    PRIMARY KEY (name, level),
-    UNIQUE (id)
+    UNIQUE (name, level)
 );
 
 CREATE TABLE projects
@@ -47,16 +46,13 @@ CREATE TABLE customers
 
 CREATE TABLE developers_skills
 (
-    developers_id INT REFERENCES developers (id),
-    skill_name    TEXT,
-    skill_level   TEXT,
-    FOREIGN KEY (skill_name, skill_level) REFERENCES skills (name, level) ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (developers_id, skill_name)
+    developers_id INT REFERENCES developers (id) ON DELETE CASCADE,
+    skill_id INT REFERENCES skills(id) ON DELETE CASCADE
 );
 
 CREATE TABLE projects_developers
 (
-    projects_id   INT REFERENCES projects (id) ON DELETE CASCADE ,
+    projects_id   INT REFERENCES projects (id) ON DELETE CASCADE,
     developers_id INT REFERENCES developers (id) ON DELETE CASCADE
 );
 
