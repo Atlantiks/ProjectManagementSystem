@@ -5,13 +5,10 @@ import lombok.RequiredArgsConstructor;
 import ua.com.goit.Formatter;
 import ua.com.goit.command.Command;
 import ua.com.goit.dao.CompanyDao;
-import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.entity.Company;
-import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.view.View;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class CreateCompany implements Command {
 
         switch (userAnswer) {
             case "Y":
-                view.write("4. Please enter new Company's location (country):");
+                view.write("2. Please enter new Company's location (country):");
                 String country = Formatter.capitalize(view.read());
 
                 newCompany.setCountry(country);
