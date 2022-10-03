@@ -1,6 +1,7 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
+import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -46,7 +47,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
     }
 
     @Override
-    public Developer save(Developer developer) {
+    public Developer save(Developer developer, View view) {
         String query = SQL.INSERT.command;
 
         try (var connection = connectionManager.getConnection();
@@ -63,15 +64,16 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                 if (generatedKey.next()) {
                     developer.setId(generatedKey.getInt(1));
                 } else {
-                    throw new RuntimeException("No id was returned back.");
+                    view.write("No id was returned back for new Developer.");
                 }
             } catch (SQLException e) {
-                System.out.println("Couldn't create new developer in database");
-                throw new RuntimeException(e.getMessage());
+                view.write("Couldn't create new developer in database");
+                view.write(e.getMessage());
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            view.write("Couldn't create new developer in database");
+            view.write(e.getMessage());
         }
         return developer;
     }

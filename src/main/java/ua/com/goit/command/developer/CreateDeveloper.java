@@ -14,8 +14,7 @@ import java.util.Objects;
 public class CreateDeveloper implements Command {
     public static final String CREATE_DEV = "create developer";
     private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
-    @NonNull @Getter
-    private View view;
+    @NonNull private View view;
 
 
     @Override
@@ -38,7 +37,7 @@ public class CreateDeveloper implements Command {
 
         view.write("Would you like to add non-required fields? Y/N");
 
-        Developer savedDev = DEV_DAO.save(newDev);
+        Developer savedDev = DEV_DAO.save(newDev, view);
 
         if (Objects.nonNull(savedDev.getId())) view.write(savedDev.toString());
 

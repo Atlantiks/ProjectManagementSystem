@@ -1,6 +1,7 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Company;
+import ua.com.goit.view.View;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
     }
 
     @Override
-    public Company save(Company company) {
+    public Company save(Company company, View view) {
         String query = SQL.INSERT.command;
 
         try (var connection = connectionManager.getConnection();

@@ -2,6 +2,7 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
+import ua.com.goit.view.View;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
     }
 
     @Override
-    public Skill save(Skill skill) {
+    public Skill save(Skill skill, View view) {
         String query = SQL.INSERT.command;
 
         try (var connection = connectionManager.getConnection();

@@ -2,6 +2,7 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
+import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -50,7 +51,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
     }
 
     @Override
-    public Project save(Project project) {
+    public Project save(Project project, View view) {
         String query = SQL.INSERT.command;
 
         try (var connection = connectionManager.getConnection();
