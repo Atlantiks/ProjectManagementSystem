@@ -7,10 +7,7 @@ import ua.com.goit.command.developer.CreateDeveloper;
 import ua.com.goit.command.developer.FindDeveloperById;
 import ua.com.goit.command.developer.GetDevelopersWithSkillLevel;
 import ua.com.goit.command.developer.GetDevelopersWithSkillName;
-import ua.com.goit.command.project.CreateProject;
-import ua.com.goit.command.project.GetDevelopersList;
-import ua.com.goit.command.project.GetDevelopersSalary;
-import ua.com.goit.command.project.GetProjectInfo;
+import ua.com.goit.command.project.*;
 import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
@@ -49,6 +46,7 @@ public class Main {
 
         commands.add(new ProjectMenu(view));
         commands.add(new CreateProject(view));
+        commands.add(new FindProjectById(view));
         commands.add(new GetDevelopersList(view));
         commands.add(new GetDevelopersSalary(view));
         commands.add(new GetProjectInfo(view));
