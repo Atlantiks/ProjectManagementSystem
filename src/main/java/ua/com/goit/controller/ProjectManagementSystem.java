@@ -16,7 +16,9 @@ public class ProjectManagementSystem {
         view.write("Hello, please enter help to see all command");
         try {
             execute();
-        } catch (ExitException e) {}
+        } catch (ExitException e) {
+            view.write("Thanks for your visit! See you next time...");
+        }
     }
 
     private void execute() {

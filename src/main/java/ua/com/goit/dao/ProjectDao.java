@@ -197,30 +197,33 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
         return devs;
     }
 
-    public void printProjectInfo() {
+    public String getProjectInfo() {
         String query = SQL.GET_INFO.command;
+        StringBuilder sb = new StringBuilder();
 
         try (var connection = connectionManager.getConnection();
              var st  = connection.prepareStatement(query)) {
             var resultSet = st.executeQuery();
 
             if (resultSet.next()) {
-                System.out.println("\nДата создания - название проекта - количество разработчиков на этом проекте.");
-                System.out.print(resultSet.getDate(1).toLocalDate() + " - ");
-                System.out.print(resultSet.getString(2) + " - ");
-                System.out.print(resultSet.getInt(3) + "\n");
+                sb.append("\nДата создания - название проекта - количество разработчиков на этом проекте.");
+                sb.append(resultSet.getDate(1).toLocalDate()).append(" - ");
+                sb.append(resultSet.getString(2)).append(" - ");
+                sb.append(resultSet.getInt(3)).append("\n");
             } else {
-                System.out.println("Информация не найдена");
+                sb.append("Информация не найдена");
             }
 
             while (resultSet.next()) {
-                System.out.print(resultSet.getDate(1).toLocalDate() + " - ");
-                System.out.print(resultSet.getString(2) + " - ");
-                System.out.print(resultSet.getInt(3) + "\n");
+                sb.append(resultSet.getDate(1).toLocalDate()).append(" - ");
+                sb.append(resultSet.getString(2)).append(" - ");
+                sb.append(resultSet.getInt(3)).append("\n");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e.getMessage());
         }
+
+        return sb.toString();
     }
 
     enum SQL {
