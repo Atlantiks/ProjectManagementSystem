@@ -21,7 +21,5 @@ public class GetProjectInfo implements Command {
     @Override
     public void execute() {
         view.write(PROJECT_DAO.getProjectInfo());
-
-        view.write("\nPlease, enter next command...");
     }
 }

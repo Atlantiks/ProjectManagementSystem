@@ -10,7 +10,7 @@ CREATE TABLE developers
     id         SERIAL PRIMARY KEY,
     first_name VARCHAR NOT NULL,
     last_name  VARCHAR NOT NULL,
-    sex        CHAR(1) NOT NULL,
+    sex        CHAR(1) NOT NULL CHECK(sex IN ('M','F')),
     company_id INT REFERENCES companies (id),
     salary     NUMERIC,
     UNIQUE (first_name, last_name)

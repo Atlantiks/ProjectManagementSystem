@@ -22,13 +22,7 @@ public class GetDevelopersList implements Command {
     @Override
     public void execute() {
         view.write("Please enter project" + "\033[0;93m" + " id" + "\033[0m");
-        Integer projectId = 0;
-
-        try {
-            projectId = Integer.parseInt(view.read());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        Integer projectId = Integer.parseInt(view.read());
 
         var devs = PROJECT_DAO.getListOfInvolvedDevelopers(projectId);
 
@@ -40,7 +34,5 @@ public class GetDevelopersList implements Command {
                     .map(Developer::toString)
                     .forEach(view::write);
         }
-
-        view.write("\nPlease, enter next command...");
     }
 }

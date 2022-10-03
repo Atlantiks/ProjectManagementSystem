@@ -24,19 +24,11 @@ public class GetDevelopersSalary implements Command {
     @Override
     public void execute() {
         view.write("Please enter project" + "\033[0;93m" + " id" + "\033[0m");
-        Integer projectId = 0;
-
-        try {
-            projectId = Integer.parseInt(view.read());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        Integer projectId = Integer.parseInt(view.read());
 
         view.write(String.format("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
                 PROJECT_DAO.getListOfInvolvedDevelopers(projectId)
                         .stream().map(Developer::getSalary)
                         .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));
-
-        view.write("\nPlease, enter next command...");
     }
 }

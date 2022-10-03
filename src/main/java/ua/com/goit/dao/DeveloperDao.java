@@ -58,7 +58,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
             statement.setObject(4, developer.getCompanyId());
             statement.setBigDecimal(5, developer.getSalary());
 
-            var x = statement.executeUpdate();
+            int updatedRows = statement.executeUpdate();
 
             try (ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
@@ -71,7 +71,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                 view.write(e.getMessage());
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             view.write("Couldn't create new developer in database");
             view.write(e.getMessage());
         }

@@ -25,10 +25,7 @@ public class GetDevelopersWithSkillLevel implements Command {
         view.write("Please enter skill level, for example junior, middle, senior etc");
         String userInput = view.read().toLowerCase();
 
-        System.out.printf("\nСписок всех разработчиков уровня %s\n", "\033[0;92m" + userInput + "\033[0m");
+        System.out.printf("\nСписок всех разработчиков уровня \"%s\"\n", "\033[0;92m" + userInput + "\033[0m");
         SKILL_DAO.getDevelopersWithSkillLevel(userInput).forEach(System.out::println);
-
-        view.write("");
-        view.write(String.format("Please enter next command or type %s to see available list\n", "\033[0;93m" + "help" + "\033[0m"));
     }
 }

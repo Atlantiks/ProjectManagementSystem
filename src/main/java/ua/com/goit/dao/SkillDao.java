@@ -178,7 +178,7 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         developersIds.stream().map(developerDao::findById)
                 .forEach(developer -> developer.ifPresent(devs::add));
 
-        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков со знанием %s не найдено \u001B[0m\n", skillName);
+        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков со знанием \"%s\" не найдено \u001B[0m\n", skillName);
 
         return devs;
     }
@@ -203,7 +203,7 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         developersIds.stream().map(developerDao::findById)
                 .forEach(developer -> developer.ifPresent(devs::add));
 
-        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков уровня %s не найдено \u001B[0m\n", skillLevel);
+        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков уровня \"%s\" не найдено \u001B[0m\n", skillLevel);
 
         return devs;
     }
