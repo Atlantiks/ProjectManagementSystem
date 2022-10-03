@@ -1,6 +1,7 @@
 package ua.com.goit;
 
 import ua.com.goit.command.*;
+import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.developer.CreateDeveloper;
 import ua.com.goit.command.developer.GetDevelopersWithSkillLevel;
 import ua.com.goit.command.developer.GetDevelopersWithSkillName;
@@ -53,6 +54,7 @@ public class Main {
         commands.add(new CreateSkill(view));
 
         commands.add(new CompanyMenu(view));
+        commands.add(new CreateCompany(view));
 
     }
 
