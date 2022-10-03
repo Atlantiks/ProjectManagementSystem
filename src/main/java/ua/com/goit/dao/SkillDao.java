@@ -62,7 +62,7 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
                     throw new RuntimeException("No id was returned back.");
                 }
             } catch (SQLException e) {
-                System.out.println("Couldn't create new project in database");
+                System.out.println("Couldn't create new skill in database");
                 throw new RuntimeException(e.getMessage());
             }
 

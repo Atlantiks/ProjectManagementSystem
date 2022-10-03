@@ -18,6 +18,8 @@ public class Help implements Command {
         view.write("===========HELP MENU===========");
         view.write(String.format("Type %s to see tasks for developers", "\033[0;93m" + DeveloperMenu.DEV_COMMANDS + "\033[0m"));
         view.write(String.format("Type %s to see tasks for projects", "\033[0;93m" + ProjectMenu.PROJECT_COMMANDS + "\033[0m"));
+        view.write(String.format("Type %s to see tasks for skills", "\033[0;93m" + SkillMenu.SKILL_COMMANDS + "\033[0m"));
+        view.write(String.format("Type %s to see tasks for companies", "\033[0;93m" + CompanyMenu.COMPANY_COMMANDS + "\033[0m"));
 
         view.write(String.format("\n .. or type %s to quit application","\033[0;93m" + "exit" + "\033[0m"));
         view.write("===============================");

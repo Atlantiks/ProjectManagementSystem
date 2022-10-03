@@ -48,6 +48,10 @@ public class Main {
         commands.add(new GetDevelopersSalary(view));
         commands.add(new GetProjectInfo(view));
 
+        commands.add(new SkillMenu(view));
+
+        commands.add(new CompanyMenu(view));
+
     }
 
 }

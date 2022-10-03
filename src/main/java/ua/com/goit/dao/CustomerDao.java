@@ -64,7 +64,7 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
                     throw new RuntimeException("No id was returned back.");
                 }
             } catch (SQLException e) {
-                System.out.println("Couldn't create new project in database");
+                System.out.println("Couldn't create new customer in database");
                 throw new RuntimeException(e.getMessage());
             }
 

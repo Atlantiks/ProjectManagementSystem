@@ -61,7 +61,7 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
                     throw new RuntimeException("No id was returned back.");
                 }
             } catch (SQLException e) {
-                System.out.println("Couldn't create new project in database");
+                System.out.println("Couldn't create new company in database");
                 throw new RuntimeException(e.getMessage());
             }
 
