@@ -14,6 +14,7 @@ import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
+import ua.com.goit.service.DeveloperService;
 import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
@@ -28,6 +29,7 @@ public class Main {
         View view = new Console(scanner);
         List<Command> commands = new ArrayList<>();
 
+        initializeServices(view);
         initializeCommands(view, commands);
 
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
@@ -37,6 +39,9 @@ public class Main {
         connectionManager.closeConnectionPool();
     }
 
+    private static void initializeServices(View view) {
+        DeveloperService.getInstance().setView(view);
+    }
     private static void initializeCommands(View view, List<Command> commands) {
         commands.add(new Help(view));
         commands.add(new Exit());

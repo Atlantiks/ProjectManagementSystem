@@ -4,12 +4,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
 import ua.com.goit.dao.DeveloperDao;
+import ua.com.goit.service.DeveloperService;
 import ua.com.goit.view.View;
 
 @RequiredArgsConstructor
 public class DeleteDeveloperById implements Command {
     public static final String DEL_DEV_BY_ID = "delete developer by id";
-    private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
+    private final DeveloperService DEVELOPER_SERVICE = DeveloperService.getInstance();
     @NonNull private View view;
 
 
@@ -20,13 +21,6 @@ public class DeleteDeveloperById implements Command {
 
     @Override
     public void execute() {
-        view.write("Please enter developer's id:");
-        Integer devId = Integer.parseInt(view.read());
-
-        if (DEV_DAO.removeById(devId)) {
-            view.write("Success!");
-        } else {
-            view.write(String.format("Couldn't delete developer with following Id = %d", devId ));
-        }
+        DEVELOPER_SERVICE.deleteDeveloperById();
     }
 }

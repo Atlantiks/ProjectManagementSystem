@@ -221,7 +221,7 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
             insertedRows = st.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            return false;
         }
 
         return insertedRows > 0;
@@ -248,17 +248,17 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
 
         COUNT("SELECT count(id) FROM skills"),
 
-        GET_ALL_DEVS_BY_SKILL_NAME("SELECT developers_id " +
-                "FROM skills " +
-                "LEFT JOIN developers_skills ds on skills.name = ds.skill_name and skills.level = ds.skill_level " +
-                "LEFT JOIN developers d on ds.developers_id = d.id " +
-                "WHERE skill_name ILIKE ? "),
+        GET_ALL_DEVS_BY_SKILL_NAME("SELECT d.id\n" +
+                "FROM developers d\n" +
+                "LEFT JOIN developers_skills ds on d.id = ds.developers_id\n" +
+                "LEFT JOIN skills s on ds.skill_id = s.id\n" +
+                "WHERE s.name = ?"),
 
-        GET_ALL_DEVS_BY_SKILL_LEVEL("SELECT DISTINCT developers_id " +
-                "FROM skills " +
-                "LEFT JOIN developers_skills ds on skills.name = ds.skill_name and skills.level = ds.skill_level " +
-                "LEFT JOIN developers d on ds.developers_id = d.id " +
-                "WHERE skill_level ILIKE ? "),
+        GET_ALL_DEVS_BY_SKILL_LEVEL("SELECT DISTINCT d.id\n" +
+                "FROM developers d\n" +
+                "LEFT JOIN developers_skills ds on d.id = ds.developers_id\n" +
+                "LEFT JOIN skills s on ds.skill_id = s.id\n" +
+                "WHERE s.level = ?"),
 
         ADD_SKILL_TO_DEV("INSERT INTO developers_skills (developers_id, skill_id)\n" +
                 "VALUES (?, ?)");

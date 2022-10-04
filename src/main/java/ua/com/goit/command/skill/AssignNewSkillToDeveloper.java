@@ -73,9 +73,13 @@ public class AssignNewSkillToDeveloper implements Command {
                 view.write(String.format("Entered skill %s with %s level doesn't exist in database. Add skill first.",
                         devNewSkill, skillLevel));
             } else {
-                view.write(String.format("Creating skill %s-%s for user %s %s",
+                view.write(String.format("Creating skill %s-%s for user %s %s...",
                         devNewSkill, skillLevel, devById.get().getFirstName(), devById.get().getLastName()));
-                SKILL_DAO.assignSkillToDev(devId, newSkillId);
+                if (SKILL_DAO.assignSkillToDev(devId, newSkillId)) {
+                    view.write("Success");
+                } else {
+                    view.write("ERROR occurred");
+                }
             }
         } else {
             view.write(String.format("Entered skill %s doesn't exist in database. Add skill first.", devNewSkill));
