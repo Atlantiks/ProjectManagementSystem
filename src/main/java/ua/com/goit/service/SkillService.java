@@ -7,7 +7,6 @@ import ua.com.goit.dao.SkillDao;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.exception.BlancFieldException;
-import ua.com.goit.exception.DeveloperNotFound;
 import ua.com.goit.view.View;
 
 import java.util.ArrayList;

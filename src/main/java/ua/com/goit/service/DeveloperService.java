@@ -8,7 +8,7 @@ import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
-import ua.com.goit.exception.DeveloperNotFound;
+import ua.com.goit.exception.DeveloperNotFoundException;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -102,7 +102,7 @@ public class DeveloperService {
         Integer devId = Integer.parseInt(view.read());
 
         Developer developer =  DEV_DAO.findById(devId).orElseThrow(() ->
-                        new DeveloperNotFound(
+                        new DeveloperNotFoundException(
                                 String.format("\033[0;91mDeveloper with Id = %d wasn't found\033[0m", devId)));
 
         view.write(developer.toString());

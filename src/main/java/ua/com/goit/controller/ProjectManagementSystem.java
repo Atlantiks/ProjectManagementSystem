@@ -3,6 +3,7 @@ package ua.com.goit.controller;
 import lombok.AllArgsConstructor;
 import ua.com.goit.command.Command;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DeveloperNotFoundException;
 import ua.com.goit.exception.ExitException;
 import ua.com.goit.view.View;
 
@@ -34,8 +35,7 @@ public class ProjectManagementSystem {
                         view.write("Incorrect input type. Please use numeric types accordingly");
                     } catch (BlancFieldException e) {
                         view.write("Empty fields are not allowed here");
-                    } catch (RuntimeException e) {
-                        view.write("ERROR occurred");
+                    } catch (DeveloperNotFoundException e) {
                         view.write(e.getMessage());
                     }
                     isInputCorrect = true;
