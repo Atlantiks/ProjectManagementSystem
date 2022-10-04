@@ -76,8 +76,8 @@ public class Main {
         commands.add(new DeleteCompanyById());
 
         commands.add(new CustomerMenu(view));
-        commands.add(new CreateCustomer(view));
-        commands.add(new FindCustomerById(view));
-        commands.add(new DeleteCustomerById(view));
+        commands.add(new CreateCustomer());
+        commands.add(new FindCustomerById());
+        commands.add(new DeleteCustomerById());
     }
 }
