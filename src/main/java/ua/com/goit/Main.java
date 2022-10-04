@@ -15,6 +15,7 @@ import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.service.DeveloperService;
+import ua.com.goit.service.ProjectService;
 import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
@@ -41,25 +42,26 @@ public class Main {
 
     private static void initializeServices(View view) {
         DeveloperService.getInstance().setView(view);
+        ProjectService.getInstance().setView(view);
     }
     private static void initializeCommands(View view, List<Command> commands) {
         commands.add(new Help(view));
         commands.add(new Exit());
 
         commands.add(new DeveloperMenu(view));
-        commands.add(new FindDeveloperById(view));
-        commands.add(new DeleteDeveloperById(view));
-        commands.add(new GetDevelopersWithSkillName(view));
-        commands.add(new GetDevelopersWithSkillLevel(view));
-        commands.add(new CreateDeveloper(view));
+        commands.add(new FindDeveloperById());
+        commands.add(new DeleteDeveloperById());
+        commands.add(new GetDevelopersWithSkillName());
+        commands.add(new GetDevelopersWithSkillLevel());
+        commands.add(new CreateDeveloper());
 
         commands.add(new ProjectMenu(view));
-        commands.add(new CreateProject(view));
-        commands.add(new FindProjectById(view));
-        commands.add(new DeleteProjectById(view));
-        commands.add(new GetDevelopersList(view));
-        commands.add(new GetDevelopersSalary(view));
-        commands.add(new GetProjectInfo(view));
+        commands.add(new CreateProject());
+        commands.add(new FindProjectById());
+        commands.add(new DeleteProjectById());
+        commands.add(new GetDevelopersList());
+        commands.add(new GetDevelopersSalary());
+        commands.add(new GetProjectInfo());
 
         commands.add(new SkillMenu(view));
         commands.add(new CreateSkill(view));

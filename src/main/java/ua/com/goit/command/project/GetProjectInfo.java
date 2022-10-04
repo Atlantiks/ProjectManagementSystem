@@ -1,17 +1,11 @@
 package ua.com.goit.command.project;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
-import ua.com.goit.dao.ProjectDao;
-import ua.com.goit.view.View;
+import ua.com.goit.service.ProjectService;
 
-@RequiredArgsConstructor
 public class GetProjectInfo implements Command {
     public static final String GET_INFO = "get projects info";
-    private static final ProjectDao PROJECT_DAO = ProjectDao.getInstance();
-    @NonNull private View view;
-
+    private static final ProjectService PROJECT_SERVICE = ProjectService.getInstance();
 
     @Override
     public boolean canBeExecuted(String input) {
@@ -20,6 +14,6 @@ public class GetProjectInfo implements Command {
 
     @Override
     public void execute() {
-        view.write(PROJECT_DAO.getProjectInfo());
+        PROJECT_SERVICE.getProjectInfo();
     }
 }

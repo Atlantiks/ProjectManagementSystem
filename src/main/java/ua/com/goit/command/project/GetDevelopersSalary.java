@@ -1,20 +1,11 @@
 package ua.com.goit.command.project;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
-import ua.com.goit.dao.ProjectDao;
-import ua.com.goit.entity.Developer;
-import ua.com.goit.view.View;
+import ua.com.goit.service.ProjectService;
 
-import java.math.BigDecimal;
-
-@RequiredArgsConstructor
 public class GetDevelopersSalary implements Command {
     public static final String GET_DEVS_SALARY = "get salary of involved developers";
-    private static final ProjectDao PROJECT_DAO = ProjectDao.getInstance();
-    @NonNull private View view;
-
+    private static final ProjectService PROJECT_SERVICE = ProjectService.getInstance();
 
     @Override
     public boolean canBeExecuted(String input) {
@@ -23,12 +14,6 @@ public class GetDevelopersSalary implements Command {
 
     @Override
     public void execute() {
-        view.write("Please enter project" + "\033[0;93m" + " id" + "\033[0m");
-        Integer projectId = Integer.parseInt(view.read());
-
-        view.write(String.format("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
-                PROJECT_DAO.getListOfInvolvedDevelopers(projectId)
-                        .stream().map(Developer::getSalary)
-                        .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));
+        PROJECT_SERVICE.getDevelopersSalary();
     }
 }
