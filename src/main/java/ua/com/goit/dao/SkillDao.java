@@ -209,6 +209,24 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         return devs;
     }
 
+    public boolean assignSkillToDev(Integer devId, Integer skillId) {
+        String query = SQL.ADD_SKILL_TO_DEV.command;
+        int insertedRows = 0;
+
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
+            st.setInt(1, devId);
+            st.setInt(2, skillId);
+
+            insertedRows = st.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
+        return insertedRows > 0;
+    }
+
     enum SQL {
         INSERT("INSERT INTO skills (name, level) " +
                 "VALUES (?,?)"),
@@ -240,7 +258,10 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
                 "FROM skills " +
                 "LEFT JOIN developers_skills ds on skills.name = ds.skill_name and skills.level = ds.skill_level " +
                 "LEFT JOIN developers d on ds.developers_id = d.id " +
-                "WHERE skill_level ILIKE ? ");
+                "WHERE skill_level ILIKE ? "),
+
+        ADD_SKILL_TO_DEV("INSERT INTO developers_skills (developers_id, skill_id)\n" +
+                "VALUES (?, ?)");
 
         SQL(String command) {
             this.command = command;
