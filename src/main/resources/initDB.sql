@@ -10,8 +10,8 @@ CREATE TABLE developers
     id         SERIAL PRIMARY KEY,
     first_name VARCHAR NOT NULL,
     last_name  VARCHAR NOT NULL,
-    sex        CHAR(1) NOT NULL CHECK(sex IN ('M','F')),
-    company_id INT REFERENCES companies (id) ON DELETE SET NULL,
+    sex        CHAR(1) NOT NULL CHECK (sex IN ('M', 'F')),
+    company_id INT     REFERENCES companies (id) ON DELETE SET NULL,
     salary     NUMERIC,
     UNIQUE (first_name, last_name)
 );
@@ -47,13 +47,15 @@ CREATE TABLE customers
 CREATE TABLE developers_skills
 (
     developers_id INT REFERENCES developers (id) ON DELETE CASCADE,
-    skill_id INT REFERENCES skills(id) ON DELETE CASCADE
+    skill_id      INT REFERENCES skills (id) ON DELETE CASCADE,
+    UNIQUE (developers_id, skill_id)
 );
 
 CREATE TABLE projects_developers
 (
     projects_id   INT REFERENCES projects (id) ON DELETE CASCADE,
-    developers_id INT REFERENCES developers (id) ON DELETE CASCADE
+    developers_id INT REFERENCES developers (id) ON DELETE CASCADE,
+    UNIQUE (projects_id, developers_id)
 );
 
 CREATE TABLE companies_projects
@@ -65,5 +67,6 @@ CREATE TABLE companies_projects
 CREATE TABLE customers_projects
 (
     customers_id INT REFERENCES customers (id) ON DELETE CASCADE,
-    projects_id  INT REFERENCES projects (id) ON DELETE CASCADE
+    projects_id  INT REFERENCES projects (id) ON DELETE CASCADE,
+    UNIQUE (customers_id, projects_id)
 );
