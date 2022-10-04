@@ -11,7 +11,7 @@ import ua.com.goit.command.developer.*;
 import ua.com.goit.command.project.*;
 import ua.com.goit.command.skill.AssignNewSkillToDeveloper;
 import ua.com.goit.command.skill.CreateSkill;
-import ua.com.goit.command.skill.GetAllSkills;
+import ua.com.goit.command.skill.ViewSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.service.*;
@@ -68,7 +68,7 @@ public class Main {
         commands.add(new SkillMenu(view));
         commands.add(new CreateSkill());
         commands.add(new AssignNewSkillToDeveloper());
-        commands.add(new GetAllSkills());
+        commands.add(new ViewSkills());
 
         commands.add(new CompanyMenu(view));
         commands.add(new CreateCompany());

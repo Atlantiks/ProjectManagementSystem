@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.SkillDao;
+import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DeveloperNotFound;
@@ -68,25 +69,16 @@ public class SkillService {
         }
     }
 
-    public void getAllSkills() {
-        String listOfAllSkills = SKILL_DAO.findAll().stream()
-                .map(Skill::getName)
-                .distinct()
-                .map(String::valueOf)
-                .collect(Collectors.joining(", "));
-        view.write(listOfAllSkills);
+    public void viewAllSkills() {
+        view.write(getSkillsList());
     }
 
     public void assignNewSkillToDeveloper() {
-        var developer = DEV_SERVICE.findDeveloperById().orElseThrow(DeveloperNotFound::new);
-
+        Developer developer = DEV_SERVICE.findDeveloperById().orElseThrow(DeveloperNotFound::new);
         List<Skill> allSkills = SKILL_DAO.findAll();
+        String listOfAllSkills = getSkillsList();
 
         view.write("Please enter developer's new skill (choose from list underneath) :");
-        String listOfAllSkills = allSkills.stream().map(Skill::getName)
-                .distinct()
-                .map(String::valueOf)
-                .collect(Collectors.joining(", "));
         view.write(listOfAllSkills);
 
         String devNewSkill = Formatter.capitalize(view.read());
@@ -105,20 +97,34 @@ public class SkillService {
             }
 
             if (Objects.isNull(newSkillId)) {
-                view.write(String.format("Entered skill %s with %s level doesn't exist in database. Add skill first.",
+                view.write(String.format(
+                        "Entered skill %s with %s level doesn't exist in database. Add skill first.",
                         devNewSkill, skillLevel));
             } else {
-                view.write(String.format("Creating skill %s-%s for user %s %s...",
+                view.write(String.format(
+                        "Creating skill %s-%s for user %s %s...",
                         devNewSkill, skillLevel, developer.getFirstName(), developer.getLastName()));
+
                 if (SKILL_DAO.assignSkillToDev(developer.getId(), newSkillId)) {
-                    view.write(String.format("Skill %s-%s was successfully added to developer %s %s",
-                            devNewSkill,skillLevel,developer.getFirstName(),developer.getLastName()));
+                    view.write(String.format(
+                            "Skill %s-%s was successfully added to developer %s %s",
+                            devNewSkill, skillLevel, developer.getFirstName(), developer.getLastName()));
                 } else {
                     view.write("ERROR occurred");
                 }
+
             }
+
         } else {
             view.write(String.format("Entered skill %s doesn't exist in database. Add skill first.", devNewSkill));
         }
+    }
+
+    private String getSkillsList() {
+        return SKILL_DAO.findAll().stream()
+                .map(Skill::getName)
+                .distinct()
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
     }
 }
