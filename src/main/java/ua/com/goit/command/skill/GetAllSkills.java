@@ -7,6 +7,8 @@ import ua.com.goit.dao.SkillDao;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.view.View;
 
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 public class GetAllSkills implements Command {
     public static final String GET_SKILLS = "get skills";
@@ -20,10 +22,11 @@ public class GetAllSkills implements Command {
 
     @Override
     public void execute() {
-        SKILL_DAO.findAll().stream()
+        String listOfAllSkills = SKILL_DAO.findAll().stream()
                 .map(Skill::getName)
                 .distinct()
                 .map(String::valueOf)
-                .forEach(view::write);
+                .collect(Collectors.joining(", "));
+        view.write(listOfAllSkills);
     }
 }

@@ -3,10 +3,13 @@ package ua.com.goit;
 import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.company.DeleteCompanyById;
+import ua.com.goit.command.company.FindCompanyById;
 import ua.com.goit.command.customer.CreateCustomer;
 import ua.com.goit.command.customer.DeleteCustomerById;
+import ua.com.goit.command.customer.FindCustomerById;
 import ua.com.goit.command.developer.*;
 import ua.com.goit.command.project.*;
+import ua.com.goit.command.skill.AssignNewSkillToDeveloper;
 import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
@@ -55,14 +58,17 @@ public class Main {
 
         commands.add(new SkillMenu(view));
         commands.add(new CreateSkill(view));
+        commands.add(new AssignNewSkillToDeveloper(view));
         commands.add(new GetAllSkills(view));
 
         commands.add(new CompanyMenu(view));
         commands.add(new CreateCompany(view));
+        commands.add(new FindCompanyById(view));
         commands.add(new DeleteCompanyById(view));
 
         commands.add(new CustomerMenu(view));
         commands.add(new CreateCustomer(view));
+        commands.add(new FindCustomerById(view));
         commands.add(new DeleteCustomerById(view));
     }
 }
