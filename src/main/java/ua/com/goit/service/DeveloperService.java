@@ -13,7 +13,6 @@ import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
 
 
 public class DeveloperService {
@@ -102,9 +101,12 @@ public class DeveloperService {
         view.write("Please enter developer's id:");
         Integer devId = Integer.parseInt(view.read());
 
-        return DEV_DAO.findById(devId).orElseThrow(() ->
+        Developer developer =  DEV_DAO.findById(devId).orElseThrow(() ->
                         new DeveloperNotFound(
                                 String.format("\033[0;91mDeveloper with Id = %d wasn't found\033[0m", devId)));
+
+        view.write(developer.toString());
+        return developer;
     }
 
     public void getDevelopersWithSkillLevel() {
