@@ -34,6 +34,9 @@ public class ProjectManagementSystem {
                         view.write("Incorrect input type. Please use numeric types accordingly");
                     } catch (BlancFieldException e) {
                         view.write("Empty fields are not allowed here");
+                    } catch (RuntimeException e) {
+                        view.write("ERROR occurred");
+                        view.write(e.getMessage());
                     }
                     isInputCorrect = true;
                 }

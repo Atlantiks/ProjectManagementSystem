@@ -74,7 +74,7 @@ public class SkillService {
     }
 
     public void assignNewSkillToDeveloper() {
-        Developer developer = DEV_SERVICE.findDeveloperById().orElseThrow(DeveloperNotFound::new);
+        Developer developer = DEV_SERVICE.findDeveloperById();
         List<Skill> allSkills = SKILL_DAO.findAll();
         String listOfAllSkills = getSkillsList();
 

@@ -8,6 +8,7 @@ import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DeveloperNotFound;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -97,19 +98,13 @@ public class DeveloperService {
         }
     }
 
-    public Optional<Developer> findDeveloperById() {
+    public Developer findDeveloperById() {
         view.write("Please enter developer's id:");
         Integer devId = Integer.parseInt(view.read());
 
-        var developer = DEV_DAO.findById(devId);
-
-        if (developer.isPresent()) {
-            view.write(developer.get().toString());
-            return developer;
-        } else {
-            view.write(String.format("\033[0;91mDeveloper with Id = %d wasn't found\033[0m", devId));
-            return Optional.empty();
-        }
+        return DEV_DAO.findById(devId).orElseThrow(() ->
+                        new DeveloperNotFound(
+                                String.format("\033[0;91mDeveloper with Id = %d wasn't found\033[0m", devId)));
     }
 
     public void getDevelopersWithSkillLevel() {
