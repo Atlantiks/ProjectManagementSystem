@@ -14,6 +14,7 @@ import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
+import ua.com.goit.service.CompanyService;
 import ua.com.goit.service.DeveloperService;
 import ua.com.goit.service.ProjectService;
 import ua.com.goit.view.Console;
@@ -43,6 +44,7 @@ public class Main {
     private static void initializeServices(View view) {
         DeveloperService.getInstance().setView(view);
         ProjectService.getInstance().setView(view);
+        CompanyService.getInstance().setView(view);
     }
     private static void initializeCommands(View view, List<Command> commands) {
         commands.add(new Help(view));
@@ -69,9 +71,9 @@ public class Main {
         commands.add(new GetAllSkills(view));
 
         commands.add(new CompanyMenu(view));
-        commands.add(new CreateCompany(view));
-        commands.add(new FindCompanyById(view));
-        commands.add(new DeleteCompanyById(view));
+        commands.add(new CreateCompany());
+        commands.add(new FindCompanyById());
+        commands.add(new DeleteCompanyById());
 
         commands.add(new CustomerMenu(view));
         commands.add(new CreateCustomer(view));
