@@ -82,22 +82,26 @@ VALUES ('Ivan', 'Petrov', 'M', NULL),
        ('Callie', 'White', 'F', 5),
        ('Elliot', 'Campbell', 'M', 1),
        ('Paul', 'Saunders', 'M', 6),
-       ('Galina', 'Blanka', 'F', 6);
+       ('Alen', 'Dallas', 'M', 6),
+       ('Dean', 'Saunders', 'M', 7),
+       ('Kevin', 'Law', 'M', 7),
+       ('John', 'Philips', 'M', 7),
+       ('Galina', 'Blanka', 'F', 7);
 
-INSERT INTO developers_skills (developers_id, skill_name, skill_level)
-VALUES (1, 'Java', 'Junior'),
-       (1, 'JavaScript', 'Middle'),
-       (2, 'Python', 'Middle'),
-       (2, 'C#', 'Senior'),
-       (2, 'JavaScript', 'Middle'),
-       (3, 'C++', 'Junior'),
-       (3, 'Java', 'Junior'),
-       (3, 'Python', 'Senior'),
-       (4, 'Python', 'Senior'),
-       (4, 'Scala', 'Senior'),
-       (5, 'Groovy', 'Senior'),
-       (6, 'Java', 'Senior'),
-       (7, 'Scala', 'Junior');
+INSERT INTO developers_skills (developers_id, skill_id)
+VALUES (1, 1),
+       (1, 11),
+       (2, 20),
+       (2, 9),
+       (2, 11),
+       (3, 4),
+       (3, 1),
+       (3, 21),
+       (4, 21),
+       (4, 15),
+       (5, 18),
+       (6, 3),
+       (7, 13);
 
 INSERT INTO projects_developers (projects_id, developers_id)
 VALUES (1, 5),(1, 6),(1, 7),

@@ -2,13 +2,13 @@ package ua.com.goit;
 
 import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
+import ua.com.goit.command.company.DeleteCompanyById;
 import ua.com.goit.command.customer.CreateCustomer;
-import ua.com.goit.command.developer.CreateDeveloper;
-import ua.com.goit.command.developer.FindDeveloperById;
-import ua.com.goit.command.developer.GetDevelopersWithSkillLevel;
-import ua.com.goit.command.developer.GetDevelopersWithSkillName;
+import ua.com.goit.command.customer.DeleteCustomerById;
+import ua.com.goit.command.developer.*;
 import ua.com.goit.command.project.*;
 import ua.com.goit.command.skill.CreateSkill;
+import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
 import ua.com.goit.view.Console;
@@ -40,6 +40,7 @@ public class Main {
 
         commands.add(new DeveloperMenu(view));
         commands.add(new FindDeveloperById(view));
+        commands.add(new DeleteDeveloperById(view));
         commands.add(new GetDevelopersWithSkillName(view));
         commands.add(new GetDevelopersWithSkillLevel(view));
         commands.add(new CreateDeveloper(view));
@@ -47,19 +48,21 @@ public class Main {
         commands.add(new ProjectMenu(view));
         commands.add(new CreateProject(view));
         commands.add(new FindProjectById(view));
+        commands.add(new DeleteProjectById(view));
         commands.add(new GetDevelopersList(view));
         commands.add(new GetDevelopersSalary(view));
         commands.add(new GetProjectInfo(view));
 
         commands.add(new SkillMenu(view));
         commands.add(new CreateSkill(view));
+        commands.add(new GetAllSkills(view));
 
         commands.add(new CompanyMenu(view));
         commands.add(new CreateCompany(view));
+        commands.add(new DeleteCompanyById(view));
 
         commands.add(new CustomerMenu(view));
         commands.add(new CreateCustomer(view));
-
+        commands.add(new DeleteCustomerById(view));
     }
-
 }

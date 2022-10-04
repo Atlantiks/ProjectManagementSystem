@@ -11,7 +11,7 @@ CREATE TABLE developers
     first_name VARCHAR NOT NULL,
     last_name  VARCHAR NOT NULL,
     sex        CHAR(1) NOT NULL CHECK(sex IN ('M','F')),
-    company_id INT REFERENCES companies (id),
+    company_id INT REFERENCES companies (id) ON DELETE SET NULL,
     salary     NUMERIC,
     UNIQUE (first_name, last_name)
 );
@@ -58,12 +58,12 @@ CREATE TABLE projects_developers
 
 CREATE TABLE companies_projects
 (
-    companies_id INT REFERENCES companies (id),
+    companies_id INT REFERENCES companies (id) ON DELETE CASCADE,
     projects_id  INT REFERENCES projects (id) ON DELETE CASCADE UNIQUE
 );
 
 CREATE TABLE customers_projects
 (
-    customers_id INT REFERENCES customers (id),
+    customers_id INT REFERENCES customers (id) ON DELETE CASCADE,
     projects_id  INT REFERENCES projects (id) ON DELETE CASCADE
 );

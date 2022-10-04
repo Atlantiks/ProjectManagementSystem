@@ -116,14 +116,14 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
     @Override
     public boolean removeById(Integer id) {
         String query = SQL.DELETE_BY_ID.command;
-        int result;
+        int result = 0;
 
         try (var connection = connectionManager.getConnection();
              var statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             result = statement.executeUpdate();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         return result > 0;
     }

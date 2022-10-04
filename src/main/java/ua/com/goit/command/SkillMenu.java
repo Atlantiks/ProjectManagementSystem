@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.project.CreateProject;
 import ua.com.goit.command.skill.CreateSkill;
+import ua.com.goit.command.skill.GetAllSkills;
 import ua.com.goit.view.View;
 
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class SkillMenu implements Command {
     public void execute() {
         view.write("===========SKILL SERVICE MENU===========");
         view.write(String.format("Type %s to add new skill", "\033[0;93m" + CreateSkill.CREATE_SKILL + "\033[0m"));
+        view.write(String.format("Type %s to list all available skills/technologies", "\033[0;93m" + GetAllSkills.GET_SKILLS + "\033[0m"));
 
         view.write(String.format("\n .. or type %s to see all available commands","\033[0;93m" + "help" + "\033[0m"));
     }
