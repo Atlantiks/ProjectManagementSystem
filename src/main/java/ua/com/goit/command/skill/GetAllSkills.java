@@ -1,19 +1,11 @@
 package ua.com.goit.command.skill;
 
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import ua.com.goit.command.Command;
-import ua.com.goit.dao.SkillDao;
-import ua.com.goit.entity.Skill;
-import ua.com.goit.view.View;
+import ua.com.goit.service.SkillService;
 
-import java.util.stream.Collectors;
-
-@RequiredArgsConstructor
 public class GetAllSkills implements Command {
     public static final String GET_SKILLS = "get skills";
-    private static final SkillDao SKILL_DAO = SkillDao.getInstance();
-    @NonNull private View view;
+    private static final SkillService SKILL_SERVICE = SkillService.getInstance();
 
     @Override
     public boolean canBeExecuted(String input) {
@@ -22,11 +14,7 @@ public class GetAllSkills implements Command {
 
     @Override
     public void execute() {
-        String listOfAllSkills = SKILL_DAO.findAll().stream()
-                .map(Skill::getName)
-                .distinct()
-                .map(String::valueOf)
-                .collect(Collectors.joining(", "));
-        view.write(listOfAllSkills);
+        SKILL_SERVICE.getAllSkills();
     }
+
 }
