@@ -8,6 +8,7 @@ import ua.com.goit.dao.ProjectDao;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -87,14 +88,17 @@ public class ProjectService {
         }
     }
 
-    public void findProjectById() {
+    public Project findProjectById() {
         view.write("Please enter Project's id:");
         Integer projectId = Integer.parseInt(view.read());
 
-        PROJECT_DAO.findById(projectId).ifPresentOrElse(
-                dev -> view.write(dev.toString()),
-                () -> view.write(
+        Project project =  PROJECT_DAO.findById(projectId).orElseThrow(() ->
+                new NotFoundException(
                         String.format("\033[0;91mProject with Id = %d wasn't found\033[0m", projectId)));
+
+        view.write(project.toString());
+
+        return project;
     }
 
     public void getDevelopersList() {
