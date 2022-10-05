@@ -6,6 +6,7 @@ import ua.com.goit.Formatter;
 import ua.com.goit.dao.CompanyDao;
 import ua.com.goit.entity.Company;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
 import java.util.Objects;
@@ -76,12 +77,14 @@ public class CompanyService {
         }
     }
 
-    public void findCompanyById() {
+    public Company findCompanyById() {
         view.write("Please enter Company's id:");
         Integer companyId = Integer.parseInt(view.read());
 
-        COMPANY_DAO.findById(companyId).ifPresentOrElse(
-                dev -> view.write(dev.toString()),
-                () -> view.write(String.format("\033[0;91mCompany with Id = %d wasn't found\033[0m", companyId)));
+        Company company = COMPANY_DAO.findById(companyId).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("\033[0;91mCompany with Id = %d wasn't found\033[0m", companyId)));
+
+        return company;
     }
 }

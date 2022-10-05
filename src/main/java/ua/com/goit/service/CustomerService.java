@@ -6,6 +6,7 @@ import ua.com.goit.Formatter;
 import ua.com.goit.dao.CustomerDao;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
 import java.util.Objects;
@@ -95,12 +96,14 @@ public class CustomerService {
         }
     }
 
-    public void findCustomerById() {
+    public Customer findCustomerById() {
         view.write("Please enter customer's id:");
         Integer customerId = Integer.parseInt(view.read());
 
-        CUSTOMER_DAO.findById(customerId).ifPresentOrElse(
-                dev -> view.write(dev.toString()),
-                () -> view.write(String.format("\033[0;91mCustomer with Id = %d wasn't found\033[0m", customerId)));
+        Customer customer = CUSTOMER_DAO.findById(customerId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("\033[0;91mCustomer with Id = %d wasn't found\033[0m", customerId)));
+
+        return customer;
     }
 }
