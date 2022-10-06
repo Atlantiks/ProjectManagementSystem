@@ -85,6 +85,8 @@ public class CompanyService {
                 () -> new NotFoundException(
                         String.format("\033[0;91mCompany with Id = %d wasn't found\033[0m", companyId)));
 
+        view.write(company.toString());
+
         return company;
     }
 }

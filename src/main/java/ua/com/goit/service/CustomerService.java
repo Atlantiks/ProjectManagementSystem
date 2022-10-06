@@ -104,6 +104,8 @@ public class CustomerService {
                 new NotFoundException(
                         String.format("\033[0;91mCustomer with Id = %d wasn't found\033[0m", customerId)));
 
+        view.write(customer.toString());
+
         return customer;
     }
 }
