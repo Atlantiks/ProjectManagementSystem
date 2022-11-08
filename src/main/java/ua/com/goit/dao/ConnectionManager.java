@@ -18,9 +18,12 @@ public final class ConnectionManager {
     private static List<Connection> allConnections;
 
     static {
+        loadDriver();
         initVariables();
         initConnectionPool();
     }
+
+
 
     private ConnectionManager() {
     }
@@ -28,6 +31,8 @@ public final class ConnectionManager {
     public static ConnectionManager getInstance() {
         return INSTANCE;
     }
+
+
 
     public Connection getConnection() {
         try {
@@ -44,6 +49,14 @@ public final class ConnectionManager {
                     PROPERTIES.getProperty("user"),
                     PROPERTIES.getProperty("password"));
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void loadDriver() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

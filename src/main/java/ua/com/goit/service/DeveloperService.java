@@ -6,13 +6,16 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
+import ua.com.goit.dto.DeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class DeveloperService {
@@ -107,6 +110,13 @@ public class DeveloperService {
 
         view.write(developer.toString());
         return developer;
+    }
+
+    public List<DeveloperDto> getAllDevelopers() {
+        return DEV_DAO.findAll().stream().map(developer ->
+                new DeveloperDto(developer.getFirstName() + " " + developer.getLastName(),
+                        developer.getSex(),
+                        developer.getSalary())).collect(Collectors.toList());
     }
 
     public void getDevelopersWithSkillLevel() {
