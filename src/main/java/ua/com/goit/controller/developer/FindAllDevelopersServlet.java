@@ -19,6 +19,8 @@ public class FindAllDevelopersServlet extends HttpServlet {
         resp.setContentType("text/html");
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
+        req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
+
         try (var writer = resp.getWriter()) {
             writer.write("<h1>Список разработчиков</h1>");
             DEV_SERVICE.getAllDevelopers().forEach(developerDto -> {
