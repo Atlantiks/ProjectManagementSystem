@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="navigationBar.jsp" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="container">
     <h1>Create new developer</h1>
@@ -10,11 +11,22 @@
     <label>Surname</label> <input type="text" name="surname" id="surname" required></input></br></br>
     <p>Please select sex of a new developer:</p>
 
-    <input type="radio" id="male" name="sex" value="M">
+    <input type="radio" id="male" name="sex" value="M" required>
     <label for="male">Male</label><br>
     <input type="radio" id="female" name="sex" value="F">
     <label for="female">Female</label></br></br>
 
-    <button type="submit">Submit</button>
+    <label>Company</label>
+    <select id="company" name="company">
+        <option value="">none</option>
+        <c:forEach var="company" items="${requestScope.companies}">
+            <option value="${company.name}">${company.name}</option>
+        </c:forEach>
+    </select>
+
+    <label>Salary</label> <input type="number" name="salary" id="salary" required></input></br></br>
+      <input type="submit" value="Submit">
+      <input type="reset" value="Reset">
     </form>
+
 </div>
