@@ -30,7 +30,7 @@
     </form>
 
     <c:if test="${not empty requestScope.errors}">
-        <div>
+        <div style="color: red">
             <p> ${requestScope.errors} </p>
         </div>
     </c:if>
