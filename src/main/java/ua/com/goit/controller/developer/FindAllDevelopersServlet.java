@@ -22,13 +22,15 @@ public class FindAllDevelopersServlet extends HttpServlet {
         req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
 
         try (var writer = resp.getWriter()) {
+            writer.write("<div class=\"container\">");
             writer.write("<h1>Список разработчиков</h1>");
+            writer.write("<ul>");
             DEV_SERVICE.getAllDevelopers().forEach(developerDto -> {
-                writer.write(String.format("<li>%s %s %s</li></br>", developerDto.getFullName(),
-                        developerDto.getSex(),developerDto.getSalary().toString()));
+                writer.write(String.format("<li>%s %s</li>", developerDto.getFullName(),
+                        developerDto.getSex().equals("M") ? "Male" : "Female"));
             });
-            writer.write("<ul");
-            writer.write("</ul");
+            writer.write("</ul>");
+            writer.write("</div");
         }
     }
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
+import ua.com.goit.dto.CreateDeveloperDto;
 import ua.com.goit.dto.DeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
@@ -89,6 +90,12 @@ public class DeveloperService {
             }
     }
 
+    public void createDeveloper(CreateDeveloperDto developer) {
+        //1. Validate
+        //2. Map
+        //3. Save
+    }
+
     public void deleteDeveloperById() {
         view.write("Please enter developer's id:");
         Integer devId = Integer.parseInt(view.read());
@@ -115,8 +122,7 @@ public class DeveloperService {
     public List<DeveloperDto> getAllDevelopers() {
         return DEV_DAO.findAll().stream().map(developer ->
                 new DeveloperDto(developer.getFirstName() + " " + developer.getLastName(),
-                        developer.getSex(),
-                        developer.getSalary())).collect(Collectors.toList());
+                        developer.getSex())).collect(Collectors.toList());
     }
 
     public void getDevelopersWithSkillLevel() {
