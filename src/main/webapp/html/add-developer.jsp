@@ -29,4 +29,10 @@
       <input type="reset" value="Reset">
     </form>
 
+    <c:if test="${not empty requestScope.errors}">
+        <div>
+            <p> ${requestScope.errors} </p>
+        </div>
+    </c:if>
+
 </div>
