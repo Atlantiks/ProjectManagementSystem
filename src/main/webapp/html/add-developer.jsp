@@ -20,7 +20,7 @@
     <select id="company" name="company">
         <option value="">none</option>
         <c:forEach var="company" items="${requestScope.companies}">
-            <option value="${company.name}">${company.name}</option>
+            <option value="${company.id}">${company.name}</option>
         </c:forEach>
     </select>
 

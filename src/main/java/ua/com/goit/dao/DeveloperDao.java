@@ -1,6 +1,8 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
+import ua.com.goit.exception.DataBaseOperationException;
+import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -8,6 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 public final class DeveloperDao implements DataAccess<Integer, Developer> {
     private static final DeveloperDao DEV_DAO = new DeveloperDao();
@@ -74,6 +77,35 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
         } catch (SQLException e) {
             view.write("Couldn't create new developer in database");
             view.write(e.getMessage());
+        }
+        return developer;
+    }
+
+    public Developer save(Developer developer) {
+        String query = SQL.INSERT.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, developer.getFirstName());
+            statement.setString(2, developer.getLastName());
+            statement.setString(3, developer.getSex());
+            statement.setObject(4, developer.getCompanyId());
+            statement.setBigDecimal(5, developer.getSalary());
+
+            int updatedRows = statement.executeUpdate();
+
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    developer.setId(generatedKey.getInt(1));
+                } else {
+                    throw new DataBaseOperationException("No id was returned back for new Developer.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseOperationException("Couldn't create new developer in database");
+            }
+
+        } catch (SQLException e) {
+            throw new DataBaseOperationException("Couldn't create new developer in database");
         }
         return developer;
     }

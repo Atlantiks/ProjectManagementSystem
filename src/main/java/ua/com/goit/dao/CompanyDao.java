@@ -17,7 +17,7 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
     }
 
     public static CompanyDao getInstance() {
-       return COMPANY_DAO;
+        return COMPANY_DAO;
     }
 
     @Override
@@ -159,6 +159,23 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
         return 0;
     }
 
+    public Optional<Integer> getCompanyIdFromCompanyName(String companyName) {
+        var query = SQL.GET_COMPANY_ID_BY_ITS_NAME.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, companyName);
+            var resultSet = statement.executeQuery();
+
+            if (resultSet.next()) return Optional.of(resultSet.getObject(1,Integer.class));
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
     enum SQL {
         INSERT("INSERT INTO companies (name, country) " +
                 "VALUES (?,?)"),
@@ -178,7 +195,10 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
 
         DELETE_BY_NAME("DELETE FROM companies WHERE name = ?"),
 
-        COUNT("SELECT count(id) FROM companies");
+        COUNT("SELECT count(id) FROM companies"),
+
+        GET_COMPANY_ID_BY_ITS_NAME("SELECT id, name FROM companies " +
+                "WHERE name = ?");
 
         SQL(String command) {
             this.command = command;

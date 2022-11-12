@@ -9,6 +9,6 @@ public class CreateDeveloperDto {
     String firstName;
     String lastName;
     String sex;
-    String company;
+    String companyId;
     String salary;
 }

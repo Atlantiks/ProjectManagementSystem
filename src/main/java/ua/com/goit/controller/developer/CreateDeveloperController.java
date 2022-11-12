@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.com.goit.dto.CreateDeveloperDto;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.CompanyService;
 import ua.com.goit.service.DeveloperService;
@@ -34,18 +35,17 @@ public class CreateDeveloperController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CreateDeveloperDto newUser = CreateDeveloperDto.builder()
+        CreateDeveloperDto newDev = CreateDeveloperDto.builder()
                 .firstName(req.getParameter("name"))
                 .lastName(req.getParameter("surname"))
                 .sex(req.getParameter("sex"))
-                .company(req.getParameter("company"))
+                .companyId(req.getParameter("company"))
                 .salary(req.getParameter("salary"))
                 .build();
-
         try {
-            DEV_SERVICE.createDeveloper(newUser);
+            DEV_SERVICE.createDeveloper(newDev);
             req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
-        } catch (ValidationException ex) {
+        } catch (ValidationException | DataBaseOperationException ex) {
             req.setAttribute("errors",ex.getMessage());
             doGet(req, resp);
         }

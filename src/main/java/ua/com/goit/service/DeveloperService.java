@@ -11,6 +11,9 @@ import ua.com.goit.dto.DeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateDeveloperMapper;
+import ua.com.goit.validation.CreateDeveloperValidator;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -23,8 +26,11 @@ public class DeveloperService {
     private static final DeveloperService DEV_SERVICE = new DeveloperService();
     private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
     private static final SkillDao SKILL_DAO = SkillDao.getInstance();
+    private static final CreateDeveloperValidator DEV_VALIDATOR = CreateDeveloperValidator.getInstance();
+    private static final CreateDeveloperMapper DEVELOPER_MAPPER = CreateDeveloperMapper.getInstance();
     @Getter @Setter
     private View view;
+
 
     private DeveloperService() {
     }
@@ -90,10 +96,13 @@ public class DeveloperService {
             }
     }
 
-    public void createDeveloper(CreateDeveloperDto developer) {
-        //1. Validate
-        //2. Map
-        //3. Save
+    public void createDeveloper(CreateDeveloperDto developerDto) {
+        if (!DEV_VALIDATOR.isValid(developerDto)) {
+            throw new ValidationException("Developer validation failed");
+        } else {
+            Developer newDeveloper = DEVELOPER_MAPPER.mapFrom(developerDto);
+            DEV_DAO.save(newDeveloper);
+        }
     }
 
     public void deleteDeveloperById() {

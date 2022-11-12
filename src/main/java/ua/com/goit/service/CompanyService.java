@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.CompanyDao;
+import ua.com.goit.dto.CompanyDto;
 import ua.com.goit.entity.Company;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CompanyService {
     private static final CompanyService COMPANY_SERVICE = new CompanyService();
@@ -88,5 +91,11 @@ public class CompanyService {
         view.write(company.toString());
 
         return company;
+    }
+
+    public List<CompanyDto> findAllCompanies() {
+        return COMPANY_DAO.findAll().stream()
+                .map(company -> new CompanyDto(company.getName(),company.getId()))
+                .collect(Collectors.toList());
     }
 }

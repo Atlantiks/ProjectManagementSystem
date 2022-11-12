@@ -18,6 +18,11 @@ public class CreateDeveloperValidator implements Validator<CreateDeveloperDto> {
         if (!developerDto.getLastName().matches("[A-z]+")) return false;
         if (!developerDto.getSex().matches("[FM]")) return false;
 
+        if (!developerDto.getCompanyId().isEmpty() &&
+                !developerDto.getCompanyId().matches("\\d+")) {
+            return false;
+        }
+
         return true;
     }
 }

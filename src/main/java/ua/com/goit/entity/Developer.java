@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Developer {
     private Integer id;
     @NonNull private String firstName;
