@@ -11,6 +11,7 @@ import ua.com.goit.dto.DeveloperDto;
 import ua.com.goit.dto.FindDeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateDeveloperMapper;
@@ -116,6 +117,20 @@ public class DeveloperService {
             view.write("Success!");
         } else {
             view.write(String.format("Couldn't delete developer with following Id = %d", devId ));
+        }
+    }
+
+    public void deleteDeveloperById(String id) {
+        Integer devId;
+        try {
+            devId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new NotFoundException("Incorrect id provided");
+        }
+
+        if (!DEV_DAO.removeById(devId)) {
+            throw new DataBaseOperationException(
+                    String.format("Couldn't delete developer with following Id = %d", devId));
         }
     }
 

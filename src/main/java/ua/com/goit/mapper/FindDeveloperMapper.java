@@ -1,9 +1,7 @@
 package ua.com.goit.mapper;
 
-import ua.com.goit.dao.CompanyDao;
 import ua.com.goit.dto.FindDeveloperDto;
 import ua.com.goit.entity.Developer;
-import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.service.CompanyService;
 
 public class FindDeveloperMapper implements Mapper<FindDeveloperDto, Developer> {
