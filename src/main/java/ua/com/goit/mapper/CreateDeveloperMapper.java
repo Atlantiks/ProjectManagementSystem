@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 
 public class CreateDeveloperMapper implements Mapper<CreateDeveloperDto, Developer> {
     private static final CreateDeveloperMapper CREATE_DEVELOPER_MAPPER = new CreateDeveloperMapper();
-    private static final CompanyDao COMPANY_DAO = CompanyDao.getInstance();
 
     private CreateDeveloperMapper() {}
 

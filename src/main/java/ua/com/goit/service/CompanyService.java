@@ -93,6 +93,19 @@ public class CompanyService {
         return company;
     }
 
+    public Company findCompanyById(String id) {
+        Integer companyId;
+        try {
+            companyId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new NotFoundException("Incorrect company id provided");
+        }
+
+        return COMPANY_DAO.findById(companyId).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("Company with Id = %d wasn't found", companyId)));
+    }
+
     public List<CompanyDto> findAllCompanies() {
         return COMPANY_DAO.findAll().stream()
                 .map(company -> new CompanyDto(company.getName(),company.getId()))

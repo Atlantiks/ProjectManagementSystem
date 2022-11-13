@@ -8,11 +8,13 @@ import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
 import ua.com.goit.dto.CreateDeveloperDto;
 import ua.com.goit.dto.DeveloperDto;
+import ua.com.goit.dto.FindDeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateDeveloperMapper;
+import ua.com.goit.mapper.FindDeveloperMapper;
 import ua.com.goit.validation.CreateDeveloperValidator;
 import ua.com.goit.view.View;
 
@@ -28,6 +30,7 @@ public class DeveloperService {
     private static final SkillDao SKILL_DAO = SkillDao.getInstance();
     private static final CreateDeveloperValidator DEV_VALIDATOR = CreateDeveloperValidator.getInstance();
     private static final CreateDeveloperMapper DEVELOPER_MAPPER = CreateDeveloperMapper.getInstance();
+    private static final FindDeveloperMapper FIND_DEVELOPER_MAPPER = FindDeveloperMapper.getInstance();
     @Getter @Setter
     private View view;
 
@@ -126,6 +129,21 @@ public class DeveloperService {
 
         view.write(developer.toString());
         return developer;
+    }
+
+    public FindDeveloperDto findDeveloperById(String id) {
+        int developerId;
+        try {
+            developerId = Integer.parseInt(id);
+        } catch (NumberFormatException ex) {
+            throw new NotFoundException("Incorrect Id provided");
+        }
+
+        Developer developer =  DEV_DAO.findById(developerId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Developer with Id = %d wasn't found", developerId)));
+
+        return FIND_DEVELOPER_MAPPER.mapTo(developer);
     }
 
     public List<DeveloperDto> getAllDevelopers() {

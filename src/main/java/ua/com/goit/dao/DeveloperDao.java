@@ -2,7 +2,6 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.DataBaseOperationException;
-import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -10,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 public final class DeveloperDao implements DataAccess<Integer, Developer> {
     private static final DeveloperDao DEV_DAO = new DeveloperDao();
