@@ -34,6 +34,10 @@ public class CreateDeveloperMapper implements Mapper<CreateDeveloperDto, Develop
 
     @Override
     public CreateDeveloperDto mapTo(Developer developer) {
-        return null;
+        return CreateDeveloperDto.builder()
+                .firstName(developer.getFirstName())
+                .lastName(developer.getLastName())
+                .sex(developer.getSex())
+                .build();
     }
 }

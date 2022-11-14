@@ -5,13 +5,16 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.ProjectDao;
+import ua.com.goit.dto.CreateDeveloperDto;
 import ua.com.goit.dto.CreateProjectDto;
+import ua.com.goit.dto.DeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateDeveloperMapper;
 import ua.com.goit.mapper.CreateProjectMapper;
 import ua.com.goit.validation.CreateProjectValidator;
 import ua.com.goit.view.View;
@@ -21,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ProjectService {
     private static final ProjectService PROJECT_SERVICE = new ProjectService();
@@ -28,6 +32,7 @@ public class ProjectService {
     private static final ProjectDao PROJECT_DAO = ProjectDao.getInstance();
     private static final CreateProjectValidator PROJECT_VALIDATOR = CreateProjectValidator.getInstance();
     private static final CreateProjectMapper PROJECT_MAPPER = CreateProjectMapper.getInstance();
+    private static final CreateDeveloperMapper DEV_MAPPER = CreateDeveloperMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -167,6 +172,20 @@ public class ProjectService {
                     .map(Developer::toString)
                     .forEach(view::write);
         }
+    }
+
+    public List<CreateDeveloperDto> getDevelopersList(String id) {
+
+        Integer projectId = Integer.parseInt(id);
+
+        var devs = PROJECT_DAO.getListOfInvolvedDevelopers(projectId);
+
+        if (devs.size() == 0) {
+            return new ArrayList<>();
+        } else {
+            return devs.stream().map(DEV_MAPPER::mapTo).collect(Collectors.toList());
+        }
+
     }
 
     public void getDevelopersSalary() {

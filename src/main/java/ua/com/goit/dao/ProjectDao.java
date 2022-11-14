@@ -198,8 +198,8 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
         try (var connection = connectionManager.getConnection();
              var st = connection.prepareStatement(query)) {
             if (st.executeQuery().next()) return st.getResultSet().getInt(1);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        } catch (SQLException e) {
+            throw new DataBaseOperationException(e.getMessage());
         }
         return 0;
     }
