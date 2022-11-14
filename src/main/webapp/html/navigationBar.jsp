@@ -32,8 +32,8 @@
                               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Project</a>
                               <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/add-project">Create</a></li>
-                                <li><a class="dropdown-item" href="#">Find</a></li>
-                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li><a class="dropdown-item" href="/find-project">Find</a></li>
+                                <li><a class="dropdown-item" href="/delete-project">Delete</a></li>
                                 <li><a class="dropdown-item" href="/find-all-projects">View All</a></li>
                               </ul>
                             </li>

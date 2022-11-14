@@ -118,6 +118,22 @@ public class ProjectService {
         return project;
     }
 
+    public CreateProjectDto findProjectById(String id) {
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        Project project =  PROJECT_DAO.findById(projectId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Project with Id = %d wasn't found", projectId)));
+
+
+        return PROJECT_MAPPER.mapTo(project);
+    }
+
     public List<Project> findAllProjects() {
         return PROJECT_DAO.findAll();
     }

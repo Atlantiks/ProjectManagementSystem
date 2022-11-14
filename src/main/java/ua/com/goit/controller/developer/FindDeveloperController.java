@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.com.goit.exception.NotFoundException;
-import ua.com.goit.service.CompanyService;
 import ua.com.goit.service.DeveloperService;
 
 import java.io.IOException;
