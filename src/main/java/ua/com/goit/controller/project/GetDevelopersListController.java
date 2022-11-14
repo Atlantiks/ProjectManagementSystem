@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.ProjectService;
 
 import java.io.IOException;
@@ -33,22 +34,27 @@ public class GetDevelopersListController extends HttpServlet {
             writer.write("<h1>Список разработчиков</h1>");
             writer.write(String.format("<p><i>Проекта с id = %s</i></p>", projectId));
 
+            try {
+                var devs = PROJECT_SERVICE.getDevelopersList(projectId);
 
-            var devs = PROJECT_SERVICE.getDevelopersList(projectId);
-
-            if (devs.size() > 0) {
-                writer.write("<ul>");
-                devs.forEach(developerDto -> {
-                    writer.write(String.format("<li>%s %s %s</li>",
-                            developerDto.getFirstName(),
-                            developerDto.getLastName(),
-                            developerDto.getSex().equals("M") ? "Male" : "Female"));
-                });
-                writer.write("</ul>");
-                writer.write("</div");
-            } else {
-                writer.write("<p>Разработчиков не обнаружено</p>");
+                if (devs.size() > 0) {
+                    writer.write("<ul>");
+                    devs.forEach(developerDto -> {
+                        writer.write(String.format("<li>%s %s %s</li>",
+                                developerDto.getFirstName(),
+                                developerDto.getLastName(),
+                                developerDto.getSex().equals("M") ? "Male" : "Female"));
+                    });
+                    writer.write("</ul>");
+                    writer.write("</div");
+                } else {
+                    writer.write("<p>Разработчиков не обнаружено</p>");
+                }
+            } catch (ValidationException e) {
+                req.setAttribute("errors",e.getMessage());
+                doGet(req, resp);
             }
+
         }
     }
 }

@@ -175,8 +175,12 @@ public class ProjectService {
     }
 
     public List<CreateDeveloperDto> getDevelopersList(String id) {
-
-        Integer projectId = Integer.parseInt(id);
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
 
         var devs = PROJECT_DAO.getListOfInvolvedDevelopers(projectId);
 
