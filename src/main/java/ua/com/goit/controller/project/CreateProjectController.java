@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.com.goit.dto.CreateProjectDto;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.ProjectService;
 
@@ -32,7 +33,7 @@ public class CreateProjectController extends HttpServlet {
             PROJECT_SERVICE.createProject(project);
             req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
             resp.getWriter().write("Success!");
-        } catch (ValidationException e) {
+        } catch (ValidationException | DataBaseOperationException e) {
             req.setAttribute("errors",e.getMessage());
             doGet(req, resp);
         }

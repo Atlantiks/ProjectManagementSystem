@@ -29,7 +29,7 @@ public class CreateProjectMapper implements Mapper<CreateProjectDto, Project> {
         return CreateProjectDto.builder()
                 .name(project.getName())
                 .description(project.getDescription())
-                .date("11.11.22")
+                .date(project.getDate_created().toString())
                 .status(project.getStatus())
                 .build();
     }
