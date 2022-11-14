@@ -9,6 +9,7 @@ import ua.com.goit.dto.CreateProjectDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateProjectMapper;
@@ -102,6 +103,20 @@ public class ProjectService {
             view.write("Success!");
         } else {
             view.write(String.format("Couldn't delete Project with following Id = %d", projectId ));
+        }
+    }
+
+    public void deleteProjectById(String id) {
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new NotFoundException("Incorrect id provided");
+        }
+
+        if (!PROJECT_DAO.removeById(projectId)) {
+            throw new DataBaseOperationException(
+                    String.format("Couldn't delete project with following Id = %d", projectId));
         }
     }
 
