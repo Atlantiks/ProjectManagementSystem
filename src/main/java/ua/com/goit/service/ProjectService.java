@@ -202,6 +202,20 @@ public class ProjectService {
                         .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));
     }
 
+    public double getDevelopersSalary(String id) {
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        var salary = PROJECT_DAO.getListOfInvolvedDevelopers(projectId)
+                        .stream().map(Developer::getSalary)
+                        .reduce(BigDecimal.valueOf(0.0), BigDecimal::add);
+        return salary.doubleValue();
+    }
+
     public void getProjectInfo() {
         view.write(PROJECT_DAO.getProjectInfo());
     }

@@ -36,6 +36,7 @@
                                 <li><a class="dropdown-item" href="/delete-project">Delete</a></li>
                                 <li><a class="dropdown-item" href="/find-all-projects">View All</a></li>
                                 <li><a class="dropdown-item" href="/find-all-developers-in-project">View developers</a></li>
+                                <li><a class="dropdown-item" href="/get-project-cost">Get project cost</a></li>
                               </ul>
                             </li>
         <li class="nav-item">
