@@ -8,6 +8,7 @@ import ua.com.goit.dao.ProjectDao;
 import ua.com.goit.dto.CreateDeveloperDto;
 import ua.com.goit.dto.CreateProjectDto;
 import ua.com.goit.dto.DeveloperDto;
+import ua.com.goit.dto.ProjectInfoDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
@@ -218,5 +219,9 @@ public class ProjectService {
 
     public void getProjectInfo() {
         view.write(PROJECT_DAO.getProjectInfo());
+    }
+
+    public List<ProjectInfoDto> getAllProjectsInfo() {
+        return PROJECT_DAO.getAllProjectsInfo();
     }
 }

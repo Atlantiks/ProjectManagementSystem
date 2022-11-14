@@ -1,8 +1,10 @@
 package ua.com.goit.dao;
 
+import ua.com.goit.dto.ProjectInfoDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.DataBaseOperationException;
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -250,10 +252,44 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
                 sb.append(resultSet.getInt(3)).append("\n");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new DataBaseOperationException(e.getMessage());
         }
 
         return sb.toString();
+    }
+
+    public List<ProjectInfoDto> getAllProjectsInfo() {
+        String query = SQL.GET_INFO.command;
+        List<ProjectInfoDto> projects = new ArrayList<>();
+
+        try (var connection = connectionManager.getConnection();
+             var st  = connection.prepareStatement(query)) {
+            var resultSet = st.executeQuery();
+
+            if (resultSet.next()) {
+                var projectInfoDto = ProjectInfoDto.builder()
+                        .date(resultSet.getObject(1,LocalDate.class).toString())
+                        .name(resultSet.getString(2))
+                        .numberOfDevelopers(String.valueOf(resultSet.getInt(3)))
+                        .build();
+                projects.add(projectInfoDto);
+            } else {
+                throw new NotFoundException("Данные не обнаружены");
+            }
+
+            while (resultSet.next()) {
+                var projectInfoDto = ProjectInfoDto.builder()
+                        .date(resultSet.getObject(1,LocalDate.class).toString())
+                        .name(resultSet.getString(2))
+                        .numberOfDevelopers(String.valueOf(resultSet.getInt(3)))
+                        .build();
+                projects.add(projectInfoDto);
+            }
+        } catch (SQLException e) {
+            throw new DataBaseOperationException(e.getMessage());
+        }
+
+        return projects;
     }
 
     enum SQL {
