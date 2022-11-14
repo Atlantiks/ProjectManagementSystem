@@ -25,7 +25,12 @@ public class CreateProjectMapper implements Mapper<CreateProjectDto, Project> {
     }
 
     @Override
-    public CreateProjectDto mapTo(Project object) {
-        return null;
+    public CreateProjectDto mapTo(Project project) {
+        return CreateProjectDto.builder()
+                .name(project.getName())
+                .description(project.getDescription())
+                .date("11.11.22")
+                .status(project.getStatus())
+                .build();
     }
 }

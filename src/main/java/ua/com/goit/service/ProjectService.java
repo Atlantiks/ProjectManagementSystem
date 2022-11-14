@@ -17,6 +17,8 @@ import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ProjectService {
@@ -114,6 +116,10 @@ public class ProjectService {
         view.write(project.toString());
 
         return project;
+    }
+
+    public List<Project> findAllProjects() {
+        return PROJECT_DAO.findAll();
     }
 
     public void getDevelopersList() {

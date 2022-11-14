@@ -34,6 +34,7 @@
                                 <li><a class="dropdown-item" href="/add-project">Create</a></li>
                                 <li><a class="dropdown-item" href="#">Find</a></li>
                                 <li><a class="dropdown-item" href="#">Delete</a></li>
+                                <li><a class="dropdown-item" href="/find-all-projects">View All</a></li>
                               </ul>
                             </li>
         <li class="nav-item">
