@@ -8,7 +8,7 @@
     <h3>Please enter project id to find all developers involved in the project</h3></br>
 
     <form action="/find-all-developers-in-project" method="post">
-    <label>Id</label> <input type="number" name="id" id="id" required></input>
+    <label>Id</label> <input type="number" name="id" id="id" min="1" required></input>
       <input type="submit" value="Submit">
       <input type="reset" value="Reset">
     </form>
