@@ -2,6 +2,7 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -77,6 +78,35 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }
+        return project;
+    }
+
+    public Project save(Project project) {
+        String query = SQL.INSERT.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1,project.getName());
+            statement.setObject(2,project.getDate_created());
+            statement.setObject(3,project.getDescription());
+            statement.setObject(4,project.getStatus());
+            statement.setObject(5,project.getCost());
+
+            int resultRows = statement.executeUpdate();
+
+            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    project.setId(generatedKey.getInt(1));
+                } else {
+                    throw new DataBaseOperationException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseOperationException("Couldn't create new project in database");
+            }
+
+        } catch (Exception e) {
+            throw new DataBaseOperationException(e.getMessage());
         }
         return project;
     }

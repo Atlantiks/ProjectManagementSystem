@@ -9,6 +9,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Project {
     private Integer id;
     @NonNull private String name;

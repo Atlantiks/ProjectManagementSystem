@@ -4,7 +4,7 @@
 
 <div class="container">
     <h1>Create new developer</h1>
-    <h2>Please fill the form bellow to add new developer to database</h2></br>
+    <h2>Please fill the form bellow to add new developer to the system</h2></br>
 
     <form action="/add-developer" method="post">
     <label>Name</label> <input type="text" name="name" id="name" required></input>

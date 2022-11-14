@@ -31,7 +31,7 @@
               <li class="nav-item dropdown">
                               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Project</a>
                               <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/add-dev">Create</a></li>
+                                <li><a class="dropdown-item" href="/add-project">Create</a></li>
                                 <li><a class="dropdown-item" href="#">Find</a></li>
                                 <li><a class="dropdown-item" href="#">Delete</a></li>
                               </ul>

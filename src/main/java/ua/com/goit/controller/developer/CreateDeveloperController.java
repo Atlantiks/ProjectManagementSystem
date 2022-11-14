@@ -45,6 +45,7 @@ public class CreateDeveloperController extends HttpServlet {
         try {
             DEV_SERVICE.createDeveloper(newDev);
             req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
+            resp.getWriter().write("Success!");
         } catch (ValidationException | DataBaseOperationException ex) {
             req.setAttribute("errors",ex.getMessage());
             doGet(req, resp);

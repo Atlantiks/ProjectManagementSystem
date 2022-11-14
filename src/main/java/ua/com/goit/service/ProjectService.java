@@ -5,10 +5,14 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.ProjectDao;
+import ua.com.goit.dto.CreateProjectDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateProjectMapper;
+import ua.com.goit.validation.CreateProjectValidator;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -19,6 +23,8 @@ public class ProjectService {
     private static final ProjectService PROJECT_SERVICE = new ProjectService();
     private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
     private static final ProjectDao PROJECT_DAO = ProjectDao.getInstance();
+    private static final CreateProjectValidator PROJECT_VALIDATOR = CreateProjectValidator.getInstance();
+    private static final CreateProjectMapper PROJECT_MAPPER = CreateProjectMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -74,6 +80,15 @@ public class ProjectService {
         if (Objects.nonNull(savedProject.getId())) {
             view.write("\033[0;92mThe following project was successfully added to database:\033[0m");
             view.write(savedProject + "\n");
+        }
+    }
+
+    public void createProject(CreateProjectDto projectDto) {
+        if (PROJECT_VALIDATOR.isValid(projectDto)) {
+            Project newProject = PROJECT_MAPPER.mapFrom(projectDto);
+            PROJECT_DAO.save(newProject);
+        } else {
+            throw new ValidationException("Couldn't validate project");
         }
     }
 
