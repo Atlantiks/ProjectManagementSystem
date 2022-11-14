@@ -7,7 +7,7 @@
     <h2>Please fill the form bellow to delete developer providing his id</h2></br>
 
     <form action="/delete-developer" method="post">
-    <label>Id</label> <input type="number" name="id" id="id" required></input>
+    <label>Id</label> <input type="number" name="id" id="id" min="1" required></input>
       <input type="submit" value="Submit">
       <input type="reset" value="Reset">
     </form>
