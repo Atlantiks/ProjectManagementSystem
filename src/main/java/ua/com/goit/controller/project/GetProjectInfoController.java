@@ -10,17 +10,12 @@ import ua.com.goit.service.ProjectService;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet("/view-project-info")
+@WebServlet("/view-projects-info")
 public class GetProjectInfoController extends HttpServlet {
     private static final ProjectService PROJECT_SERVICE = ProjectService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/html/view-project-info.jsp").forward(req, resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
 

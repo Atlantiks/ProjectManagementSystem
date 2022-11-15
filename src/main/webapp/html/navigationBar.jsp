@@ -37,12 +37,18 @@
                                 <li><a class="dropdown-item" href="/find-all-projects">View All</a></li>
                                 <li><a class="dropdown-item" href="/find-all-developers-in-project">View developers</a></li>
                                 <li><a class="dropdown-item" href="/get-project-cost">Get project cost</a></li>
-                                <li><a class="dropdown-item" href="/view-project-info">View project info</a></li>
+                                <li><a class="dropdown-item" href="/view-projects-info">View projects info</a></li>
                               </ul>
                             </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">A Link</a>
-        </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Company</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/add-company">Create</a></li>
+                  <li><a class="dropdown-item" href="/find-company">Find</a></li>
+                  <li><a class="dropdown-item" href="/delete-company">Delete</a></li>
+                  <li><a class="dropdown-item" href="/view-all-companies">View All</a></li>
+                </ul>
+              </li>
         <li class="nav-item">
           <a class="nav-link" href="#">B Link</a>
         </li>

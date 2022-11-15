@@ -5,9 +5,14 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.CompanyDao;
 import ua.com.goit.dto.CompanyDto;
+import ua.com.goit.dto.CreateCompanyDto;
 import ua.com.goit.entity.Company;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateCompanyMapper;
+import ua.com.goit.validation.CreateCompanyValidator;
 import ua.com.goit.view.View;
 
 import java.util.List;
@@ -17,6 +22,8 @@ import java.util.stream.Collectors;
 public class CompanyService {
     private static final CompanyService COMPANY_SERVICE = new CompanyService();
     private static final CompanyDao COMPANY_DAO = CompanyDao.getInstance();
+    private static final CreateCompanyValidator COMPANY_VALIDATOR = CreateCompanyValidator.getInstance();
+    private static final CreateCompanyMapper COMPANY_MAPPER = CreateCompanyMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -69,6 +76,14 @@ public class CompanyService {
         }
     }
 
+    public void createCompany(CreateCompanyDto companyDto) {
+        if (COMPANY_VALIDATOR.isValid(companyDto)) {
+            COMPANY_DAO.save(COMPANY_MAPPER.mapFrom(companyDto));
+        } else {
+            throw new ValidationException("Couldn't pass validation test for new company");
+        }
+    }
+
     public void deleteCompanyById() {
         view.write("Please enter Company's id:");
         Integer companyId = Integer.parseInt(view.read());
@@ -78,6 +93,19 @@ public class CompanyService {
         } else {
             view.write(String.format("Couldn't delete Company with following Id = %d", companyId ));
         }
+    }
+
+    public void deleteCompanyById(String id) {
+        Integer companyId;
+        try {
+            companyId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        if (!COMPANY_DAO.removeById(companyId)) throw
+                new DataBaseOperationException(
+                    String.format("Couldn't delete Company with following Id = %d", companyId ));
     }
 
     public Company findCompanyById() {
@@ -108,7 +136,7 @@ public class CompanyService {
 
     public List<CompanyDto> findAllCompanies() {
         return COMPANY_DAO.findAll().stream()
-                .map(company -> new CompanyDto(company.getName(),company.getId()))
+                .map(company -> new CompanyDto(company.getName(), company.getId(), company.getCountry()))
                 .collect(Collectors.toList());
     }
 }

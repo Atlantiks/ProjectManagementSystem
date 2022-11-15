@@ -1,6 +1,7 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Company;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
 
 import java.sql.*;
@@ -69,6 +70,32 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
         } catch (SQLException e) {
             view.write("Couldn't create new company in database");
             view.write(e.getMessage());
+        }
+        return company;
+    }
+
+    public Company save(Company company) {
+        String query = SQL.INSERT.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setObject(1, company.getName());
+            statement.setObject(2, company.getCountry());
+
+            int resultRows = statement.executeUpdate();
+
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    company.setId(generatedKey.getInt(1));
+                } else {
+                    throw new DataBaseOperationException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseOperationException(e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            throw new DataBaseOperationException(e.getMessage());
         }
         return company;
     }

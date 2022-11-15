@@ -1,5 +1,6 @@
 package ua.com.goit.mapper;
 
+import ua.com.goit.Formatter;
 import ua.com.goit.dto.CreateProjectDto;
 import ua.com.goit.entity.Project;
 
@@ -17,7 +18,7 @@ public class CreateProjectMapper implements Mapper<CreateProjectDto, Project> {
     @Override
     public Project mapFrom(CreateProjectDto projectDto) {
         return Project.builder()
-                .name(projectDto.getName())
+                .name(Formatter.capitalize(projectDto.getName()))
                 .date_created(LocalDate.parse(projectDto.getDate()))
                 .description(projectDto.getDescription())
                 .status(projectDto.getStatus())

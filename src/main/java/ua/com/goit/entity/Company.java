@@ -6,6 +6,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class Company {
     private Integer id;
     @NonNull private String name;

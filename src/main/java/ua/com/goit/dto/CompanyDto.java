@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class CompanyDto {
     private String name;
     private Integer id;
+    private String country;
 }
