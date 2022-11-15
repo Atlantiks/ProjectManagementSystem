@@ -4,20 +4,25 @@ import lombok.Getter;
 import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.SkillDao;
+import ua.com.goit.dto.CreateSkillDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateSkillMapper;
+import ua.com.goit.validation.CreateSkillValidator;
 import ua.com.goit.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SkillService {
     private static final SkillService SKILL_SERVICE = new SkillService();
     private static final DeveloperService DEV_SERVICE = DeveloperService.getInstance();
     private static final SkillDao SKILL_DAO = SkillDao.getInstance();
+    private static final CreateSkillMapper SKILL_MAPPER = CreateSkillMapper.getInstance();
+    private final static CreateSkillValidator SKILL_VALIDATOR = CreateSkillValidator.getInstance();
 
     @Getter
     @Setter
@@ -68,8 +73,40 @@ public class SkillService {
         }
     }
 
+    public void createSkill(CreateSkillDto skillDto) {
+       if (!SKILL_VALIDATOR.isValid(skillDto)) {
+           throw new ValidationException("Couldn't validate new skill");
+       }
+
+        if (Objects.isNull(skillDto.getLevel())) {
+            List<CreateSkillDto> newSkillsDto = new ArrayList<>();
+            String[] standardSkillLevelsSet = {"Junior","Middle","Senior"};
+
+            Stream.of(standardSkillLevelsSet).forEach(skillLevel -> {
+                newSkillsDto.add(CreateSkillDto.builder()
+                        .name(skillDto.getName())
+                        .level(skillLevel)
+                        .build());
+            });
+
+            newSkillsDto.stream()
+                    .map(SKILL_MAPPER::mapFrom)
+                    .forEach(SKILL_DAO::save);
+
+        } else {
+            SKILL_DAO.save(SKILL_MAPPER.mapFrom(skillDto));
+        }
+    }
+
     public void viewAllSkills() {
         view.write(getSkillsList());
+    }
+
+    public List<String> getAllSkillNames() {
+        return SKILL_DAO.findAll().stream()
+                .map(Skill::getName)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public void assignNewSkillToDeveloper() {

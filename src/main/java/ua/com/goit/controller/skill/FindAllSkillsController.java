@@ -1,18 +1,18 @@
-package ua.com.goit.controller.developer;
+package ua.com.goit.controller.skill;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ua.com.goit.service.DeveloperService;
+import ua.com.goit.service.SkillService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-@WebServlet(urlPatterns = "/find-all-devs")
-public class FindAllDevelopersServlet extends HttpServlet {
-    private final DeveloperService DEV_SERVICE = DeveloperService.getInstance();
+@WebServlet("/view-all-skills")
+public class FindAllSkillsController extends HttpServlet {
+    private static final SkillService SKILL_SERVICE = SkillService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,11 +23,10 @@ public class FindAllDevelopersServlet extends HttpServlet {
 
         try (var writer = resp.getWriter()) {
             writer.write("<div class=\"container\">");
-            writer.write("<h1>Список всех разработчиков</h1>");
+            writer.write("<h1>Список всех технологий</h1>");
             writer.write("<ul>");
-            DEV_SERVICE.getAllDevelopers().forEach(developerDto -> {
-                writer.write(String.format("<li>%s %s</li>", developerDto.getFullName(),
-                        developerDto.getSex().equals("M") ? "Male" : "Female"));
+            SKILL_SERVICE.getAllSkillNames().forEach(skillName -> {
+                writer.write(String.format("<li><strong>%s</strong></li>", skillName));
             });
             writer.write("</ul>");
             writer.write("</div");

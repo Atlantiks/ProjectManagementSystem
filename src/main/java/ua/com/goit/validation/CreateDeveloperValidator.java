@@ -14,7 +14,7 @@ public class CreateDeveloperValidator implements Validator<CreateDeveloperDto> {
 
     @Override
     public boolean isValid(CreateDeveloperDto developerDto) {
-        if (!developerDto.getFirstName().matches("[A-z]+")) return false;
+        if (!developerDto.getFirstName().matches("[A-z\\s]+")) return false;
         if (!developerDto.getLastName().matches("[A-z]+")) return false;
         if (!developerDto.getSex().matches("[FM]")) return false;
 

@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="container">
-    <h1>Create new project</h1>
+    <h1>Create new <span style="color: blue">project</span></h1>
     <h2>Please fill the form bellow to add new project to the system</h2></br>
 
     <form action="/add-project" method="post">

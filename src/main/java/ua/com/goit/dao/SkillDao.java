@@ -2,6 +2,7 @@ package ua.com.goit.dao;
 
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
 
 import java.sql.*;
@@ -70,6 +71,32 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         } catch (SQLException e) {
             view.write("Couldn't create new skill in database");
             view.write(e.getMessage());
+        }
+        return skill;
+    }
+
+    public Skill save(Skill skill) {
+        String query = SQL.INSERT.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setObject(1, skill.getName());
+            statement.setObject(2, skill.getLevel());
+
+            statement.executeUpdate();
+
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    skill.setId(generatedKey.getInt(1));
+                } else {
+                    throw new DataBaseOperationException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseOperationException("Couldn't create new skill in database");
+            }
+
+        } catch (SQLException e) {
+            throw new DataBaseOperationException("Couldn't create new skill in database");
         }
         return skill;
     }
