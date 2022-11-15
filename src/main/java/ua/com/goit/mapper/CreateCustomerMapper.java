@@ -28,7 +28,12 @@ public class CreateCustomerMapper implements Mapper<CreateCustomerDto, Customer>
     }
 
     @Override
-    public CreateCustomerDto mapTo(Customer object) {
-        return null;
+    public CreateCustomerDto mapTo(Customer customer) {
+        return CreateCustomerDto.builder()
+                .name(customer.getFirstName())
+                .surname(customer.getLastName())
+                .company(Objects.isNull(customer.getCompany()) ? "" : customer.getCompany())
+                .address(customer.getAddress())
+                .build();
     }
 }

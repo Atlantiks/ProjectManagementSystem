@@ -7,13 +7,17 @@ import ua.com.goit.dao.CustomerDao;
 import ua.com.goit.dto.CreateCustomerDto;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateCustomerMapper;
 import ua.com.goit.validation.CreateCustomerValidator;
 import ua.com.goit.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CustomerService {
     private static final CustomerService CUSTOMER_SERVICE = new CustomerService();
@@ -111,6 +115,20 @@ public class CustomerService {
         }
     }
 
+    public void deleteCustomerById(String id) {
+        Integer customerId;
+        try {
+            customerId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        if (!CUSTOMER_DAO.removeById(customerId)) {
+            throw new DataBaseOperationException(
+                    String.format("Couldn't delete customer with following Id = %d", customerId));
+        }
+    }
+
     public Customer findCustomerById() {
         view.write("Please enter customer's id:");
         Integer customerId = Integer.parseInt(view.read());
@@ -122,5 +140,24 @@ public class CustomerService {
         view.write(customer.toString());
 
         return customer;
+    }
+
+    public CreateCustomerDto findCustomerById(String id) {
+        Integer customerId;
+        try {
+            customerId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        Customer customer = CUSTOMER_DAO.findById(customerId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Customer with Id = %d wasn't found", customerId)));
+
+        return CREATE_CUSTOMER_MAPPER.mapTo(customer);
+    }
+
+    public List<CreateCustomerDto> findAllCustomers() {
+        return CUSTOMER_DAO.findAll().stream().map(CREATE_CUSTOMER_MAPPER::mapTo).collect(Collectors.toList());
     }
 }
