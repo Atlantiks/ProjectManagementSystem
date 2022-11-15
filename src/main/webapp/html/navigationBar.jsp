@@ -49,9 +49,15 @@
                   <li><a class="dropdown-item" href="/view-all-companies">View All</a></li>
                 </ul>
               </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">B Link</a>
-        </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Customer</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/add-customer">Create</a></li>
+                  <li><a class="dropdown-item" href="/find-customer">Find</a></li>
+                  <li><a class="dropdown-item" href="/delete-customer">Delete</a></li>
+                  <li><a class="dropdown-item" href="/view-all-customers">View All</a></li>
+                </ul>
+              </li>
         <li class="nav-item">
           <a class="nav-link" href="#">C Link</a>
         </li>

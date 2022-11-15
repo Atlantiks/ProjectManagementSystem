@@ -4,9 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.CustomerDao;
+import ua.com.goit.dto.CreateCustomerDto;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
+import ua.com.goit.mapper.CreateCustomerMapper;
+import ua.com.goit.validation.CreateCustomerValidator;
 import ua.com.goit.view.View;
 
 import java.util.Objects;
@@ -14,6 +18,8 @@ import java.util.Objects;
 public class CustomerService {
     private static final CustomerService CUSTOMER_SERVICE = new CustomerService();
     private static final CustomerDao CUSTOMER_DAO = CustomerDao.getInstance();
+    private final static CreateCustomerValidator CUSTOMER_VALIDATOR = CreateCustomerValidator.getInstance();
+    private static final CreateCustomerMapper CREATE_CUSTOMER_MAPPER = CreateCustomerMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -82,6 +88,15 @@ public class CustomerService {
         if (Objects.nonNull(savedCustomer.getId())) {
             view.write("\033[0;92mThe following Customer was successfully added to database:\033[0m");
             view.write(savedCustomer + "\n");
+        }
+    }
+
+    public void createCustomer(CreateCustomerDto customerDto) {
+        if (CUSTOMER_VALIDATOR.isValid(customerDto)) {
+            Customer newCustomer = CREATE_CUSTOMER_MAPPER.mapFrom(customerDto);
+            CUSTOMER_DAO.save(newCustomer);
+        } else {
+            throw new ValidationException("Validation failed");
         }
     }
 

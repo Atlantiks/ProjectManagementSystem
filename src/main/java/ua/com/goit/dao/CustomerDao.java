@@ -1,6 +1,7 @@
 package ua.com.goit.dao;
 
 import ua.com.goit.entity.Customer;
+import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
 
 import java.sql.*;
@@ -71,6 +72,34 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
 
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
+        }
+        return customer;
+    }
+
+    public Customer save(Customer customer) {
+        String query = SQL.INSERT.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1,customer.getFirstName());
+            statement.setString(2,customer.getLastName());
+            statement.setObject(3,customer.getCompany());
+            statement.setObject(4,customer.getAddress());
+
+            statement.executeUpdate();
+
+            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+                if (generatedKey.next()) {
+                    customer.setId(generatedKey.getInt(1));
+                } else {
+                    throw new DataBaseOperationException("No id was returned back.");
+                }
+            } catch (SQLException e) {
+                throw new DataBaseOperationException("Couldn't create new customer in database");
+            }
+
+        } catch (Exception e) {
+            throw new DataBaseOperationException(e.getMessage());
         }
         return customer;
     }
