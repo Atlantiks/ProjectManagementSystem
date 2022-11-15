@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.CompanyService;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class DeleteCompanyController extends HttpServlet {
             writer.write("<div class=\"container\">");
             writer.write(String.format("<p>Company with id=%s was successfully deleted</p>", req.getParameter("id")));
             writer.write("</div");
-        } catch (NotFoundException | DataBaseOperationException e) {
+        } catch (NotFoundException | DataBaseOperationException | ValidationException e) {
             req.setAttribute("errors",e.getMessage());
             doGet(req, resp);
         }
