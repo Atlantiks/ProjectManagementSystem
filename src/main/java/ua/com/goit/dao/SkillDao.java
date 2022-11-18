@@ -254,6 +254,31 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         return insertedRows > 0;
     }
 
+    public List<Skill> findSkillsOfDeveloperWithName(String fullname) {
+        String query = SQL.GET_ALL_SKILLS_OF_DEV.command;
+        List<Skill> devSkills = new ArrayList<>();
+
+        try (var connection = connectionManager.getConnection();
+             var st = connection.prepareStatement(query)) {
+            st.setString(1, fullname);
+            var resultSet = st.executeQuery();
+
+            while (resultSet.next()) {
+                devSkills.add(
+                        Skill.builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .level(resultSet.getString(3))
+                        .build()
+                );
+            }
+        } catch (SQLException e) {
+            throw new DataBaseOperationException(e.getMessage());
+        }
+
+        return devSkills;
+    }
+
     enum SQL {
         INSERT("INSERT INTO skills (name, level) " +
                 "VALUES (?,?)"),
@@ -288,7 +313,13 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
                 "WHERE s.level = ?"),
 
         ADD_SKILL_TO_DEV("INSERT INTO developers_skills (developers_id, skill_id)\n" +
-                "VALUES (?, ?)");
+                "VALUES (?, ?)"),
+
+        GET_ALL_SKILLS_OF_DEV("SELECT s.id, s.name, s.level\n" +
+                "FROM developers d\n" +
+                "JOIN developers_skills ds on d.id = ds.developers_id\n" +
+                "JOIN skills s on ds.skill_id = s.id\n" +
+                "WHERE CONCAT(d.first_name, ' ', d.last_name) = ?");
 
         SQL(String command) {
             this.command = command;

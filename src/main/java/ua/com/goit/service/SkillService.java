@@ -3,13 +3,20 @@ package ua.com.goit.service;
 import lombok.Getter;
 import lombok.Setter;
 import ua.com.goit.Formatter;
+import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.SkillDao;
+import ua.com.goit.dto.assignSkill.AssignSkillDto;
+import ua.com.goit.dto.assignSkill.ChooseSkillLevelForDeveloperDto;
 import ua.com.goit.dto.CreateSkillDto;
+import ua.com.goit.dto.assignSkill.SetSelectedSkillToDeveloperDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.exception.BlancFieldException;
+import ua.com.goit.exception.DataBaseOperationException;
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateSkillMapper;
+import ua.com.goit.validation.AssignSkillValidator;
 import ua.com.goit.validation.CreateSkillValidator;
 import ua.com.goit.view.View;
 
@@ -21,8 +28,10 @@ public class SkillService {
     private static final SkillService SKILL_SERVICE = new SkillService();
     private static final DeveloperService DEV_SERVICE = DeveloperService.getInstance();
     private static final SkillDao SKILL_DAO = SkillDao.getInstance();
+    private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
     private static final CreateSkillMapper SKILL_MAPPER = CreateSkillMapper.getInstance();
     private final static CreateSkillValidator SKILL_VALIDATOR = CreateSkillValidator.getInstance();
+    private final static AssignSkillValidator ASSIGN_SKILL_VALIDATOR = AssignSkillValidator.getInstance();
 
     @Getter
     @Setter
@@ -109,6 +118,10 @@ public class SkillService {
                 .collect(Collectors.toList());
     }
 
+    public List<Skill> getSkillsOfDeveloper(AssignSkillDto skillDto) {
+        return SKILL_DAO.findSkillsOfDeveloperWithName(skillDto.getDeveloper());
+    }
+
     public void assignNewSkillToDeveloper() {
         Developer developer = DEV_SERVICE.findDeveloperById();
         List<Skill> allSkills = SKILL_DAO.findAll();
@@ -154,6 +167,34 @@ public class SkillService {
         } else {
             view.write(String.format("Entered skill %s doesn't exist in database. Add skill first.", devNewSkill));
         }
+    }
+
+    public void assignNewSkillToDeveloper(SetSelectedSkillToDeveloperDto skillToDeveloperDto) {
+        if (!SKILL_DAO.assignSkillToDev(
+                Integer.parseInt(skillToDeveloperDto.getDeveloperId()),
+                Integer.parseInt(skillToDeveloperDto.getSkillId()))) {
+            throw new DataBaseOperationException("Couldn't assign new skill to developer");
+        };
+    }
+
+    public ChooseSkillLevelForDeveloperDto getSkillLevels(AssignSkillDto skillDto) {
+        if (!ASSIGN_SKILL_VALIDATOR.isValid(skillDto)) {
+            throw new ValidationException("Couldn't assign selected skill to a developer.");
+        }
+
+        Developer developer = DEV_DAO.findByFullName(skillDto.getDeveloper()).orElseThrow(
+                () -> new NotFoundException("Developer was not found in the system"));
+
+        List<Skill> availableSkills = new ArrayList<>();
+
+        SKILL_DAO.findAll().stream()
+                .filter(skill -> skill.getName().equalsIgnoreCase(skillDto.getSkill()))
+                .forEach(availableSkills::add);
+
+        return ChooseSkillLevelForDeveloperDto.builder()
+                .developer(developer)
+                .availableSkills(availableSkills)
+                .build();
     }
 
     private String getSkillsList() {

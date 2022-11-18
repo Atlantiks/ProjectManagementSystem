@@ -47,6 +47,31 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
         return Optional.empty();
     }
 
+    public Optional<Developer> findByFullName(String fullname) {
+        String query = SQL.SELECT_BY_FULLNAME.command;
+
+        try (var connection = connectionManager.getConnection();
+             var statement = connection.prepareStatement(query)) {
+            statement.setString(1, fullname);
+            statement.executeQuery();
+
+            var rs = statement.getResultSet();
+            if (rs.next()) {
+                return Optional.of(new Developer(
+                        rs.getInt("id"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("sex"),
+                        rs.getObject("company_id", Integer.class),
+                        rs.getObject("salary", BigDecimal.class)));
+            }
+        } catch (Exception e) {
+            throw new DataBaseOperationException(e.getMessage());
+        }
+
+        return Optional.empty();
+    }
+
     @Override
     public Developer save(Developer developer, View view) {
         String query = SQL.INSERT.command;
@@ -212,6 +237,9 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
 
         SELECT_BY_ID("SELECT id, first_name, last_name, sex, company_id, salary FROM developers " +
                 "WHERE id = ?"),
+
+        SELECT_BY_FULLNAME("SELECT id, first_name, last_name, sex, company_id, salary FROM developers d " +
+                "WHERE CONCAT(d.first_name, ' ',d.last_name) = ?"),
 
         UPDATE("UPDATE developers " +
                 "SET first_name = ?, last_name = ?, sex = ?, company_id = ?, salary = ? " +

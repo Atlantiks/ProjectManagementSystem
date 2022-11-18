@@ -5,11 +5,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ua.com.goit.dto.assignSkill.AssignSkillDto;
+import ua.com.goit.exception.NotFoundException;
+import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.DeveloperService;
 import ua.com.goit.service.SkillService;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 @WebServlet("/assign-skill")
 public class AssignSkillController extends HttpServlet {
@@ -28,16 +30,20 @@ public class AssignSkillController extends HttpServlet {
         String developer = req.getParameter("developer");
         String skill = req.getParameter("skill");
 
-        resp.setContentType("text/html");
-        resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        var assignSkillDto = AssignSkillDto.builder()
+                .developer(developer)
+                .skill(skill)
+                .build();
 
-        req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
+        try {
+            var skillLevelsForDev = SKILL_SERVICE.getSkillLevels(assignSkillDto);
 
-        try (var writer = resp.getWriter()) {
-            writer.write("<div class=\"container\">");
-            writer.write(String.format("<p>%s</p>", developer));
-            writer.write(String.format("<p>%s</p>", skill));
-            writer.write("</div");
+            req.setAttribute("info",skillLevelsForDev);
+
+            req.getRequestDispatcher("/html/set-skill-level.jsp").forward(req, resp);
+        } catch (NotFoundException | ValidationException e) {
+            req.setAttribute("errors", e.getMessage());
+            doGet(req, resp);
         }
     }
 }

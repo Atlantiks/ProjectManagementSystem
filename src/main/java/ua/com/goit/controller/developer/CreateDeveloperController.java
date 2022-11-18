@@ -29,7 +29,7 @@ public class CreateDeveloperController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var allCompanies = COMPANY_SERVICE.findAllCompanies();
-        req.setAttribute("companies",allCompanies);
+        req.setAttribute("companies", allCompanies);
         req.getRequestDispatcher("/html/add-developer.jsp").include(req,resp);
     }
 
