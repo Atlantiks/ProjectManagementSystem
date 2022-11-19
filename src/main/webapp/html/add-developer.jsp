@@ -11,7 +11,7 @@
     <label>Surname</label> <input type="text" name="surname" id="surname" required></input></br></br>
     <p>Please select sex of a new developer:</p>
 
-    <input type="radio" id="male" name="sex" value="M" required>
+    <input type="radio" id="male" name="sex" value="M" checked required>
     <label for="male">Male</label><br>
     <input type="radio" id="female" name="sex" value="F">
     <label for="female">Female</label></br></br>

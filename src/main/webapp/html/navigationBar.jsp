@@ -24,6 +24,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/add-developer">Create</a></li>
                   <li><a class="dropdown-item" href="/find-developer">Find</a></li>
+                  <li><a class="dropdown-item" href="/update-developer">Update</a></li>
                   <li><a class="dropdown-item" href="/delete-developer">Delete</a></li>
                   <li><a class="dropdown-item" href="/find-all-devs">View All</a></li>
                 </ul>

@@ -211,7 +211,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
             updatedRows = statement.executeUpdate();
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new DataBaseOperationException(e.getMessage());
         }
         return updatedRows > 0;
     }
