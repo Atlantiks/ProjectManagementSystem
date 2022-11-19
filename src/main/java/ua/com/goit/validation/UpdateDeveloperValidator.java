@@ -17,7 +17,11 @@ public class UpdateDeveloperValidator implements Validator<UpdateDeveloperDto> {
         if (!developerDto.getName().matches("[A-z\\s]+")) return false;
         if (!developerDto.getSurname().matches("[A-z]+")) return false;
         if (!developerDto.getSex().matches("[FM]")) return false;
-        if (!developerDto.getSalary().matches("\\d+")) return false;
+        try {
+            Double.parseDouble(developerDto.getSalary());
+        } catch (NumberFormatException e){
+            return false;
+        }
 
         return true;
     }
