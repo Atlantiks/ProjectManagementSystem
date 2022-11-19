@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ua.com.goit.dto.FindDeveloperDto;
+
 import ua.com.goit.dto.UpdateDeveloperDto;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
@@ -29,7 +29,7 @@ public class UpdateDeveloperController extends HttpServlet {
             try {
                 var developer = DEV_SERVICE.getDeveloperForUpdate(req.getParameter("id"));
                 var companies = COMPANY_SERVICE.findAllCompanies();
-                System.out.println(developer);
+
                 req.setAttribute("developer", developer);
                 req.setAttribute("companies", companies);
             } catch (NotFoundException e) {
@@ -49,14 +49,14 @@ public class UpdateDeveloperController extends HttpServlet {
                 .companyName(req.getParameter("company"))
                 .salary(req.getParameter("salary"))
                 .build();
-        System.out.println(dev);
         try {
             DEV_SERVICE.updateDeveloper(dev);
             req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
+            resp.getWriter().write("<div class=\"container\">");
             resp.getWriter().write("Success!");
+            resp.getWriter().write("</div>");
         } catch (ValidationException | DataBaseOperationException ex) {
             req.setAttribute("errors",ex.getMessage());
-            System.out.println(ex.getMessage());
             doGet(req, resp);
         }
     }

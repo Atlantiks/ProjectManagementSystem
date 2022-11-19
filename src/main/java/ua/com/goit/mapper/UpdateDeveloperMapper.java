@@ -24,7 +24,7 @@ public class UpdateDeveloperMapper implements Mapper<UpdateDeveloperDto, Develop
             var company = COMPANY_SERVICE.findAllCompanies().stream()
                     .filter(companyDto -> companyDto.getName().equalsIgnoreCase(developerDto.getCompanyName()))
                     .findFirst().orElse(null);
-            System.out.println(company);
+
             if (Objects.nonNull(company)) companyId = company.getId();
         }
         return Developer.builder()

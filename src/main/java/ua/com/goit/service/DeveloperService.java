@@ -19,6 +19,7 @@ import ua.com.goit.mapper.CreateDeveloperMapper;
 import ua.com.goit.mapper.FindDeveloperMapper;
 import ua.com.goit.mapper.UpdateDeveloperMapper;
 import ua.com.goit.validation.CreateDeveloperValidator;
+import ua.com.goit.validation.UpdateDeveloperValidator;
 import ua.com.goit.view.View;
 
 import java.math.BigDecimal;
@@ -32,6 +33,7 @@ public class DeveloperService {
     private static final DeveloperDao DEV_DAO = DeveloperDao.getInstance();
     private static final SkillDao SKILL_DAO = SkillDao.getInstance();
     private static final CreateDeveloperValidator DEV_VALIDATOR = CreateDeveloperValidator.getInstance();
+    private final static UpdateDeveloperValidator UPDATE_DEVELOPER_VALIDATOR = UpdateDeveloperValidator.getInstance();
     private static final CreateDeveloperMapper DEVELOPER_MAPPER = CreateDeveloperMapper.getInstance();
     private static final FindDeveloperMapper FIND_DEVELOPER_MAPPER = FindDeveloperMapper.getInstance();
     private static final UpdateDeveloperMapper UPDATE_DEVELOPER_MAPPER = UpdateDeveloperMapper.getInstance();
@@ -180,6 +182,7 @@ public class DeveloperService {
     }
 
     public void updateDeveloper(UpdateDeveloperDto developerDto) {
+        if (!UPDATE_DEVELOPER_VALIDATOR.isValid(developerDto)) throw new ValidationException("Validation Failed!");
         DEV_DAO.update(UPDATE_DEVELOPER_MAPPER.mapFrom(developerDto));
     }
 
