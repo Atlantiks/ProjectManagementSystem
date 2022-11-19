@@ -16,6 +16,11 @@ public class UpdateCompanyValidator implements Validator<UpdateCompanyDto> {
     public boolean isValid(UpdateCompanyDto companyDto) {
         if (!companyDto.getName().matches("[0-9A-z\\s]+")) return false;
         if (!companyDto.getCountry().matches("[A-z\\s]+")) return false;
+        try {
+            Integer.parseInt(companyDto.getId());
+        } catch (NumberFormatException e){
+            return false;
+        }
 
         return true;
     }

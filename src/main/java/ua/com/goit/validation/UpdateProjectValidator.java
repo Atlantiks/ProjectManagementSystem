@@ -11,17 +11,17 @@ public class UpdateProjectValidator implements Validator<UpdateProjectDto> {
     @Override
     public boolean isValid(UpdateProjectDto projectDto) {
         List<String> statuses = List.of("Active", "Inactive", "Discontinued", "Not commissioned");
+        if (!statuses.contains(projectDto.getStatus())) return false;
 
         if (!projectDto.getName().matches("[A-z]+")) return false;
         if (!projectDto.getDescription().isBlank()) return false;
         try {
+            Integer.parseInt(projectDto.getId());
             LocalDate.parse(projectDto.getDate());
-        } catch (DateTimeParseException e) {
+        } catch (DateTimeParseException | NumberFormatException e) {
             return false;
         }
-        if (!statuses.contains(projectDto.getStatus())) return false;
 
-
-        return false;
+        return true;
     }
 }
