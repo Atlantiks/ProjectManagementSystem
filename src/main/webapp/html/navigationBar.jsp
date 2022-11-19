@@ -57,6 +57,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/add-customer">Create</a></li>
                   <li><a class="dropdown-item" href="/find-customer">Find</a></li>
+                  <li><a class="dropdown-item" href="/update-customer">Update</a></li>
                   <li><a class="dropdown-item" href="/delete-customer">Delete</a></li>
                   <li><a class="dropdown-item" href="/view-all-customers">View All</a></li>
                 </ul>
@@ -70,9 +71,6 @@
                   <li><a class="dropdown-item" href="/view-all-skills">View All</a></li>
                 </ul>
               </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">C Link</a>
-        </li>
       </ul>
     </div>
   </div>

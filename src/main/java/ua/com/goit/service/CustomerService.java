@@ -5,16 +5,19 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.CustomerDao;
 import ua.com.goit.dto.CreateCustomerDto;
+import ua.com.goit.dto.UpdateCustomerDto;
+import ua.com.goit.entity.Company;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateCustomerMapper;
+import ua.com.goit.mapper.UpdateCustomerMapper;
 import ua.com.goit.validation.CreateCustomerValidator;
+import ua.com.goit.validation.UpdateCustomerValidator;
 import ua.com.goit.view.View;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,7 +26,9 @@ public class CustomerService {
     private static final CustomerService CUSTOMER_SERVICE = new CustomerService();
     private static final CustomerDao CUSTOMER_DAO = CustomerDao.getInstance();
     private final static CreateCustomerValidator CUSTOMER_VALIDATOR = CreateCustomerValidator.getInstance();
+    private final static UpdateCustomerValidator UPDATE_CUSTOMER_VALIDATOR = UpdateCustomerValidator.getInstance();
     private static final CreateCustomerMapper CREATE_CUSTOMER_MAPPER = CreateCustomerMapper.getInstance();
+    private static final UpdateCustomerMapper UPDATE_CUSTOMER_MAPPER = UpdateCustomerMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -142,6 +147,11 @@ public class CustomerService {
         return customer;
     }
 
+    public void update(UpdateCustomerDto customerDto) {
+        if (!UPDATE_CUSTOMER_VALIDATOR.isValid(customerDto)) throw new ValidationException("Validation failed");
+        CUSTOMER_DAO.update(UPDATE_CUSTOMER_MAPPER.mapFrom(customerDto));
+    }
+
     public CreateCustomerDto findCustomerById(String id) {
         Integer customerId;
         try {
@@ -155,6 +165,22 @@ public class CustomerService {
                         String.format("Customer with Id = %d wasn't found", customerId)));
 
         return CREATE_CUSTOMER_MAPPER.mapTo(customer);
+    }
+
+    public UpdateCustomerDto getCustomerForUpdate(String id) {
+        Integer customerId;
+        try {
+            customerId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        Customer customer =  CUSTOMER_DAO.findById(customerId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Customer with Id = %d wasn't found", customerId)));
+
+
+        return UPDATE_CUSTOMER_MAPPER.mapTo(customer);
     }
 
     public List<CreateCustomerDto> findAllCustomers() {

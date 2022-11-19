@@ -17,7 +17,7 @@
 </c:if>
 
 <c:if test="${not empty requestScope.project}">
-    <h1>Update existing <span style="color: orange">project</span></h1>
+    <h1>Update existing <span style="color: blue">project</span></h1>
     <h2>Please fill the form bellow to update existing project in the system</h2></br>
     <form action="/update-project" method="post">
         <input type="hidden" id="projectId" name="id" value="${requestScope.project.id}">
