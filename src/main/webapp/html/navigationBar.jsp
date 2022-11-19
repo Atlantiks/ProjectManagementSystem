@@ -47,6 +47,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="/add-company">Create</a></li>
                   <li><a class="dropdown-item" href="/find-company">Find</a></li>
+                  <li><a class="dropdown-item" href="/update-company">Update</a></li>
                   <li><a class="dropdown-item" href="/delete-company">Delete</a></li>
                   <li><a class="dropdown-item" href="/view-all-companies">View All</a></li>
                 </ul>

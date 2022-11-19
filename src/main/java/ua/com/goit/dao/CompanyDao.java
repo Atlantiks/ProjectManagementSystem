@@ -170,7 +170,7 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
             updatedRows = statement.executeUpdate();
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new DataBaseOperationException(e.getMessage());
         }
         return updatedRows > 0;
     }

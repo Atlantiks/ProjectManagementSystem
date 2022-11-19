@@ -6,13 +6,18 @@ import ua.com.goit.Formatter;
 import ua.com.goit.dao.CompanyDao;
 import ua.com.goit.dto.CompanyDto;
 import ua.com.goit.dto.CreateCompanyDto;
+import ua.com.goit.dto.UpdateCompanyDto;
+import ua.com.goit.dto.UpdateProjectDto;
 import ua.com.goit.entity.Company;
+import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateCompanyMapper;
+import ua.com.goit.mapper.UpdateCompanyMapper;
 import ua.com.goit.validation.CreateCompanyValidator;
+import ua.com.goit.validation.UpdateCompanyValidator;
 import ua.com.goit.view.View;
 
 import java.util.List;
@@ -23,7 +28,9 @@ public class CompanyService {
     private static final CompanyService COMPANY_SERVICE = new CompanyService();
     private static final CompanyDao COMPANY_DAO = CompanyDao.getInstance();
     private static final CreateCompanyValidator COMPANY_VALIDATOR = CreateCompanyValidator.getInstance();
+    private static final UpdateCompanyValidator UPDATE_COMPANY_VALIDATOR = UpdateCompanyValidator.getInstance();
     private static final CreateCompanyMapper COMPANY_MAPPER = CreateCompanyMapper.getInstance();
+    private static final UpdateCompanyMapper UPDATE_COMPANY_MAPPER = UpdateCompanyMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -132,6 +139,27 @@ public class CompanyService {
         return COMPANY_DAO.findById(companyId).orElseThrow(
                 () -> new NotFoundException(
                         String.format("Company with Id = %d wasn't found", companyId)));
+    }
+
+    public void update(UpdateCompanyDto companyDto) {
+        if (!UPDATE_COMPANY_VALIDATOR.isValid(companyDto)) throw new ValidationException("Validation failed");
+        COMPANY_DAO.update(UPDATE_COMPANY_MAPPER.mapFrom(companyDto));
+    }
+
+    public UpdateCompanyDto getCompanyForUpdateById(String id) {
+        Integer companyId;
+        try {
+            companyId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        Company company =  COMPANY_DAO.findById(companyId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Company with Id = %d wasn't found", companyId)));
+
+
+        return UPDATE_COMPANY_MAPPER.mapTo(company);
     }
 
     public List<CompanyDto> findAllCompanies() {
