@@ -32,6 +32,7 @@ public class UpdateProjectMapper implements Mapper<UpdateProjectDto, Project> {
                 .name(project.getName())
                 .description(project.getDescription())
                 .date(project.getDate_created().toString())
+                .status(project.getStatus())
                 .build();
     }
 }
