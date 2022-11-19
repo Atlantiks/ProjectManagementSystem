@@ -5,10 +5,7 @@ import lombok.Setter;
 import ua.com.goit.Formatter;
 import ua.com.goit.dao.DeveloperDao;
 import ua.com.goit.dao.ProjectDao;
-import ua.com.goit.dto.CreateDeveloperDto;
-import ua.com.goit.dto.CreateProjectDto;
-import ua.com.goit.dto.DeveloperDto;
-import ua.com.goit.dto.ProjectInfoDto;
+import ua.com.goit.dto.*;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
@@ -17,6 +14,7 @@ import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateDeveloperMapper;
 import ua.com.goit.mapper.CreateProjectMapper;
+import ua.com.goit.mapper.UpdateProjectMapper;
 import ua.com.goit.validation.CreateProjectValidator;
 import ua.com.goit.view.View;
 
@@ -34,6 +32,7 @@ public class ProjectService {
     private static final CreateProjectValidator PROJECT_VALIDATOR = CreateProjectValidator.getInstance();
     private static final CreateProjectMapper PROJECT_MAPPER = CreateProjectMapper.getInstance();
     private static final CreateDeveloperMapper DEV_MAPPER = CreateDeveloperMapper.getInstance();
+    private static final UpdateProjectMapper UPDATE_PROJECT_MAPPER = UpdateProjectMapper.getInstance();
     @Getter
     @Setter
     private View view;
@@ -101,6 +100,11 @@ public class ProjectService {
         }
     }
 
+    public void update(UpdateProjectDto projectDto) {
+        var project = UPDATE_PROJECT_MAPPER.mapFrom(projectDto);
+        PROJECT_DAO.update(project);
+    }
+
     public void deleteProjectById() {
         view.write("Please enter Project's id:");
         Integer projectId = Integer.parseInt(view.read());
@@ -153,6 +157,22 @@ public class ProjectService {
 
 
         return PROJECT_MAPPER.mapTo(project);
+    }
+
+    public UpdateProjectDto getProjectForUpdateById(String id) {
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
+
+        Project project =  PROJECT_DAO.findById(projectId).orElseThrow(() ->
+                new NotFoundException(
+                        String.format("Project with Id = %d wasn't found", projectId)));
+
+
+        return UPDATE_PROJECT_MAPPER.mapTo(project);
     }
 
     public List<Project> findAllProjects() {

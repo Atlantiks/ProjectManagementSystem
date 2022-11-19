@@ -189,7 +189,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             updatedRows = statement.executeUpdate();
 
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            throw new DataBaseOperationException(e.getMessage());
         }
         return updatedRows > 0;
     }
