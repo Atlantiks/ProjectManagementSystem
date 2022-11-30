@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!--Use Hibernate's own connection pool configuration-->
+        <property name="connection.url">jdbc:postgresql://host.docker.internal:49153/go_it</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">postgrespw</property>
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+
+        <!--hibernate dialect-->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!--Print sql statement-->
+        <property name="hibernate.show_sql">true</property>
+        <!--Format sql-->
+        <property name="hibernate.format_sql">true</property>
+
+
+    </session-factory>
+</hibernate-configuration>

@@ -1,5 +1,9 @@
 package ua.com.goit.dao;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
@@ -21,6 +25,7 @@ public final class ConnectionManager {
         loadDriver();
         initVariables();
         initConnectionPool();
+        initHibernate();
     }
 
 
@@ -92,6 +97,16 @@ public final class ConnectionManager {
         }
 
         System.out.println("\033[0;92mDatabase connection pool created\033[0m\n");
+    }
+
+    private static void initHibernate() {
+        Configuration config = new Configuration();
+        config.configure();
+
+        try (SessionFactory sf = config.buildSessionFactory();
+             Session session = sf.openSession()) {
+            System.out.println("O'K");
+        }
     }
 
     public void closeConnectionPool() {
