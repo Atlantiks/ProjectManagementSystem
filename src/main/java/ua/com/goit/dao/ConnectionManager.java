@@ -2,7 +2,9 @@ package ua.com.goit.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
+import ua.com.goit.entity.Developer;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -20,6 +22,7 @@ public final class ConnectionManager {
     private static final ConnectionManager INSTANCE = new ConnectionManager();
     private static BlockingQueue<Connection> pool;
     private static List<Connection> allConnections;
+    private static SessionFactory sessionFactory;
 
     static {
         loadDriver();
@@ -45,6 +48,10 @@ public final class ConnectionManager {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Session getHibernateSession() {
+        return sessionFactory.openSession();
     }
 
     private Connection openConnection() {
@@ -103,10 +110,11 @@ public final class ConnectionManager {
         Configuration config = new Configuration();
         config.configure();
 
-        try (SessionFactory sf = config.buildSessionFactory();
-             Session session = sf.openSession()) {
-            System.out.println("O'K");
-        }
+        config.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
+
+        config.addAnnotatedClass(Developer.class);
+
+        sessionFactory = config.buildSessionFactory();
     }
 
     public void closeConnectionPool() {

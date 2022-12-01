@@ -2,8 +2,10 @@ package ua.com.goit.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
@@ -12,6 +14,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @Entity
+@Table(name = "developers")
 public class Developer {
     @Id
     private Integer id;

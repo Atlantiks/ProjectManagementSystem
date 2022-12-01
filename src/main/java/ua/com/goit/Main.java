@@ -1,5 +1,6 @@
 package ua.com.goit;
 
+import org.hibernate.Session;
 import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.company.DeleteCompanyById;
@@ -14,10 +15,12 @@ import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.command.skill.ViewSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
+import ua.com.goit.entity.Developer;
 import ua.com.goit.service.*;
 import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -33,6 +36,22 @@ public class Main {
         initializeCommands(view, commands);
 
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
+
+        var developer = Developer.builder()
+                .id(50)
+                .firstName("Migel")
+                .lastName("Servantes")
+                .salary(BigDecimal.valueOf(1000.0))
+                .companyId(3)
+                .sex("M")
+                .build();
+
+
+        var hibernateSession = connectionManager.getHibernateSession();
+
+        hibernateSession.beginTransaction();
+        hibernateSession.save(developer);
+        hibernateSession.getTransaction().commit();
 
         pms.run();
 
