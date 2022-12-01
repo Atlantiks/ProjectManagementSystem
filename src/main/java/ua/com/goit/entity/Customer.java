@@ -1,5 +1,7 @@
 package ua.com.goit.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @AllArgsConstructor
@@ -7,7 +9,9 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 @Builder
+@Entity
 public class Customer {
+    @Id
     private Integer id;
     @NonNull private String firstName;
     @NonNull private String lastName;

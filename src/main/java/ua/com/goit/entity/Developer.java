@@ -1,5 +1,7 @@
 package ua.com.goit.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,7 +11,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Data
 @Builder
+@Entity
 public class Developer {
+    @Id
     private Integer id;
     @NonNull private String firstName;
     @NonNull private String lastName;
