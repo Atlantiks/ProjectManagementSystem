@@ -94,7 +94,7 @@ public class ProjectService {
     public void createProject(CreateProjectDto projectDto) {
         if (PROJECT_VALIDATOR.isValid(projectDto)) {
             Project newProject = PROJECT_MAPPER.mapFrom(projectDto);
-            PROJECT_DAO.save(newProject);
+            PROJECT_DAO.saveWithHibernate(newProject);
         } else {
             throw new ValidationException("Couldn't validate project");
         }

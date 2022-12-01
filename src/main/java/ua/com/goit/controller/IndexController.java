@@ -7,12 +7,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import ua.com.goit.dao.ConnectionManager;
 
 import java.io.IOException;
 import java.util.Objects;
 
 @WebServlet(urlPatterns = {"/index.html"})
 public class IndexController extends HttpServlet {
+    private final static ConnectionManager cm = ConnectionManager.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -1,5 +1,7 @@
 package ua.com.goit.dao;
 
+import jakarta.persistence.PersistenceException;
+import org.hibernate.Session;
 import ua.com.goit.dto.ProjectInfoDto;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Project;
@@ -110,6 +112,20 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
         } catch (Exception e) {
             throw new DataBaseOperationException(e.getMessage());
         }
+        return project;
+    }
+
+    public Project saveWithHibernate(Project project) {
+        var hibernateSession = connectionManager.getHibernateSession();
+
+        try {
+            hibernateSession.beginTransaction();
+            hibernateSession.persist(project);
+            hibernateSession.getTransaction().commit();
+        } catch (PersistenceException e) {
+            throw new DataBaseOperationException("Error occurred adding new project");
+        }
+
         return project;
     }
 

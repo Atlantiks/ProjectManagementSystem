@@ -4,7 +4,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy;
 import org.hibernate.cfg.Configuration;
-import ua.com.goit.entity.Developer;
+import ua.com.goit.entity.*;
 
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -113,6 +113,10 @@ public final class ConnectionManager {
         config.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());
 
         config.addAnnotatedClass(Developer.class);
+        config.addAnnotatedClass(Company.class);
+        config.addAnnotatedClass(Project.class);
+        config.addAnnotatedClass(Customer.class);
+        config.addAnnotatedClass(Skill.class);
 
         sessionFactory = config.buildSessionFactory();
     }

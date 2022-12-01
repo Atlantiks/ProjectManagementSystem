@@ -1,11 +1,8 @@
 package ua.com.goit.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
 @AllArgsConstructor
@@ -17,6 +14,7 @@ import java.math.BigDecimal;
 @Table(name = "developers")
 public class Developer {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NonNull private String firstName;
     @NonNull private String lastName;

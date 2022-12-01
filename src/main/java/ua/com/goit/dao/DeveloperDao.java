@@ -133,6 +133,18 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
         return developer;
     }
 
+    public Developer saveWithHibernate(Developer developer) {
+        var x = connectionManager.getHibernateSession();
+
+        x.beginTransaction();
+
+        x.persist(developer);
+
+        x.getTransaction().commit();
+
+        return developer;
+    }
+
     @Override
     public List<Developer> findAll() {
         List<Developer> allDevs = new ArrayList<>();

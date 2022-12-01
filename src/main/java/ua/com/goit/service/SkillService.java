@@ -100,10 +100,10 @@ public class SkillService {
 
             newSkillsDto.stream()
                     .map(SKILL_MAPPER::mapFrom)
-                    .forEach(SKILL_DAO::save);
+                    .forEach(SKILL_DAO::saveWithHibernate);
 
         } else {
-            SKILL_DAO.save(SKILL_MAPPER.mapFrom(skillDto));
+            SKILL_DAO.saveWithHibernate(SKILL_MAPPER.mapFrom(skillDto));
         }
     }
 

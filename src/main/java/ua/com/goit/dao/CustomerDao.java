@@ -1,5 +1,6 @@
 package ua.com.goit.dao;
 
+import jakarta.persistence.PersistenceException;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
@@ -100,6 +101,19 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
 
         } catch (Exception e) {
             throw new DataBaseOperationException(e.getMessage());
+        }
+        return customer;
+    }
+
+    public Customer saveWithHibernate(Customer customer) {
+        var hibernateSession = connectionManager.getHibernateSession();
+
+        try {
+            hibernateSession.beginTransaction();
+            hibernateSession.persist(customer);
+            hibernateSession.getTransaction().commit();
+        } catch (PersistenceException e) {
+            throw new DataBaseOperationException("Error occurred adding new customer");
         }
         return customer;
     }

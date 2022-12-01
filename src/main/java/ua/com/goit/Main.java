@@ -1,6 +1,6 @@
 package ua.com.goit;
 
-import org.hibernate.Session;
+import jakarta.persistence.Table;
 import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.company.DeleteCompanyById;
@@ -20,8 +20,10 @@ import ua.com.goit.service.*;
 import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -38,20 +40,23 @@ public class Main {
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
 
         var developer = Developer.builder()
-                .id(50)
-                .firstName("Migel")
-                .lastName("Servantes")
-                .salary(BigDecimal.valueOf(1000.0))
-                .companyId(3)
+                .id(51)
+                .firstName("Timothy")
+                .lastName("Sanders")
+                .salary(BigDecimal.valueOf(2000.0))
+                .companyId(4)
                 .sex("M")
                 .build();
 
+        var annotation = developer.getClass().getAnnotation(Table.class);
+        Arrays.stream(developer.getClass().getDeclaredFields()).forEach(System.out::println);
+        System.out.println(annotation);
 
         var hibernateSession = connectionManager.getHibernateSession();
 
-        hibernateSession.beginTransaction();
-        hibernateSession.save(developer);
-        hibernateSession.getTransaction().commit();
+/*        hibernateSession.beginTransaction();
+        hibernateSession.merge(developer);
+        hibernateSession.getTransaction().commit();*/
 
         pms.run();
 

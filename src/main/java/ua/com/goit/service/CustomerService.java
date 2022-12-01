@@ -103,7 +103,7 @@ public class CustomerService {
     public void createCustomer(CreateCustomerDto customerDto) {
         if (CUSTOMER_VALIDATOR.isValid(customerDto)) {
             Customer newCustomer = CREATE_CUSTOMER_MAPPER.mapFrom(customerDto);
-            CUSTOMER_DAO.save(newCustomer);
+            CUSTOMER_DAO.saveWithHibernate(newCustomer);
         } else {
             throw new ValidationException("Validation failed");
         }

@@ -110,7 +110,7 @@ public class DeveloperService {
             throw new ValidationException("Developer validation failed");
         } else {
             Developer newDeveloper = DEVELOPER_MAPPER.mapFrom(developerDto);
-            DEV_DAO.save(newDeveloper);
+            DEV_DAO.saveWithHibernate(newDeveloper);
         }
     }
 

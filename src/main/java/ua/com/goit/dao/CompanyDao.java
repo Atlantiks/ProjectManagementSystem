@@ -1,5 +1,7 @@
 package ua.com.goit.dao;
 
+import jakarta.persistence.PersistenceException;
+
 import ua.com.goit.entity.Company;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
@@ -97,6 +99,20 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
         } catch (SQLException e) {
             throw new DataBaseOperationException(e.getMessage());
         }
+        return company;
+    }
+
+    public Company saveWithHibernate(Company company) {
+        var hibernateSession = connectionManager.getHibernateSession();
+
+        try {
+            hibernateSession.beginTransaction();
+            hibernateSession.persist(company);
+            hibernateSession.getTransaction().commit();
+        } catch (PersistenceException e) {
+            throw new DataBaseOperationException("Error occurred");
+        }
+
         return company;
     }
 

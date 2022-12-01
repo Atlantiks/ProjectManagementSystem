@@ -1,7 +1,6 @@
 package ua.com.goit.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -10,8 +9,10 @@ import lombok.*;
 @Data
 @Builder
 @Entity
+@Table(name = "skills")
 public class Skill {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NonNull private String name;
     @NonNull private String level;

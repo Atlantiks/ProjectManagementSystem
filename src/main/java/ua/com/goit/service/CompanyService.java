@@ -7,9 +7,7 @@ import ua.com.goit.dao.CompanyDao;
 import ua.com.goit.dto.CompanyDto;
 import ua.com.goit.dto.CreateCompanyDto;
 import ua.com.goit.dto.UpdateCompanyDto;
-import ua.com.goit.dto.UpdateProjectDto;
 import ua.com.goit.entity.Company;
-import ua.com.goit.entity.Project;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
@@ -85,7 +83,7 @@ public class CompanyService {
 
     public void createCompany(CreateCompanyDto companyDto) {
         if (COMPANY_VALIDATOR.isValid(companyDto)) {
-            COMPANY_DAO.save(COMPANY_MAPPER.mapFrom(companyDto));
+            COMPANY_DAO.saveWithHibernate(COMPANY_MAPPER.mapFrom(companyDto));
         } else {
             throw new ValidationException("Couldn't pass validation test for new company");
         }

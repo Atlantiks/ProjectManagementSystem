@@ -1,5 +1,6 @@
 package ua.com.goit.dao;
 
+import jakarta.persistence.PersistenceException;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.entity.Skill;
 import ua.com.goit.exception.DataBaseOperationException;
@@ -98,6 +99,20 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         } catch (SQLException e) {
             throw new DataBaseOperationException("Couldn't create new skill in database");
         }
+        return skill;
+    }
+
+    public Skill saveWithHibernate(Skill skill) {
+        var hibernateSession = connectionManager.getHibernateSession();
+
+        try {
+            hibernateSession.beginTransaction();
+            hibernateSession.persist(skill);
+            hibernateSession.getTransaction().commit();
+        } catch (PersistenceException e) {
+            throw new DataBaseOperationException("Error occurred adding new skill");
+        }
+
         return skill;
     }
 
