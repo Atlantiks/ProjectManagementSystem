@@ -47,6 +47,10 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         return Optional.empty();
     }
 
+    public Optional<Skill> findByIdWithHibernate(Integer id) {
+      return Optional.ofNullable(connectionManager.getHibernateSession().get(Skill.class, id));
+    }
+
     @Override
     public Skill save(Skill skill, View view) {
         String query = SQL.INSERT.command;

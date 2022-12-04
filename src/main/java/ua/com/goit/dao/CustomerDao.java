@@ -47,6 +47,10 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
         return Optional.empty();
     }
 
+    public Optional<Customer> findByIdWithHibernate(Integer id) {
+        return Optional.ofNullable(connectionManager.getHibernateSession().get(Customer.class, id));
+    }
+
     @Override
     public Customer save(Customer customer, View view) {
         String query = SQL.INSERT.command;

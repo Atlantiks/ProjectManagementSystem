@@ -22,10 +22,7 @@ import ua.com.goit.view.View;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -39,24 +36,9 @@ public class Main {
 
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
 
-        var developer = Developer.builder()
-                .id(51)
-                .firstName("Timothy")
-                .lastName("Sanders")
-                .salary(BigDecimal.valueOf(2000.0))
-                .companyId(4)
-                .sex("M")
-                .build();
-
-        var annotation = developer.getClass().getAnnotation(Table.class);
-        Arrays.stream(developer.getClass().getDeclaredFields()).forEach(System.out::println);
-        System.out.println(annotation);
-
         var hibernateSession = connectionManager.getHibernateSession();
 
-/*        hibernateSession.beginTransaction();
-        hibernateSession.merge(developer);
-        hibernateSession.getTransaction().commit();*/
+        var byIdWithHibernate = DeveloperDao.getInstance().findByIdWithHibernate(1);
 
         pms.run();
 

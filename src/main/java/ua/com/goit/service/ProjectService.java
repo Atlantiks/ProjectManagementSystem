@@ -134,7 +134,7 @@ public class ProjectService {
         view.write("Please enter Project's id:");
         Integer projectId = Integer.parseInt(view.read());
 
-        Project project =  PROJECT_DAO.findById(projectId).orElseThrow(() ->
+        Project project =  PROJECT_DAO.findByIdWithHibernate(projectId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("\033[0;91mProject with Id = %d wasn't found\033[0m", projectId)));
 
@@ -151,7 +151,7 @@ public class ProjectService {
             throw new ValidationException("Incorrect id provided");
         }
 
-        Project project =  PROJECT_DAO.findById(projectId).orElseThrow(() ->
+        Project project =  PROJECT_DAO.findByIdWithHibernate(projectId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Project with Id = %d wasn't found", projectId)));
 

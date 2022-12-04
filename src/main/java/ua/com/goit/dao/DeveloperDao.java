@@ -1,5 +1,7 @@
 package ua.com.goit.dao;
 
+import org.hibernate.Session;
+import ua.com.goit.entity.Customer;
 import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
@@ -45,6 +47,10 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
         }
 
         return Optional.empty();
+    }
+
+    public Optional<Developer> findByIdWithHibernate(Integer id) {
+        return Optional.ofNullable(connectionManager.getHibernateSession().get(Developer.class, id));
     }
 
     public Optional<Developer> findByFullName(String fullname) {

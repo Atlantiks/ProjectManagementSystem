@@ -3,6 +3,7 @@ package ua.com.goit.dao;
 import jakarta.persistence.PersistenceException;
 
 import ua.com.goit.entity.Company;
+import ua.com.goit.entity.Developer;
 import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.view.View;
 
@@ -45,6 +46,10 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
         }
 
         return Optional.empty();
+    }
+
+    public Optional<Company> findByIdWithHibernate(Integer id) {
+        return Optional.ofNullable(connectionManager.getHibernateSession().get(Company.class, id));
     }
 
     @Override

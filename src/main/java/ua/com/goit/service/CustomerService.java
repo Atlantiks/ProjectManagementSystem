@@ -160,7 +160,7 @@ public class CustomerService {
             throw new ValidationException("Incorrect id provided");
         }
 
-        Customer customer = CUSTOMER_DAO.findById(customerId).orElseThrow(() ->
+        Customer customer = CUSTOMER_DAO.findByIdWithHibernate(customerId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Customer with Id = %d wasn't found", customerId)));
 

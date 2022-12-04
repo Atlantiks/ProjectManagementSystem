@@ -134,7 +134,7 @@ public class CompanyService {
             throw new NotFoundException("Incorrect company id provided");
         }
 
-        return COMPANY_DAO.findById(companyId).orElseThrow(
+        return COMPANY_DAO.findByIdWithHibernate(companyId).orElseThrow(
                 () -> new NotFoundException(
                         String.format("Company with Id = %d wasn't found", companyId)));
     }

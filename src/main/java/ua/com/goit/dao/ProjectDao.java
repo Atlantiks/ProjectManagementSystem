@@ -55,6 +55,10 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
         return Optional.empty();
     }
 
+    public Optional<Project> findByIdWithHibernate(Integer id) {
+        return Optional.ofNullable(connectionManager.getHibernateSession().get(Project.class, id));
+    }
+
     @Override
     public Project save(Project project, View view) {
         String query = SQL.INSERT.command;

@@ -159,7 +159,7 @@ public class DeveloperService {
             throw new NotFoundException("Incorrect Id provided");
         }
 
-        Developer developer =  DEV_DAO.findById(developerId).orElseThrow(() ->
+        Developer developer =  DEV_DAO.findByIdWithHibernate(developerId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Developer with Id = %d wasn't found", developerId)));
 
