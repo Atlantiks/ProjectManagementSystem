@@ -7,6 +7,14 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class UpdateProjectValidator implements Validator<UpdateProjectDto> {
+    private final static UpdateProjectValidator PROJECT_VALIDATOR = new UpdateProjectValidator();
+
+    private UpdateProjectValidator() {
+    }
+
+    public static UpdateProjectValidator getInstance() {
+        return PROJECT_VALIDATOR;
+    }
 
     @Override
     public boolean isValid(UpdateProjectDto projectDto) {
@@ -14,7 +22,7 @@ public class UpdateProjectValidator implements Validator<UpdateProjectDto> {
         if (!statuses.contains(projectDto.getStatus())) return false;
 
         if (!projectDto.getName().matches("[A-z]+")) return false;
-        if (!projectDto.getDescription().isBlank()) return false;
+        if (projectDto.getDescription().isBlank()) return false;
         try {
             Integer.parseInt(projectDto.getId());
             LocalDate.parse(projectDto.getDate());

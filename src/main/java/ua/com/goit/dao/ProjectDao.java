@@ -45,7 +45,8 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
                         rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
-                        rs.getBigDecimal("cost")
+                        rs.getBigDecimal("cost"),
+                        null
                         ));
             }
         } catch (Exception e) {
@@ -60,36 +61,6 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
     }
 
     @Override
-    public Project save(Project project, View view) {
-        String query = SQL.INSERT.command;
-
-        try (var connection = connectionManager.getConnection();
-             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1,project.getName());
-            statement.setObject(2,project.getDate_created());
-            statement.setObject(3,project.getDescription());
-            statement.setObject(4,project.getStatus());
-            statement.setObject(5,project.getCost());
-
-            int resultRows = statement.executeUpdate();
-
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    project.setId(generatedKey.getInt(1));
-                } else {
-                    throw new RuntimeException("No id was returned back.");
-                }
-            } catch (SQLException e) {
-                System.out.println("Couldn't create new project in database");
-                throw new RuntimeException(e.getMessage());
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return project;
-    }
-
     public Project save(Project project) {
         String query = SQL.INSERT.command;
 
@@ -114,7 +85,7 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
             }
 
         } catch (Exception e) {
-            throw new DataBaseOperationException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
         return project;
     }
@@ -150,7 +121,8 @@ public final class ProjectDao implements DataAccess<Integer, Project> {
                         rs.getObject("date_created", LocalDate.class),
                         rs.getString("description"),
                         rs.getString("status"),
-                        rs.getObject("cost", BigDecimal.class)
+                        rs.getObject("cost", BigDecimal.class),
+                        null
                 ));
             }
         } catch (Exception e) {

@@ -18,6 +18,8 @@
         <!--Format sql-->
         <property name="hibernate.format_sql">true</property>
 
+        <property name="hibernate.current_session_context_class">thread</property>
+
 
     </session-factory>
 </hibernate-configuration>

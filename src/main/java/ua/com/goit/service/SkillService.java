@@ -16,6 +16,8 @@ import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateSkillMapper;
+import ua.com.goit.repository.SessionManager;
+import ua.com.goit.repository.SkillRepository;
 import ua.com.goit.validation.AssignSkillValidator;
 import ua.com.goit.validation.CreateSkillValidator;
 import ua.com.goit.view.View;
@@ -36,8 +38,10 @@ public class SkillService {
     @Getter
     @Setter
     private View view;
+    private final SkillRepository skillRepository;
 
     private SkillService() {
+        skillRepository = new SkillRepository(SessionManager.buildSessionFactory());
     }
 
     public static SkillService getInstance() {
@@ -67,7 +71,7 @@ public class SkillService {
             newSkills.add(new Skill(skillName, "Senior"));
 
             newSkills.stream()
-                    .peek(skill -> SKILL_DAO.save(skill, view))
+                    .peek(skillRepository::save)
                     .filter(skill -> Objects.nonNull(skill.getId()))
                     .forEach(createdSkills::add);
 
@@ -77,7 +81,7 @@ public class SkillService {
             }
         } else {
             var newSkill = new Skill(skillName, skillLevel);
-            var createdSkill = SKILL_DAO.save(newSkill, view);
+            var createdSkill = skillRepository.save(newSkill);
             view.write(createdSkill.toString());
         }
     }
@@ -100,10 +104,10 @@ public class SkillService {
 
             newSkillsDto.stream()
                     .map(SKILL_MAPPER::mapFrom)
-                    .forEach(SKILL_DAO::saveWithHibernate);
+                    .forEach(skillRepository::save);
 
         } else {
-            SKILL_DAO.saveWithHibernate(SKILL_MAPPER.mapFrom(skillDto));
+            skillRepository.save(SKILL_MAPPER.mapFrom(skillDto));
         }
     }
 
@@ -112,7 +116,7 @@ public class SkillService {
     }
 
     public List<String> getAllSkillNames() {
-        return SKILL_DAO.findAll().stream()
+        return skillRepository.findAll().stream()
                 .map(Skill::getName)
                 .distinct()
                 .collect(Collectors.toList());
@@ -198,7 +202,7 @@ public class SkillService {
     }
 
     private String getSkillsList() {
-        return SKILL_DAO.findAll().stream()
+        return skillRepository.findAll().stream()
                 .map(Skill::getName)
                 .distinct()
                 .map(String::valueOf)

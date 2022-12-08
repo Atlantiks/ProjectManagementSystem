@@ -53,34 +53,6 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
     }
 
     @Override
-    public Company save(Company company, View view) {
-        String query = SQL.INSERT.command;
-
-        try (var connection = connectionManager.getConnection();
-             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1, company.getName());
-            statement.setObject(2, company.getCountry());
-
-            int resultRows = statement.executeUpdate();
-
-            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    company.setId(generatedKey.getInt(1));
-                } else {
-                    throw new RuntimeException("No id was returned back.");
-                }
-            } catch (SQLException e) {
-                view.write("Couldn't create new company in database");
-                view.write(e.getMessage());
-            }
-
-        } catch (SQLException e) {
-            view.write("Couldn't create new company in database");
-            view.write(e.getMessage());
-        }
-        return company;
-    }
-
     public Company save(Company company) {
         String query = SQL.INSERT.command;
 
@@ -215,7 +187,7 @@ public final class CompanyDao implements DataAccess<Integer, Company> {
             statement.setString(1, companyName);
             var resultSet = statement.executeQuery();
 
-            if (resultSet.next()) return Optional.of(resultSet.getObject(1,Integer.class));
+            if (resultSet.next()) return Optional.of(resultSet.getObject(1, Integer.class));
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage());

@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -22,4 +24,13 @@ public class Project {
     private String description;
     private String status;
     private BigDecimal cost;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "projects_developers",
+            joinColumns = { @JoinColumn(name = "projects_id") },
+            inverseJoinColumns = { @JoinColumn(name = "developers_id") }
+    )
+    @Builder.Default
+    private List<Developer> developers = new ArrayList<>();
 }

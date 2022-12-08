@@ -18,6 +18,8 @@ import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateDeveloperMapper;
 import ua.com.goit.mapper.FindDeveloperMapper;
 import ua.com.goit.mapper.UpdateDeveloperMapper;
+import ua.com.goit.repository.DeveloperRepository;
+import ua.com.goit.repository.SessionManager;
 import ua.com.goit.validation.CreateDeveloperValidator;
 import ua.com.goit.validation.UpdateDeveloperValidator;
 import ua.com.goit.view.View;
@@ -40,8 +42,11 @@ public class DeveloperService {
     @Getter @Setter
     private View view;
 
+    private final DeveloperRepository developerRepository;
+
 
     private DeveloperService() {
+        developerRepository = new DeveloperRepository(SessionManager.buildSessionFactory());
     }
 
     public static DeveloperService getInstance() {
@@ -87,7 +92,7 @@ public class DeveloperService {
                     view.write("5. Please enter new Developer's salary:");
                     BigDecimal salary = BigDecimal.valueOf(Double.parseDouble(view.read()));
 
-                    newDev.setCompanyId(companyId);
+                   // newDev.setCompanyId(companyId);
                     newDev.setSalary(salary);
                     break;
                 case "N":
@@ -97,7 +102,7 @@ public class DeveloperService {
                     break;
             }
 
-            Developer savedDev = DEV_DAO.save(newDev, view);
+            Developer savedDev = developerRepository.save(newDev);
 
             if (Objects.nonNull(savedDev.getId())) {
                 view.write("\033[0;92mThe following developer was successfully added to database:\033[0m");
@@ -110,7 +115,7 @@ public class DeveloperService {
             throw new ValidationException("Developer validation failed");
         } else {
             Developer newDeveloper = DEVELOPER_MAPPER.mapFrom(developerDto);
-            DEV_DAO.saveWithHibernate(newDeveloper);
+            developerRepository.save(newDeveloper);
         }
     }
 
@@ -133,7 +138,9 @@ public class DeveloperService {
             throw new NotFoundException("Incorrect id provided");
         }
 
-        if (!DEV_DAO.removeById(devId)) {
+        try {
+            developerRepository.delete(devId);
+        } catch (IllegalArgumentException e) {
             throw new DataBaseOperationException(
                     String.format("Couldn't delete developer with following Id = %d", devId));
         }
@@ -143,7 +150,7 @@ public class DeveloperService {
         view.write("Please enter developer's id:");
         Integer devId = Integer.parseInt(view.read());
 
-        Developer developer =  DEV_DAO.findById(devId).orElseThrow(() ->
+        Developer developer =  developerRepository.findById(devId).orElseThrow(() ->
                         new NotFoundException(
                                 String.format("\033[0;91mDeveloper with Id = %d wasn't found\033[0m", devId)));
 
@@ -159,7 +166,7 @@ public class DeveloperService {
             throw new NotFoundException("Incorrect Id provided");
         }
 
-        Developer developer =  DEV_DAO.findByIdWithHibernate(developerId).orElseThrow(() ->
+        Developer developer =  developerRepository.findById(developerId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Developer with Id = %d wasn't found", developerId)));
 
@@ -174,7 +181,7 @@ public class DeveloperService {
             throw new NotFoundException("Incorrect Id provided");
         }
 
-        Developer developer =  DEV_DAO.findById(developerId).orElseThrow(() ->
+        Developer developer =  developerRepository.findById(developerId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Developer with Id = %d wasn't found", developerId)));
 
@@ -183,11 +190,11 @@ public class DeveloperService {
 
     public void updateDeveloper(UpdateDeveloperDto developerDto) {
         if (!UPDATE_DEVELOPER_VALIDATOR.isValid(developerDto)) throw new ValidationException("Validation Failed!");
-        DEV_DAO.update(UPDATE_DEVELOPER_MAPPER.mapFrom(developerDto));
+        developerRepository.update(UPDATE_DEVELOPER_MAPPER.mapFrom(developerDto));
     }
 
     public List<DeveloperDto> getAllDevelopers() {
-        return DEV_DAO.findAll().stream().map(developer ->
+        return developerRepository.findAll().stream().map(developer ->
                 new DeveloperDto(developer.getFirstName() + " " + developer.getLastName(),
                         developer.getSex())).collect(Collectors.toList());
     }

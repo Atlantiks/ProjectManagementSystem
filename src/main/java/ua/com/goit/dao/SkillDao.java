@@ -48,38 +48,10 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
     }
 
     public Optional<Skill> findByIdWithHibernate(Integer id) {
-      return Optional.ofNullable(connectionManager.getHibernateSession().get(Skill.class, id));
+        return Optional.ofNullable(connectionManager.getHibernateSession().get(Skill.class, id));
     }
 
     @Override
-    public Skill save(Skill skill, View view) {
-        String query = SQL.INSERT.command;
-
-        try (var connection = connectionManager.getConnection();
-             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1, skill.getName());
-            statement.setObject(2, skill.getLevel());
-
-            statement.executeUpdate();
-
-            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    skill.setId(generatedKey.getInt(1));
-                } else {
-                    throw new RuntimeException("No id was returned back.");
-                }
-            } catch (SQLException e) {
-                System.out.println("Couldn't create new skill in database");
-                view.write(e.getMessage());
-            }
-
-        } catch (SQLException e) {
-            view.write("Couldn't create new skill in database");
-            view.write(e.getMessage());
-        }
-        return skill;
-    }
-
     public Skill save(Skill skill) {
         String query = SQL.INSERT.command;
 
@@ -225,7 +197,8 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         developersIds.stream().map(developerDao::findById)
                 .forEach(developer -> developer.ifPresent(devs::add));
 
-        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков со знанием \"%s\" не найдено \u001B[0m\n", skillName);
+        if (devs.size() == 0)
+            System.out.printf("\u001B[0;91mРазработчиков со знанием \"%s\" не найдено \u001B[0m\n", skillName);
 
         return devs;
     }
@@ -250,7 +223,8 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
         developersIds.stream().map(developerDao::findById)
                 .forEach(developer -> developer.ifPresent(devs::add));
 
-        if (devs.size() == 0) System.out.printf("\u001B[0;91mРазработчиков уровня \"%s\" не найдено \u001B[0m\n", skillLevel);
+        if (devs.size() == 0)
+            System.out.printf("\u001B[0;91mРазработчиков уровня \"%s\" не найдено \u001B[0m\n", skillLevel);
 
         return devs;
     }
@@ -285,10 +259,10 @@ public final class SkillDao implements DataAccess<Integer, Skill> {
             while (resultSet.next()) {
                 devSkills.add(
                         Skill.builder()
-                        .id(resultSet.getInt(1))
-                        .name(resultSet.getString(2))
-                        .level(resultSet.getString(3))
-                        .build()
+                                .id(resultSet.getInt(1))
+                                .name(resultSet.getString(2))
+                                .level(resultSet.getString(3))
+                                .build()
                 );
             }
         } catch (SQLException e) {

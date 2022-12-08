@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DataAccess<Key, Entity> {
     Optional<Entity> findById(Key key);
-    Entity save(Entity entity, View view);
+    Entity save(Entity entity);
     List<Entity> findAll();
     boolean remove(Entity entity);
     boolean removeById(Key key);

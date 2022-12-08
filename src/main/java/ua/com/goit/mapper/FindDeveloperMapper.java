@@ -23,8 +23,7 @@ public class FindDeveloperMapper implements Mapper<FindDeveloperDto, Developer> 
     public FindDeveloperDto mapTo(Developer developer) {
         String devCompanyName = "";
         try {
-            var company = COMPANY_SERVICE.findCompanyById(developer.getCompanyId().toString());
-            devCompanyName = company.getName();
+            devCompanyName = developer.getCompany().getName();
         } catch (NullPointerException e) {
             devCompanyName = "none";
         }

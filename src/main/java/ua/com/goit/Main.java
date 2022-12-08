@@ -1,6 +1,5 @@
 package ua.com.goit;
 
-import jakarta.persistence.Table;
 import ua.com.goit.command.*;
 import ua.com.goit.command.company.CreateCompany;
 import ua.com.goit.command.company.DeleteCompanyById;
@@ -15,13 +14,10 @@ import ua.com.goit.command.skill.CreateSkill;
 import ua.com.goit.command.skill.ViewSkills;
 import ua.com.goit.controller.ProjectManagementSystem;
 import ua.com.goit.dao.*;
-import ua.com.goit.entity.Developer;
 import ua.com.goit.service.*;
 import ua.com.goit.view.Console;
 import ua.com.goit.view.View;
 
-import java.lang.annotation.Annotation;
-import java.math.BigDecimal;
 import java.util.*;
 
 public class Main {

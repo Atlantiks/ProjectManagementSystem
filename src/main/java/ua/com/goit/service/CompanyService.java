@@ -14,6 +14,8 @@ import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateCompanyMapper;
 import ua.com.goit.mapper.UpdateCompanyMapper;
+import ua.com.goit.repository.CompanyRepository;
+import ua.com.goit.repository.SessionManager;
 import ua.com.goit.validation.CreateCompanyValidator;
 import ua.com.goit.validation.UpdateCompanyValidator;
 import ua.com.goit.view.View;
@@ -33,7 +35,10 @@ public class CompanyService {
     @Setter
     private View view;
 
+    private final CompanyRepository companyRepository;
+
     private CompanyService() {
+        companyRepository = new CompanyRepository(SessionManager.buildSessionFactory());
     }
 
     public static CompanyService getInstance() {
@@ -73,7 +78,7 @@ public class CompanyService {
                 break;
         }
 
-        Company savedCompany = COMPANY_DAO.save(newCompany, view);
+        Company savedCompany = COMPANY_DAO.save(newCompany);
 
         if (Objects.nonNull(savedCompany.getId())) {
             view.write("\033[0;92mThe following Company was successfully added to database:\033[0m");
@@ -83,7 +88,7 @@ public class CompanyService {
 
     public void createCompany(CreateCompanyDto companyDto) {
         if (COMPANY_VALIDATOR.isValid(companyDto)) {
-            COMPANY_DAO.saveWithHibernate(COMPANY_MAPPER.mapFrom(companyDto));
+            companyRepository.save(COMPANY_MAPPER.mapFrom(companyDto));
         } else {
             throw new ValidationException("Couldn't pass validation test for new company");
         }
@@ -108,16 +113,19 @@ public class CompanyService {
             throw new ValidationException("Incorrect id provided");
         }
 
-        if (!COMPANY_DAO.removeById(companyId)) throw
-                new DataBaseOperationException(
-                    String.format("Couldn't delete Company with following Id = %d", companyId ));
+        try {
+            companyRepository.delete(companyId);
+        } catch (IllegalArgumentException e) {
+            throw new DataBaseOperationException(
+                            String.format("Couldn't delete Company with following Id = %d", companyId ));
+        }
     }
 
     public Company findCompanyById() {
         view.write("Please enter Company's id:");
         Integer companyId = Integer.parseInt(view.read());
 
-        Company company = COMPANY_DAO.findById(companyId).orElseThrow(
+        Company company = companyRepository.findById(companyId).orElseThrow(
                 () -> new NotFoundException(
                         String.format("\033[0;91mCompany with Id = %d wasn't found\033[0m", companyId)));
 
@@ -134,14 +142,14 @@ public class CompanyService {
             throw new NotFoundException("Incorrect company id provided");
         }
 
-        return COMPANY_DAO.findByIdWithHibernate(companyId).orElseThrow(
+        return companyRepository.findById(companyId).orElseThrow(
                 () -> new NotFoundException(
                         String.format("Company with Id = %d wasn't found", companyId)));
     }
 
     public void update(UpdateCompanyDto companyDto) {
         if (!UPDATE_COMPANY_VALIDATOR.isValid(companyDto)) throw new ValidationException("Validation failed");
-        COMPANY_DAO.update(UPDATE_COMPANY_MAPPER.mapFrom(companyDto));
+        companyRepository.update(UPDATE_COMPANY_MAPPER.mapFrom(companyDto));
     }
 
     public UpdateCompanyDto getCompanyForUpdateById(String id) {
@@ -152,7 +160,7 @@ public class CompanyService {
             throw new ValidationException("Incorrect id provided");
         }
 
-        Company company =  COMPANY_DAO.findById(companyId).orElseThrow(() ->
+        Company company =  companyRepository.findById(companyId).orElseThrow(() ->
                 new NotFoundException(
                         String.format("Company with Id = %d wasn't found", companyId)));
 
@@ -161,8 +169,12 @@ public class CompanyService {
     }
 
     public List<CompanyDto> findAllCompanies() {
-        return COMPANY_DAO.findAll().stream()
-                .map(company -> new CompanyDto(company.getName(), company.getId(), company.getCountry()))
+        return companyRepository.findAll().stream()
+                .map(company -> CompanyDto.builder()
+                        .id(company.getId())
+                        .name(company.getName())
+                        .country(company.getCountry())
+                        .build())
                 .collect(Collectors.toList());
     }
 }

@@ -29,9 +29,9 @@ public class GetProjectCostController extends HttpServlet {
         req.getRequestDispatcher("/html/navigationBar.jsp").include(req,resp);
         String projectId = req.getParameter("id");
 
-        double salary = PROJECT_SERVICE.getDevelopersSalary(projectId);
-
         try {
+            double salary = PROJECT_SERVICE.getDevelopersSalary(projectId);
+
             var writer = resp.getWriter();
             writer.write("<div class=\"container\">");
             writer.write(String.format("<H1>Project with id=%s</H1>", projectId));

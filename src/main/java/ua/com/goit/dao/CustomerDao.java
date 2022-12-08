@@ -51,49 +51,21 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
         return Optional.ofNullable(connectionManager.getHibernateSession().get(Customer.class, id));
     }
 
+
     @Override
-    public Customer save(Customer customer, View view) {
-        String query = SQL.INSERT.command;
-
-        try (var connection = connectionManager.getConnection();
-             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1,customer.getFirstName());
-            statement.setString(2,customer.getLastName());
-            statement.setObject(3,customer.getCompany());
-            statement.setObject(4,customer.getAddress());
-
-            statement.executeUpdate();
-
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    customer.setId(generatedKey.getInt(1));
-                } else {
-                    throw new RuntimeException("No id was returned back.");
-                }
-            } catch (SQLException e) {
-                System.out.println("Couldn't create new customer in database");
-                throw new RuntimeException(e.getMessage());
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return customer;
-    }
-
     public Customer save(Customer customer) {
         String query = SQL.INSERT.command;
 
         try (var connection = connectionManager.getConnection();
              var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1,customer.getFirstName());
-            statement.setString(2,customer.getLastName());
-            statement.setObject(3,customer.getCompany());
-            statement.setObject(4,customer.getAddress());
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
+            statement.setObject(3, customer.getCompany());
+            statement.setObject(4, customer.getAddress());
 
             statement.executeUpdate();
 
-            try(ResultSet generatedKey = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
                 if (generatedKey.next()) {
                     customer.setId(generatedKey.getInt(1));
                 } else {
@@ -137,7 +109,7 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
-                        rs.getObject("company",String.class),
+                        rs.getObject("company", String.class),
                         rs.getObject("address", String.class)));
             }
         } catch (Exception e) {
@@ -154,8 +126,8 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
 
         try (var connection = connectionManager.getConnection();
              var statement = connection.prepareStatement(query)) {
-            statement.setString(1,customer.getFirstName());
-            statement.setString(2,customer.getLastName());
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
             updatedRows = statement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -186,12 +158,12 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
 
         try (var connection = connectionManager.getConnection();
              var statement = connection.prepareStatement(query)) {
-            statement.setString(1,customer.getFirstName());
-            statement.setString(2,customer.getLastName());
-            statement.setObject(3,customer.getCompany(),Types.VARCHAR);
-            statement.setObject(4,customer.getAddress(),Types.LONGVARCHAR);
+            statement.setString(1, customer.getFirstName());
+            statement.setString(2, customer.getLastName());
+            statement.setObject(3, customer.getCompany(), Types.VARCHAR);
+            statement.setObject(4, customer.getAddress(), Types.LONGVARCHAR);
 
-            statement.setInt(5,customer.getId());
+            statement.setInt(5, customer.getId());
 
             updatedRows = statement.executeUpdate();
 
@@ -217,7 +189,7 @@ public final class CustomerDao implements DataAccess<Integer, Customer> {
         INSERT("INSERT INTO customers (first_name, last_name, company, address) " +
                 "VALUES (?,?,?,?)"),
 
-        SELECT_ALL ("SELECT id, first_name, last_name, company, address " +
+        SELECT_ALL("SELECT id, first_name, last_name, company, address " +
                 "FROM customers " +
                 "ORDER BY id"),
 

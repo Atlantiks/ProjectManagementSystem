@@ -6,7 +6,6 @@ import ua.com.goit.Formatter;
 import ua.com.goit.dao.CustomerDao;
 import ua.com.goit.dto.CreateCustomerDto;
 import ua.com.goit.dto.UpdateCustomerDto;
-import ua.com.goit.entity.Company;
 import ua.com.goit.entity.Customer;
 import ua.com.goit.exception.BlancFieldException;
 import ua.com.goit.exception.DataBaseOperationException;
@@ -92,7 +91,7 @@ public class CustomerService {
                 break;
         }
 
-        Customer savedCustomer = CUSTOMER_DAO.save(newCustomer, view);
+        Customer savedCustomer = CUSTOMER_DAO.save(newCustomer);
 
         if (Objects.nonNull(savedCustomer.getId())) {
             view.write("\033[0;92mThe following Customer was successfully added to database:\033[0m");

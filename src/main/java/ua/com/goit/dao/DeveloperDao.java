@@ -39,8 +39,10 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("sex"),
-                        rs.getObject("company_id", Integer.class),
-                        rs.getObject("salary", BigDecimal.class)));
+                        null,
+                        //rs.getObject("company_id", Integer.class),
+                        rs.getObject("salary", BigDecimal.class),
+                        null));
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -68,8 +70,10 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                         rs.getString("first_name"),
                         rs.getString("last_name"),
                         rs.getString("sex"),
-                        rs.getObject("company_id", Integer.class),
-                        rs.getObject("salary", BigDecimal.class)));
+                        null,
+                        //rs.getObject("company_id", Integer.class),
+                        rs.getObject("salary", BigDecimal.class),
+                        null));
             }
         } catch (Exception e) {
             throw new DataBaseOperationException(e.getMessage());
@@ -78,38 +82,8 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
         return Optional.empty();
     }
 
+
     @Override
-    public Developer save(Developer developer, View view) {
-        String query = SQL.INSERT.command;
-
-        try (var connection = connectionManager.getConnection();
-             var statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, developer.getFirstName());
-            statement.setString(2, developer.getLastName());
-            statement.setString(3, developer.getSex());
-            statement.setObject(4, developer.getCompanyId());
-            statement.setBigDecimal(5, developer.getSalary());
-
-            int updatedRows = statement.executeUpdate();
-
-            try (ResultSet generatedKey = statement.getGeneratedKeys()) {
-                if (generatedKey.next()) {
-                    developer.setId(generatedKey.getInt(1));
-                } else {
-                    view.write("No id was returned back for new Developer.");
-                }
-            } catch (SQLException e) {
-                view.write("Couldn't create new developer in database");
-                view.write(e.getMessage());
-            }
-
-        } catch (SQLException e) {
-            view.write("Couldn't create new developer in database");
-            view.write(e.getMessage());
-        }
-        return developer;
-    }
-
     public Developer save(Developer developer) {
         String query = SQL.INSERT.command;
 
@@ -118,7 +92,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
             statement.setString(3, developer.getSex());
-            statement.setObject(4, developer.getCompanyId());
+            //statement.setObject(4, developer.getCompanyId());
             statement.setBigDecimal(5, developer.getSalary());
 
             int updatedRows = statement.executeUpdate();
@@ -162,13 +136,13 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
 
             var rs = statement.getResultSet();
             while (rs.next()) {
-                allDevs.add(new Developer(
-                        rs.getInt("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("sex"),
-                        rs.getObject("company_id", Integer.class),
-                        rs.getObject("salary", BigDecimal.class)));
+                allDevs.add(Developer.builder()
+                        .id(rs.getInt("id"))
+                        .firstName(rs.getString("first_name"))
+                        .lastName(rs.getString("last_name"))
+                        .sex(rs.getString("sex"))
+                        .salary(rs.getObject("salary", BigDecimal.class))
+                        .build());
             }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
@@ -221,7 +195,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
             statement.setString(1, developer.getFirstName());
             statement.setString(2, developer.getLastName());
             statement.setString(3, developer.getSex());
-            statement.setObject(4, developer.getCompanyId(), Types.INTEGER);
+            // statement.setObject(4, developer.getCompanyId(), Types.INTEGER);
             statement.setBigDecimal(5, developer.getSalary());
 
             statement.setInt(6, developer.getId());

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -19,6 +21,12 @@ public class Developer {
     @NonNull private String firstName;
     @NonNull private String lastName;
     @NonNull private String sex;
-    private Integer companyId;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
     private BigDecimal salary;
+
+    @ManyToMany(mappedBy = "developers")
+    @Builder.Default
+    private List<Project> projects = new ArrayList<>();
 }
