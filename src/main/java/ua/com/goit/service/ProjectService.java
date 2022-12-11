@@ -114,12 +114,19 @@ public class ProjectService {
 
     public void deleteProjectById() {
         view.write("Please enter Project's id:");
-        Integer projectId = Integer.parseInt(view.read());
+        Integer projectId;
+        try {
+            projectId = Integer.parseInt(view.read());
+        } catch (NumberFormatException e) {
+            throw new NotFoundException("Incorrect id provided");
+        }
 
-        if (PROJECT_DAO.removeById(projectId)) {
+        try {
+            projectRepository.delete(projectId);
             view.write("Success!");
-        } else {
-            view.write(String.format("Couldn't delete Project with following Id = %d", projectId ));
+        } catch (IllegalArgumentException e) {
+            throw new DataBaseOperationException(
+                    String.format("Couldn't delete developer with following Id = %d", projectId));
         }
     }
 
@@ -226,10 +233,16 @@ public class ProjectService {
         view.write("Please enter project" + "\033[0;93m" + " id" + "\033[0m");
         Integer projectId = Integer.parseInt(view.read());
 
-        view.write(String.format("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
+        Project project = projectRepository.findById(projectId).orElseThrow(
+                () -> new DataBaseOperationException(String.format("Project with id=%s not found",projectId)));
+
+        view.write(project.getDevelopers().stream().map(Developer::getSalary)
+                .reduce(BigDecimal.valueOf(0.0), BigDecimal::add).toString());
+
+/*        view.write(String.format("\nЗарплата всех разработчиков проекта с id = %s : %s\n", "\033[0;93m" + projectId + "\033[0m",
                 PROJECT_DAO.getListOfInvolvedDevelopers(projectId)
                         .stream().map(Developer::getSalary)
-                        .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));
+                        .reduce(BigDecimal.valueOf(0.0), BigDecimal::add)));*/
     }
 
     public double getDevelopersSalary(String id) {
@@ -248,7 +261,16 @@ public class ProjectService {
     }
 
     public void getProjectInfo() {
-        view.write(PROJECT_DAO.getProjectInfo());
+        view.write("Дата создания - название проекта - количество разработчиков на этом проекте.");
+        projectRepository.findAll().stream()
+                .map(project -> ProjectInfoDto.builder()
+                        .name(project.getName())
+                        .date(project.getDate_created().toString())
+                        .numberOfDevelopers(String.valueOf(project.getDevelopers().size()))
+                        .build())
+                .forEach(project -> {
+                    view.write(project.getDate() + " " + project.getName() + " " + project.getNumberOfDevelopers());
+                });
     }
 
     public List<ProjectInfoDto> getAllProjectsInfo() {
