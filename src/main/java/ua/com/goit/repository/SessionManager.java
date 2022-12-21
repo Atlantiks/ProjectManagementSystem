@@ -21,7 +21,7 @@ public class SessionManager {
     }
 
 
-    public static Configuration buildConfiguration() {
+    private static Configuration buildConfiguration() {
         Configuration config = new Configuration();
 
         config.setPhysicalNamingStrategy(new CamelCaseToUnderscoresNamingStrategy());

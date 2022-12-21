@@ -121,13 +121,23 @@ public class DeveloperService {
 
     public void deleteDeveloperById() {
         view.write("Please enter developer's id:");
-        Integer devId = Integer.parseInt(view.read());
+        Integer devId;
+        try {
+            devId = Integer.parseInt(view.read());
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Incorrect id provided");
+        }
 
-        if (DEV_DAO.removeById(devId)) {
+        developerRepository.delete(devId);
+        view.write(developerRepository.findById(devId).isPresent() ?
+                String.format("Couldn't delete developer with following Id = %d", devId )
+                : "Success!");
+
+/*        if (DEV_DAO.removeById(devId)) {
             view.write("Success!");
         } else {
             view.write(String.format("Couldn't delete developer with following Id = %d", devId ));
-        }
+        }*/
     }
 
     public void deleteDeveloperById(String id) {

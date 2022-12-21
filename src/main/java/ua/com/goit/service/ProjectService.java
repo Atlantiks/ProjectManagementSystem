@@ -224,7 +224,7 @@ public class ProjectService {
         }
 
         var project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException(""));
+                .orElseThrow(() -> new NotFoundException("Can't find developers of the project with id"));
 
         return project.getDevelopers().stream().map(DEV_MAPPER::mapTo).collect(Collectors.toList());
     }

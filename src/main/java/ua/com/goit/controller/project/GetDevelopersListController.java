@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.service.ProjectService;
 
@@ -36,6 +37,7 @@ public class GetDevelopersListController extends HttpServlet {
 
             try {
                 var devs = PROJECT_SERVICE.getDevelopersList(projectId);
+                System.out.println(devs.size());
 
                 if (devs.size() > 0) {
                     writer.write("<ul>");
@@ -50,7 +52,7 @@ public class GetDevelopersListController extends HttpServlet {
                 } else {
                     writer.write("<p>Разработчиков не обнаружено</p>");
                 }
-            } catch (ValidationException e) {
+            } catch (ValidationException | NotFoundException e) {
                 req.setAttribute("errors",e.getMessage());
                 doGet(req, resp);
             }

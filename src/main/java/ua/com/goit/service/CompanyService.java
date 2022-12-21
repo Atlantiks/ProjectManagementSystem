@@ -78,7 +78,7 @@ public class CompanyService {
                 break;
         }
 
-        Company savedCompany = COMPANY_DAO.save(newCompany);
+        Company savedCompany = companyRepository.save(newCompany);
 
         if (Objects.nonNull(savedCompany.getId())) {
             view.write("\033[0;92mThe following Company was successfully added to database:\033[0m");
@@ -96,13 +96,24 @@ public class CompanyService {
 
     public void deleteCompanyById() {
         view.write("Please enter Company's id:");
-        Integer companyId = Integer.parseInt(view.read());
+        Integer companyId;
+        try {
+            companyId = Integer.parseInt(view.read());
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Invalid id provided");
+        }
 
-        if (COMPANY_DAO.removeById(companyId)) {
+
+        companyRepository.delete(companyId);
+        view.write(companyRepository.findById(companyId).isPresent() ?
+                String.format("Couldn't delete company with following Id = %d", companyId )
+                : "Success!");
+
+/*        if (COMPANY_DAO.removeById(companyId)) {
             view.write("Success!");
         } else {
             view.write(String.format("Couldn't delete Company with following Id = %d", companyId ));
-        }
+        }*/
     }
 
     public void deleteCompanyById(String id) {

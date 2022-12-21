@@ -32,10 +32,6 @@ public class Main {
 
         ProjectManagementSystem pms = new ProjectManagementSystem(view,commands);
 
-        var hibernateSession = connectionManager.getHibernateSession();
-
-        var byIdWithHibernate = DeveloperDao.getInstance().findByIdWithHibernate(1);
-
         pms.run();
 
         connectionManager.closeConnectionPool();

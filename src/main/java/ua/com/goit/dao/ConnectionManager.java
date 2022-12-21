@@ -28,7 +28,7 @@ public final class ConnectionManager {
         loadDriver();
         initVariables();
         initConnectionPool();
-        //initHibernate();
+        initHibernate();
     }
 
 
