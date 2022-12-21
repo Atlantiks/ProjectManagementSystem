@@ -26,7 +26,7 @@ public class Developer {
     private Company company;
     private BigDecimal salary;
 
-    @ManyToMany(mappedBy = "developers")
+    @ManyToMany(mappedBy = "developers", fetch = FetchType.EAGER)
     @Builder.Default
     private List<Project> projects = new ArrayList<>();
 }
