@@ -13,6 +13,9 @@ import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateCustomerMapper;
 import ua.com.goit.mapper.UpdateCustomerMapper;
+import ua.com.goit.repository.CompanyRepository;
+import ua.com.goit.repository.CustomerRepository;
+import ua.com.goit.repository.SessionManager;
 import ua.com.goit.validation.CreateCustomerValidator;
 import ua.com.goit.validation.UpdateCustomerValidator;
 import ua.com.goit.view.View;
@@ -32,7 +35,10 @@ public class CustomerService {
     @Setter
     private View view;
 
+    private final CustomerRepository customerRepository;
+
     private CustomerService() {
+        customerRepository = new CustomerRepository(SessionManager.buildSessionFactory());
     }
 
     public static CustomerService getInstance() {
@@ -91,7 +97,7 @@ public class CustomerService {
                 break;
         }
 
-        Customer savedCustomer = CUSTOMER_DAO.save(newCustomer);
+        Customer savedCustomer = customerRepository.save(newCustomer);
 
         if (Objects.nonNull(savedCustomer.getId())) {
             view.write("\033[0;92mThe following Customer was successfully added to database:\033[0m");
