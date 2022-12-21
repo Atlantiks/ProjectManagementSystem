@@ -223,7 +223,7 @@ public class ProjectService {
             throw new ValidationException("Incorrect id provided");
         }
 
-        var project = projectRepository.findById(projectId)
+        var project = projectRepository.getProjectWithDevelopers(projectId)
                 .orElseThrow(() -> new NotFoundException("Can't find developers of the project with id"));
 
         return project.getDevelopers().stream().map(DEV_MAPPER::mapTo).collect(Collectors.toList());
