@@ -10,4 +10,5 @@ public class FindDeveloperDto {
     String lastName;
     String sex;
     String companyName;
+    String projects;
 }

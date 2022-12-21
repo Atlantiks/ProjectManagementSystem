@@ -33,6 +33,7 @@ public class FindDeveloperController extends HttpServlet {
             writer.write(String.format("<p>Surname: %s</p>", developer.getLastName()));
             writer.write(String.format("<p>Sex: %s</p>", developer.getSex().equals("M") ? "Male" : "Female"));
             writer.write(String.format("<p>Company: %s</p>", developer.getCompanyName()));
+            writer.write(String.format("<p>Projects: %s</p>", developer.getProjects()));
             writer.write("</div>");
         } catch (NotFoundException e) {
             req.setAttribute("errors",e.getMessage());
