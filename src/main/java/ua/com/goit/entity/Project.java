@@ -25,7 +25,7 @@ public class Project {
     private String status;
     private BigDecimal cost;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "projects_developers",
             joinColumns = { @JoinColumn(name = "projects_id") },
