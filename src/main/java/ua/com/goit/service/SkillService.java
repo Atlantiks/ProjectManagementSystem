@@ -16,6 +16,7 @@ import ua.com.goit.exception.DataBaseOperationException;
 import ua.com.goit.exception.NotFoundException;
 import ua.com.goit.exception.ValidationException;
 import ua.com.goit.mapper.CreateSkillMapper;
+import ua.com.goit.repository.DeveloperRepository;
 import ua.com.goit.repository.SessionManager;
 import ua.com.goit.repository.SkillRepository;
 import ua.com.goit.validation.AssignSkillValidator;
@@ -39,9 +40,11 @@ public class SkillService {
     @Setter
     private View view;
     private final SkillRepository skillRepository;
+    private final DeveloperRepository developerRepository;
 
     private SkillService() {
         skillRepository = new SkillRepository(SessionManager.buildSessionFactory());
+        developerRepository = new DeveloperRepository(SessionManager.buildSessionFactory());
     }
 
     public static SkillService getInstance() {
@@ -123,7 +126,9 @@ public class SkillService {
     }
 
     public List<Skill> getSkillsOfDeveloper(AssignSkillDto skillDto) {
-        return SKILL_DAO.findSkillsOfDeveloperWithName(skillDto.getDeveloper());
+        var developer = developerRepository.findByName(skillDto.getDeveloper());
+
+        return developer.getSkills();
     }
 
     public void assignNewSkillToDeveloper() {

@@ -42,6 +42,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                         null,
                         //rs.getObject("company_id", Integer.class),
                         rs.getObject("salary", BigDecimal.class),
+                        null,
                         null));
             }
         } catch (Exception e) {
@@ -73,6 +74,7 @@ public final class DeveloperDao implements DataAccess<Integer, Developer> {
                         null,
                         //rs.getObject("company_id", Integer.class),
                         rs.getObject("salary", BigDecimal.class),
+                        null,
                         null));
             }
         } catch (Exception e) {
